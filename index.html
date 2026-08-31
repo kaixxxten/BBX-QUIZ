@@ -1,0 +1,2385 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BEYBLADE X QUIZ</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --text:#172033;
+  --muted:#667085;
+  --line:#d9e0ea;
+  --soft:#f7f9fc;
+  --navy:#24427f;
+
+  --anime:#2f6fda;
+  --anime-bg:#eaf3ff;
+
+  --bey:#b37a00;
+  --bey-bg:#fff7cf;
+
+  --easy:#2f8a59;
+  --easy-bg:#edf9f2;
+
+  --hard:#c74657;
+  --hard-bg:#fff0f3;
+
+  --correct:#2f8a59;
+  --correct-bg:#eaf8ef;
+  --wrong:#c74657;
+  --wrong-bg:#fff0f3;
+}
+
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
+  color:var(--text); background:var(--bg); padding:12px;
+}
+button,textarea,input,select{font:inherit}
+
+.app{
+  width:min(1180px,100%);
+  height:min(850px,97vh);
+  margin:auto;
+  border:1.5px solid var(--line);
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(43,57,84,.12);
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  height:76px;
+  flex:0 0 76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  font-size:30px;
+  font-weight:1000;
+  letter-spacing:.03em;
+  color:var(--navy)
+}
+.top-actions{display:flex;align-items:center;gap:12px}
+.progress{
+  font-size:18px;
+  font-weight:900;
+  color:var(--muted);
+  min-width:80px;
+  text-align:right
+}
+.small-top{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  border-radius:14px;
+  padding:10px 15px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.main{flex:1;min-height:0;position:relative}
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  padding:30px;
+  overflow:hidden
+}
+.screen.active{display:flex}
+.center{
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center
+}
+
+h1{
+  font-size:clamp(46px,7vw,82px);
+  margin:0 0 16px;
+  color:var(--navy);
+  line-height:1
+}
+.lead{
+  font-size:25px;
+  color:var(--muted);
+  line-height:1.55;
+  margin:0 0 28px
+}
+.primary{
+  border:0;
+  border-radius:20px;
+  background:var(--navy);
+  color:white;
+  padding:19px 34px;
+  min-width:280px;
+  font-size:30px;
+  font-weight:1000;
+  cursor:pointer
+}
+
+/* 分類頁 */
+.mode-title{
+  font-size:34px;
+  font-weight:1000;
+  color:var(--navy);
+  margin-bottom:10px
+}
+.mode-sub{
+  color:var(--muted);
+  font-size:18px;
+  margin-bottom:22px
+}
+.cards{
+  width:min(980px,100%);
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px
+}
+.card{
+  border:2px solid var(--line);
+  background:#fff;
+  border-radius:22px;
+  padding:24px;
+  cursor:pointer;
+  text-align:left;
+  min-height:145px;
+  transition:.15s ease
+}
+.card:hover{transform:translateY(-2px)}
+.card.anime{border-color:#b9d4ff;background:var(--anime-bg)}
+.card.bey{border-color:#efd56e;background:var(--bey-bg)}
+.card-title{
+  font-size:28px;
+  font-weight:1000;
+  margin-bottom:8px
+}
+.card.anime .card-title{color:var(--anime)}
+.card.bey .card-title{color:var(--bey)}
+.card-desc{
+  font-size:17px;
+  color:var(--muted);
+  line-height:1.45
+}
+
+/* 難度頁 */
+.diff-wrap{
+  width:min(780px,100%);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px
+}
+.diff-card{
+  border:2px solid var(--line);
+  border-radius:22px;
+  padding:28px;
+  background:#fff;
+  cursor:pointer;
+  text-align:center
+}
+.diff-card.easy{background:var(--easy-bg);border-color:#c9ead6}
+.diff-card.hard{background:var(--hard-bg);border-color:#f0c9d0}
+.diff-name{font-size:34px;font-weight:1000}
+.diff-card.easy .diff-name{color:var(--easy)}
+.diff-card.hard .diff-name{color:var(--hard)}
+.diff-desc{font-size:17px;color:var(--muted);margin-top:8px}
+
+/* 答題頁 */
+.quiz{
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-rows:62px 132px minmax(0,1fr) 112px;
+  gap:14px
+}
+.meta-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+.badges{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:16px;
+  font-weight:1000
+}
+.badge.anime{background:var(--anime-bg);color:var(--anime)}
+.badge.bey{background:var(--bey-bg);color:var(--bey)}
+.badge.easy{background:var(--easy-bg);color:var(--easy)}
+.badge.hard{background:var(--hard-bg);color:var(--hard)}
+
+.question-box{
+  border:1.5px solid var(--line);
+  border-radius:20px;
+  padding:20px 24px;
+  display:flex;
+  align-items:center;
+  background:var(--soft);
+  overflow:auto
+}
+.question{
+  font-size:clamp(30px,3.6vw,46px);
+  font-weight:1000;
+  line-height:1.25
+}
+
+.answers{
+  min-height:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:14px
+}
+.answer{
+  border:2px solid #cfd8e7;
+  background:#fff;
+  border-radius:20px;
+  padding:20px 24px;
+  text-align:left;
+  cursor:pointer;
+  font-size:clamp(28px,3.25vw,38px);
+  font-weight:900;
+  color:var(--text);
+  line-height:1.25;
+  overflow:auto
+}
+.answer:hover{
+  background:#f8fbff;
+  border-color:#91a6ce
+}
+.answer.correct{
+  background:var(--correct-bg);
+  border-color:var(--correct)
+}
+.answer.wrong{
+  background:var(--wrong-bg);
+  border-color:var(--wrong)
+}
+.answer:disabled{
+  opacity:1;
+  cursor:default
+}
+
+.bottom{
+  border:1.5px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  padding:14px 16px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px;
+  align-items:center;
+  gap:14px
+}
+.feedback-title{
+  font-size:24px;
+  font-weight:1000;
+  min-height:31px
+}
+.feedback-text{
+  font-size:16px;
+  line-height:1.4;
+  color:var(--muted);
+  max-height:48px;
+  overflow:auto
+}
+.next{
+  border:0;
+  border-radius:15px;
+  background:var(--navy);
+  color:#fff;
+  padding:14px;
+  font-size:20px;
+  font-weight:1000;
+  cursor:pointer
+}
+.next.hidden{visibility:hidden}
+
+.score{
+  font-size:140px;
+  font-weight:1000;
+  line-height:1;
+  color:var(--navy);
+  margin:20px 0
+}
+.result-text{
+  font-size:24px;
+  color:var(--muted);
+  margin-bottom:26px
+}
+
+/* editor */
+.editor{
+  flex-direction:column;
+  gap:12px
+}
+.editor-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+.editor-title{
+  font-size:31px;
+  font-weight:1000;
+  color:var(--navy)
+}
+.editor-help{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.45;
+  margin:0
+}
+.editor textarea{
+  flex:1;
+  min-height:0;
+  resize:none;
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  padding:15px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:14px;
+  line-height:1.5;
+  outline:none
+}
+.editor-actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap
+}
+.btn{
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  border-radius:12px;
+  padding:10px 15px;
+  font-weight:900;
+  cursor:pointer
+}
+.btn.dark{
+  background:var(--navy);
+  color:white;
+  border-color:var(--navy)
+}
+.status{
+  font-size:14px;
+  font-weight:900;
+  min-height:20px
+}
+.status.ok{color:var(--easy)}
+.status.bad{color:var(--hard)}
+
+
+.hero-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 13px;
+  border-radius:999px;
+  background:#eef3fb;
+  color:var(--navy);
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.04em;
+  margin-bottom:16px;
+}
+.hero-title{
+  font-size:clamp(40px,5.2vw,68px);
+  line-height:1.08;
+  font-weight:1000;
+  color:var(--navy);
+  margin:0 0 14px;
+}
+.hero-sub{
+  font-size:clamp(20px,2.2vw,28px);
+  color:var(--muted);
+  margin:0 0 28px;
+}
+.hero-panel{
+  width:min(980px,100%);
+  padding:34px 36px;
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(47,111,218,.11), transparent 30%),
+    radial-gradient(circle at 85% 80%, rgba(244,196,48,.16), transparent 28%),
+    #fbfcff;
+  border:1.5px solid var(--line);
+  box-shadow:0 14px 36px rgba(36,66,127,.08);
+}
+.hero-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:10px;
+}
+.hero-card{
+  border:2px solid var(--line);
+  border-radius:22px;
+  padding:24px 26px;
+  text-align:left;
+  background:#fff;
+  cursor:pointer;
+  min-height:150px;
+  transition:.15s ease;
+}
+.hero-card:hover{transform:translateY(-2px)}
+.hero-card.anime{
+  background:linear-gradient(180deg,#f2f7ff 0%,#e7f1ff 100%);
+  border-color:#b7d2fb;
+}
+.hero-card.bey{
+  background:linear-gradient(180deg,#fffbea 0%,#fff4bf 100%);
+  border-color:#ecd269;
+}
+.hero-icon{
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:1000;margin-bottom:14px;
+}
+.hero-card.anime .hero-icon{background:#dbeaff;color:var(--anime)}
+.hero-card.bey .hero-icon{background:#ffec99;color:#9a6a00}
+.hero-card .card-title{font-size:30px}
+.hero-foot{
+  margin-top:20px;
+  font-size:16px;
+  color:var(--muted);
+  font-weight:700;
+}
+
+
+.bottom.correct-state{
+  background:var(--correct-bg);
+  border-color:var(--correct);
+}
+.bottom.wrong-state{
+  background:var(--wrong-bg);
+  border-color:var(--wrong);
+}
+.feedback-wrap{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+}
+.feedback-icon{
+  width:48px;height:48px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:1000;
+  background:#eef2f7;
+  color:var(--muted);
+}
+.bottom.correct-state .feedback-icon{
+  background:#d7f1e1;
+  color:var(--correct);
+}
+.bottom.wrong-state .feedback-icon{
+  background:#ffdce2;
+  color:var(--wrong);
+}
+.feedback-title{
+  font-size:34px !important;
+  line-height:1.1;
+  min-height:38px !important;
+}
+.feedback-answer{
+  font-size:18px;
+  font-weight:900;
+  color:var(--text);
+  margin-top:4px;
+}
+.feedback-text{
+  font-size:16px;
+  line-height:1.4;
+  color:var(--muted);
+  max-height:46px;
+  overflow:auto;
+}
+.answer-mark{
+  float:right;
+  margin-left:16px;
+  font-size:30px;
+  font-weight:1000;
+}
+.answer.correct .answer-mark{color:var(--correct)}
+.answer.wrong .answer-mark{color:var(--wrong)}
+
+
+/* 難度頁：改成完整面板，避免平板橫向過空 */
+.difficulty-panel{
+  width:min(980px,100%);
+  padding:42px 42px 38px;
+  border-radius:28px;
+  border:1.5px solid var(--line);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(47,111,218,.10), transparent 29%),
+    radial-gradient(circle at 85% 82%, rgba(244,196,48,.16), transparent 29%),
+    #fbfcff;
+  box-shadow:0 14px 36px rgba(36,66,127,.08);
+}
+.difficulty-kicker{
+  display:inline-flex;
+  padding:7px 13px;
+  border-radius:999px;
+  background:#eef3fb;
+  color:var(--navy);
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.04em;
+  margin-bottom:15px;
+}
+.difficulty-big-title{
+  font-size:clamp(42px,5vw,66px);
+  line-height:1.08;
+  font-weight:1000;
+  color:var(--navy);
+  margin:0 0 12px;
+}
+.difficulty-big-sub{
+  font-size:clamp(19px,2vw,25px);
+  color:var(--muted);
+  margin:0 0 30px;
+}
+.diff-wrap{
+  width:100% !important;
+  gap:20px !important;
+}
+.diff-card{
+  min-height:210px !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:32px !important;
+}
+.diff-name{
+  font-size:42px !important;
+}
+.diff-desc{
+  font-size:19px !important;
+  margin-top:12px !important;
+}
+.difficulty-foot{
+  margin-top:22px;
+  font-size:16px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+/* 題庫管理內的介面文字設定 */
+.ui-settings{
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  padding:14px 16px;
+  background:#f8faff;
+}
+.ui-settings-title{
+  font-size:17px;
+  font-weight:1000;
+  color:var(--navy);
+  margin-bottom:10px;
+}
+.ui-field{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+.ui-field label{
+  font-size:14px;
+  font-weight:900;
+  color:var(--text);
+}
+.ui-field input{
+  width:100%;
+  border:1.5px solid var(--line);
+  border-radius:11px;
+  padding:10px 12px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+}
+.ui-field input:focus{
+  border-color:#91a6ce;
+}
+
+/* 首頁：取消大外框，保留乾淨白底與淡色光暈 */
+.hero-panel{
+  border:none !important;
+  box-shadow:none !important;
+  background:
+    radial-gradient(circle at 15% 22%, rgba(47,111,218,.10), transparent 31%),
+    radial-gradient(circle at 86% 82%, rgba(244,196,48,.16), transparent 30%),
+    transparent !important;
+  padding:28px 20px 24px !important;
+}
+.hero-kicker{display:none !important}
+
+/* TOP 按鈕 */
+.top-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  border-radius:14px;
+  padding:10px 15px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.top-btn:hover{background:#f6f8fc}
+
+/* 文字設定區 */
+.ui-settings-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 14px;
+}
+.ui-field{
+  display:flex !important;
+  flex-direction:column;
+  align-items:stretch !important;
+  gap:6px !important;
+}
+.ui-field label{
+  font-size:13px;
+  color:var(--muted);
+}
+.ui-field input{
+  width:100%;
+}
+
+/* V10：首頁內容放大、往上移、分類卡填滿主要區域 */
+#categoryScreen{
+  justify-content:flex-start !important;
+  padding-top:70px !important;
+}
+
+#categoryScreen .hero-panel{
+  width:min(1180px,96%) !important;
+  padding:28px 24px 20px !important;
+  margin:0 auto !important;
+}
+
+#categoryScreen .hero-title{
+  font-size:clamp(48px,5.4vw,72px) !important;
+  line-height:1.08 !important;
+  margin-bottom:12px !important;
+}
+
+#categoryScreen .hero-sub{
+  font-size:clamp(22px,2.2vw,29px) !important;
+  margin-bottom:28px !important;
+}
+
+#categoryScreen .hero-actions{
+  width:100% !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:24px !important;
+  margin-top:0 !important;
+}
+
+#categoryScreen .hero-card{
+  min-height:245px !important;
+  padding:30px 34px !important;
+  border-radius:24px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+
+#categoryScreen .hero-icon{
+  width:58px !important;
+  height:58px !important;
+  font-size:30px !important;
+  margin-bottom:18px !important;
+}
+
+#categoryScreen .hero-card .card-title{
+  font-size:38px !important;
+  margin-bottom:12px !important;
+}
+
+#categoryScreen .hero-card .card-desc{
+  font-size:21px !important;
+  line-height:1.5 !important;
+}
+
+#categoryScreen .hero-foot{
+  margin-top:20px !important;
+  font-size:17px !important;
+}
+
+/* 平板橫向時保持大塊按鈕 */
+@media (min-width:900px){
+  #categoryScreen .hero-panel{
+    transform:translateY(-10px);
+  }
+}
+
+
+/* V11：分類卡標題加大、移除上方符號 */
+#categoryScreen .hero-card{
+  justify-content:center !important;
+  padding:34px 38px !important;
+}
+
+#categoryScreen .hero-card .card-title{
+  color:var(--navy) !important;
+  font-size:clamp(46px,4.5vw,62px) !important;
+  line-height:1.05 !important;
+  margin:0 0 22px !important;
+  font-weight:1000 !important;
+}
+
+#categoryScreen .hero-card .card-desc{
+  font-size:clamp(20px,2vw,25px) !important;
+  line-height:1.5 !important;
+}
+
+#categoryScreen .hero-icon{
+  display:none !important;
+}
+
+
+/* 題庫管理拆頁 */
+.manage-home{
+  flex-direction:column;
+  gap:18px;
+}
+.manage-title{
+  font-size:34px;
+  font-weight:1000;
+  color:var(--navy);
+}
+.manage-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  width:min(900px,100%);
+}
+.manage-card{
+  border:2px solid var(--line);
+  border-radius:22px;
+  background:#fff;
+  min-height:180px;
+  padding:28px;
+  text-align:left;
+  cursor:pointer;
+}
+.manage-card-title{
+  font-size:30px;
+  font-weight:1000;
+  color:var(--navy);
+  margin-bottom:10px;
+}
+.manage-card-desc{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.5;
+}
+.settings-page{
+  flex-direction:column;
+  gap:14px;
+}
+.settings-scroll{
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding-right:4px;
+}
+.settings-panel{
+  border:1.5px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  background:#f8faff;
+}
+.settings-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px 16px;
+}
+.settings-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* 題庫編輯行號：僅後臺可見 */
+.question-editor-wrap{
+  flex:1;
+  min-height:0;
+  display:grid;
+  grid-template-columns:56px minmax(0,1fr);
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+}
+.line-numbers{
+  min-height:0;
+  overflow:hidden;
+  padding:15px 10px 15px 0;
+  background:#f3f6fb;
+  border-right:1px solid var(--line);
+  color:#8a96aa;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:14px;
+  line-height:1.5;
+  text-align:right;
+  user-select:none;
+  white-space:pre;
+}
+.question-editor-wrap textarea{
+  width:100%;
+  height:100%;
+  min-height:0;
+  resize:none;
+  border:0 !important;
+  border-radius:0 !important;
+  padding:15px !important;
+  outline:none;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:14px;
+  line-height:1.5;
+  background:#fff;
+  color:var(--text);
+  overflow:auto;
+}
+
+
+/* V15：首頁與難度頁統一真正置中 */
+#categoryScreen,
+#difficultyScreen{
+  justify-content:center !important;
+  align-items:center !important;
+  padding:24px 30px !important;
+}
+
+#categoryScreen .hero-panel,
+#difficultyScreen .difficulty-panel{
+  margin:auto !important;
+  transform:none !important;
+}
+
+/* 移除先前首頁刻意往上推的設定 */
+#categoryScreen{
+  padding-top:24px !important;
+}
+
+
+/* V17：題號直接寫入題庫文字，不再使用左側行號欄 */
+.question-editor-wrap{
+  flex:1;
+  min-height:0;
+  display:block !important;
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+}
+.line-numbers{display:none !important;}
+.question-editor-wrap textarea{
+  width:100%;
+  height:100%;
+  min-height:0;
+  resize:none;
+  border:0 !important;
+  border-radius:0 !important;
+  padding:15px !important;
+  outline:none;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:14px;
+  line-height:1.5;
+  background:#fff;
+  color:var(--text);
+  overflow:auto;
+}
+
+
+/* V18：首頁純白、題目標籤貼齊、長題目自動縮字 */
+
+/* 首頁不再有淡藍／淡黃光暈背景 */
+#categoryScreen .hero-panel{
+  background:#fff !important;
+}
+
+/* 題目頁上方分類／難度標籤與題目框左邊界對齊 */
+#quizScreen{
+  padding-left:28px !important;
+  padding-right:28px !important;
+}
+#quizScreen .meta-row{
+  padding:0 !important;
+  margin:0 !important;
+  align-items:flex-end !important;
+}
+#quizScreen .badges{
+  margin:0 !important;
+  padding:0 !important;
+  gap:10px !important;
+}
+
+/* 題目區不允許出現捲軸 */
+#quizScreen .question-box{
+  overflow:hidden !important;
+  scrollbar-width:none !important;
+}
+#quizScreen .question-box::-webkit-scrollbar{
+  display:none !important;
+}
+
+/* 題目字級由 JS 動態縮放，這裡給基準值 */
+#quizScreen .question{
+  font-size:46px;
+  line-height:1.22;
+  width:100%;
+  overflow:visible !important;
+}
+
+
+/* V19：首頁卡片改成高對比深藍風格，難度頁移除背景 */
+
+/* 首頁分類區：完全白底 */
+#categoryScreen .hero-panel{
+  background:#fff !important;
+}
+
+/* 動畫題：白底、深藍框、深藍字 */
+#categoryScreen .hero-card.anime{
+  background:#fff !important;
+  border-color:var(--navy) !important;
+  border-width:3px !important;
+}
+#categoryScreen .hero-card.anime .card-title{
+  color:var(--navy) !important;
+}
+#categoryScreen .hero-card.anime .card-desc{
+  color:var(--navy) !important;
+}
+
+/* 陀螺題：深藍底、白框、白字 */
+#categoryScreen .hero-card.bey{
+  background:var(--navy) !important;
+  border-color:#fff !important;
+  border-width:3px !important;
+  box-shadow:0 0 0 1.5px var(--navy);
+}
+#categoryScreen .hero-card.bey .card-title,
+#categoryScreen .hero-card.bey .card-desc{
+  color:#fff !important;
+}
+
+/* 難度頁背景拿掉 */
+#difficultyScreen .difficulty-panel{
+  background:#fff !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+
+/* 讓難度頁標題與首頁主標題同色 */
+#difficultyScreen .difficulty-big-title{
+  color:var(--navy) !important;
+}
+
+
+/* V20：首頁主標題比例與留白強化 */
+#categoryScreen .hero-panel{
+  padding-top:0 !important;
+}
+
+/* 主標題往上、再放大兩級 */
+#categoryScreen .hero-title{
+  font-size:clamp(64px,7vw,92px) !important;
+  line-height:1 !important;
+  letter-spacing:-0.025em !important;
+  margin-top:-34px !important;
+  margin-bottom:26px !important;
+}
+
+/* 副標與分類卡之間再空一格 */
+#categoryScreen .hero-sub{
+  margin-bottom:42px !important;
+}
+
+/* 分類卡與底部提示略微拉開 */
+#categoryScreen .hero-foot{
+  margin-top:28px !important;
+}
+
+
+/* V22：難度選擇頁放大、上移 */
+
+/* 整組內容稍微往上 */
+#difficultyScreen{
+  justify-content:center !important;
+  align-items:center !important;
+  padding-top:8px !important;
+  padding-bottom:28px !important;
+}
+
+#difficultyScreen .difficulty-panel{
+  width:min(1180px,96%) !important;
+  padding:18px 28px 18px !important;
+  transform:translateY(-34px) !important;
+}
+
+/* 標題與說明放大 */
+#difficultyScreen .difficulty-big-title{
+  font-size:clamp(54px,5.8vw,78px) !important;
+  line-height:1.02 !important;
+  margin-bottom:18px !important;
+}
+
+#difficultyScreen .difficulty-big-sub{
+  font-size:clamp(23px,2.35vw,31px) !important;
+  margin-bottom:34px !important;
+}
+
+/* 簡單／困難兩張卡放大 */
+#difficultyScreen .diff-wrap{
+  width:100% !important;
+  gap:26px !important;
+}
+
+#difficultyScreen .diff-card{
+  min-height:330px !important;
+  padding:38px 34px !important;
+  border-radius:28px !important;
+}
+
+/* 難度名稱再放大 */
+#difficultyScreen .diff-name{
+  font-size:clamp(54px,5.2vw,72px) !important;
+  line-height:1 !important;
+  margin-bottom:18px !important;
+}
+
+/* 說明也跟著放大 */
+#difficultyScreen .diff-desc{
+  font-size:clamp(21px,2vw,27px) !important;
+  line-height:1.45 !important;
+  margin-top:0 !important;
+}
+
+/* 底部提示稍微拉開 */
+#difficultyScreen .difficulty-foot{
+  margin-top:28px !important;
+  font-size:18px !important;
+}
+
+
+/* V23：難度卡再往下拉高、難度名稱再放大、底部提示下移 */
+
+#difficultyScreen .diff-card{
+  min-height:390px !important;
+  padding:44px 36px !important;
+}
+
+#difficultyScreen .diff-name{
+  font-size:clamp(66px,6vw,88px) !important;
+  line-height:1 !important;
+  margin-bottom:22px !important;
+}
+
+#difficultyScreen .diff-desc{
+  font-size:clamp(22px,2.05vw,28px) !important;
+}
+
+/* 底部提示往下移 */
+#difficultyScreen .difficulty-foot{
+  margin-top:46px !important;
+  transform:translateY(12px);
+  font-size:18px !important;
+}
+
+
+/* V24：難度名稱再放大 */
+#difficultyScreen .diff-name{
+  font-size:clamp(82px,7.2vw,110px) !important;
+  line-height:.95 !important;
+  margin-bottom:24px !important;
+  letter-spacing:-0.02em !important;
+}
+
+
+/* V25：答題頁統一首頁深藍高對比樣式 */
+
+/* 題目框 */
+#quizScreen .question-box{
+  background:#fff !important;
+  border:3px solid var(--navy) !important;
+  border-radius:22px !important;
+  box-shadow:none !important;
+}
+#quizScreen .question{
+  color:var(--navy) !important;
+  font-weight:1000 !important;
+}
+
+/* 類型與難度標籤 */
+#quizScreen .badge{
+  border-radius:999px !important;
+  font-weight:1000 !important;
+  padding:8px 15px !important;
+}
+#quizScreen .badge.anime,
+#quizScreen .badge.bey{
+  background:var(--navy) !important;
+  color:#fff !important;
+  border:2px solid var(--navy) !important;
+}
+#quizScreen .badge.easy,
+#quizScreen .badge.hard{
+  background:#fff !important;
+  color:var(--navy) !important;
+  border:2px solid var(--navy) !important;
+}
+
+/* 四個選項統一成首頁卡片語言 */
+#quizScreen .answer{
+  background:#fff !important;
+  border:3px solid var(--navy) !important;
+  color:var(--navy) !important;
+  border-radius:22px !important;
+  box-shadow:none !important;
+}
+#quizScreen .answer:hover{
+  background:#f6f9ff !important;
+  border-color:var(--navy) !important;
+}
+
+/* 正確 / 錯誤狀態保留高辨識度 */
+#quizScreen .answer.correct{
+  background:var(--correct-bg) !important;
+  border-color:var(--correct) !important;
+  color:#183522 !important;
+}
+#quizScreen .answer.wrong{
+  background:var(--wrong-bg) !important;
+  border-color:var(--wrong) !important;
+  color:#4a1820 !important;
+}
+
+/* 底部回饋區也改成同一套深藍外框 */
+#quizScreen .bottom{
+  background:#fff !important;
+  border:3px solid var(--navy) !important;
+  border-radius:22px !important;
+}
+#quizScreen .bottom.correct-state{
+  background:var(--correct-bg) !important;
+  border-color:var(--correct) !important;
+}
+#quizScreen .bottom.wrong-state{
+  background:var(--wrong-bg) !important;
+  border-color:var(--wrong) !important;
+}
+
+/* 尚未作答時的小圓點不要太像 loading */
+#quizScreen .feedback-icon{
+  background:#eef3fb !important;
+  color:var(--navy) !important;
+}
+#quizScreen .bottom.correct-state .feedback-icon{
+  background:#d7f1e1 !important;
+  color:var(--correct) !important;
+}
+#quizScreen .bottom.wrong-state .feedback-icon{
+  background:#ffdce2 !important;
+  color:var(--wrong) !important;
+}
+
+/* 下一題按鈕維持深藍 */
+#quizScreen .next{
+  background:var(--navy) !important;
+  color:#fff !important;
+  border:2px solid var(--navy) !important;
+}
+
+
+/* V26：標籤往上貼、題目框改成主視覺深藍底 */
+
+/* 左上分類／難度標籤靠近內容區上緣 */
+#quizScreen{
+  padding-top:14px !important;
+}
+#quizScreen .quiz{
+  grid-template-rows:48px 132px minmax(0,1fr) 112px !important;
+  gap:12px !important;
+}
+#quizScreen .meta-row{
+  align-items:flex-start !important;
+}
+#quizScreen .badges{
+  align-self:flex-start !important;
+  margin-top:0 !important;
+}
+
+/* 題目框改成最醒目的主標區 */
+#quizScreen .question-box{
+  background:var(--navy) !important;
+  border:3px solid var(--navy) !important;
+  border-radius:22px !important;
+  padding:20px 26px !important;
+}
+#quizScreen .question{
+  color:#fff !important;
+  font-weight:1000 !important;
+  letter-spacing:-0.01em !important;
+}
+
+/* 題目與答案之間稍微多一點呼吸感 */
+#quizScreen .answers{
+  gap:16px !important;
+}
+
+
+/* V27：結果頁成功／失敗視覺 */
+
+#resultScreen{
+  position:absolute;
+  overflow:hidden !important;
+}
+
+#resultScreen .mode-title{
+  font-size:clamp(56px,6vw,82px) !important;
+  line-height:1 !important;
+  margin-bottom:18px !important;
+  font-weight:1000 !important;
+  position:relative;
+  z-index:3;
+}
+
+#resultScreen .score{
+  font-size:clamp(150px,16vw,230px) !important;
+  line-height:.9 !important;
+  margin:18px 0 22px !important;
+  position:relative;
+  z-index:3;
+}
+
+#resultScreen .result-text{
+  font-size:clamp(24px,2.4vw,34px) !important;
+  font-weight:800 !important;
+  margin-bottom:34px !important;
+  position:relative;
+  z-index:3;
+}
+
+#resultScreen .primary{
+  position:relative;
+  z-index:3;
+}
+
+/* 成功 */
+#resultScreen.result-success .mode-title,
+#resultScreen.result-success .score{
+  color:var(--navy) !important;
+}
+
+/* 失敗 */
+#resultScreen.result-fail .mode-title,
+#resultScreen.result-fail .score{
+  color:var(--wrong) !important;
+}
+
+.result-symbol{
+  position:absolute;
+  left:50%;
+  top:51%;
+  transform:translate(-50%,-50%);
+  font-size:min(52vw,560px);
+  line-height:1;
+  font-weight:1000;
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+  opacity:0;
+}
+
+#resultScreen.result-fail .result-symbol{
+  opacity:.055;
+  color:var(--wrong);
+}
+
+/* 彩帶 */
+.confetti-layer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+}
+
+.confetti{
+  position:absolute;
+  top:-12%;
+  width:12px;
+  height:30px;
+  border-radius:4px;
+  opacity:.9;
+  animation:confettiFall linear forwards;
+}
+
+.confetti:nth-child(4n+1){background:#294b8e;}
+.confetti:nth-child(4n+2){background:#f1c94a;}
+.confetti:nth-child(4n+3){background:#e85e6a;}
+.confetti:nth-child(4n+4){background:#49a873;}
+
+@keyframes confettiFall{
+  0%{
+    transform:translate3d(0,-20px,0) rotate(0deg);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  100%{
+    transform:translate3d(var(--drift),115vh,0) rotate(var(--spin));
+    opacity:.15;
+  }
+}
+
+/* 失敗時的 X 小碎片 */
+.fail-piece{
+  position:absolute;
+  top:-10%;
+  color:var(--wrong);
+  font-size:28px;
+  font-weight:1000;
+  opacity:.28;
+  animation:failFall linear forwards;
+}
+
+@keyframes failFall{
+  0%{
+    transform:translate3d(0,-30px,0) rotate(-10deg);
+    opacity:0;
+  }
+  12%{opacity:.28;}
+  100%{
+    transform:translate3d(var(--drift),110vh,0) rotate(var(--spin));
+    opacity:.04;
+  }
+}
+
+
+/* V29：難度頁整組內容往下移一格 */
+#difficultyScreen .difficulty-panel{
+  transform:translateY(0) !important;
+}
+
+
+/* V36：後臺首頁直接分成四種題庫編輯 */
+.manage-grid{
+  grid-template-columns:1fr 1fr !important;
+  width:min(1050px,100%) !important;
+  gap:18px !important;
+}
+.manage-card{
+  min-height:155px !important;
+}
+.manage-card.question-easy{
+  background:#f5fbf7;
+  border-color:#cde7d7;
+}
+.manage-card.question-hard{
+  background:#fff6f7;
+  border-color:#efd1d6;
+}
+.manage-card.text-setting{
+  grid-column:1 / -1;
+  min-height:130px !important;
+}
+.editor-category-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 11px;
+  border-radius:999px;
+  background:#eef3fb;
+  color:var(--navy);
+  font-size:14px;
+  font-weight:900;
+  margin-top:6px;
+}
+
+/* V39：回饋解說防爆框 */
+#quizScreen .quiz{
+  grid-template-rows:48px 132px minmax(0,1fr) 138px !important;
+}
+
+#quizScreen .bottom{
+  min-height:138px !important;
+  padding:12px 16px !important;
+  overflow:hidden !important;
+}
+
+#quizScreen .feedback-wrap{
+  min-width:0 !important;
+  height:100% !important;
+  align-items:center !important;
+}
+
+#quizScreen .feedback-wrap > div:last-child{
+  min-width:0 !important;
+  max-height:112px !important;
+  overflow:hidden !important;
+}
+
+#quizScreen .feedback-title{
+  font-size:30px !important;
+  line-height:1.05 !important;
+  margin-bottom:2px !important;
+}
+
+#quizScreen .feedback-answer{
+  font-size:17px !important;
+  line-height:1.25 !important;
+  margin-top:2px !important;
+}
+
+#quizScreen .feedback-text{
+  font-size:15px;
+  line-height:1.28 !important;
+  max-height:none !important;
+  overflow:hidden !important;
+  margin-top:3px !important;
+}
+
+@media(max-width:760px){
+  .manage-grid{grid-template-columns:1fr !important}
+  .manage-card.text-setting{grid-column:auto}
+}
+
+@media(max-width:760px){
+  .manage-grid,.settings-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:760px){
+  .ui-settings-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:760px){
+  .difficulty-panel{padding:24px 20px}
+  .diff-card{min-height:160px !important;padding:20px !important}
+  .diff-name{font-size:32px !important}
+  .diff-desc{font-size:15px !important}
+  .ui-field{grid-template-columns:1fr}
+}
+
+@media(max-width:760px){
+  body{padding:5px}
+  .app{height:99vh;border-radius:18px}
+  .topbar{height:62px;flex-basis:62px;padding:0 14px}
+  .brand{font-size:20px}
+  .screen{padding:14px}
+  .cards,.diff-wrap{grid-template-columns:1fr 1fr}
+  .quiz{
+    grid-template-rows:54px 105px minmax(0,1fr) 98px;
+    gap:9px
+  }
+  .question{font-size:29px}
+  .answer{font-size:26px;padding:13px}
+  .bottom{
+    grid-template-columns:1fr 130px;
+    padding:9px
+  }
+  .feedback-title{font-size:25px !important}
+  .feedback-answer{font-size:14px}
+  .feedback-text{font-size:13px}
+  .feedback-wrap{grid-template-columns:42px minmax(0,1fr);gap:9px}
+  .feedback-icon{width:38px;height:38px;font-size:24px}
+  .next{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">BEYBLADE X QUIZ</div>
+    <div class="top-actions">
+      <div class="progress" id="progress"></div>
+      <button class="top-btn" id="topBtn">TOP</button>
+      <button class="small-top" id="editorBtn">後臺</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <section class="screen center active" id="categoryScreen">
+      <div class="hero-panel">
+        <div class="hero-kicker">BEYBLADE X QUIZ</div>
+        <div class="hero-title" id="homeTitle">你對 BEYBLADE X 有多了解？</div>
+        <div class="hero-sub" id="homeSub">選擇題目分類，挑戰隨機 5 題</div>
+
+        <div class="hero-actions">
+          <button class="hero-card anime" data-category="動畫">
+            <div class="card-title" id="animeTitle">動畫題</div>
+            <div class="card-desc" id="animeDesc">角色、劇情、台詞、隊伍、事件等動畫作品內容。</div>
+          </button>
+
+          <button class="hero-card bey" data-category="陀螺">
+            <div class="card-title" id="beyTitle">陀螺題</div>
+            <div class="card-desc" id="beyDesc">實體陀螺、零件、名稱、規則、機構與商品相關知識。</div>
+          </button>
+        </div>
+
+        <div class="hero-foot" id="homeFoot">每次挑戰都會從對應題庫中重新隨機抽選。</div>
+      </div>
+    </section>
+
+    <section class="screen center" id="difficultyScreen">
+      <div class="difficulty-panel">
+        <div class="difficulty-big-title" id="difficultyTitle">選擇難度</div>
+        <div class="difficulty-big-sub" id="difficultySub">請選擇難度，開始隨機 5 題挑戰</div>
+
+        <div class="diff-wrap">
+          <button class="diff-card easy" data-difficulty="簡單">
+            <div class="diff-name" id="easyTitle">簡單</div>
+            <div class="diff-desc" id="easyDesc">適合新手或一般參加者。</div>
+          </button>
+
+          <button class="diff-card hard" data-difficulty="困難">
+            <div class="diff-name" id="hardTitle">困難</div>
+            <div class="diff-desc" id="hardDesc">給熟悉作品或陀螺的玩家挑戰。</div>
+          </button>
+        </div>
+
+        <div class="difficulty-foot" id="difficultyFoot">每次會從所選分類與難度中隨機抽出 5 題。</div>
+      </div>
+    </section>
+
+    <section class="screen" id="quizScreen">
+      <div class="quiz">
+        <div class="meta-row">
+          <div class="badges">
+            <span class="badge" id="categoryBadge"></span>
+            <span class="badge" id="difficultyBadge"></span>
+          </div>
+        </div>
+
+        <div class="question-box">
+          <div class="question" id="question"></div>
+        </div>
+
+        <div class="answers" id="answers"></div>
+
+        <div class="bottom" id="bottomPanel">
+          <div class="feedback-wrap">
+            <div class="feedback-icon" id="feedbackIcon">•</div>
+            <div>
+              <div class="feedback-title" id="feedbackTitle"></div>
+              <div class="feedback-answer" id="feedbackAnswer"></div>
+              <div class="feedback-text" id="feedbackText"></div>
+            </div>
+          </div>
+          <button class="next hidden" id="nextBtn">下一題</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen center" id="resultScreen">
+      <div class="confetti-layer" id="resultEffects"></div>
+      <div class="result-symbol" id="resultSymbol">✕</div>
+      <div class="mode-title" id="resultTitle">挑戰完成！</div>
+      <div class="score" id="scoreText">0 / 5</div>
+      <div class="result-text" id="resultText"></div>
+      <button class="primary" id="restartBtn">重新選擇分類</button>
+    </section>
+
+    <section class="screen manage-home" id="editorScreen">
+      <div class="manage-grid">
+        <button class="manage-card question-easy" data-admin-category="動畫" data-admin-difficulty="簡單">
+          <div class="manage-card-title">題庫編輯｜動畫・簡單</div>
+          <div class="manage-card-desc">編輯動畫作品相關的簡單題庫。</div>
+        </button>
+
+        <button class="manage-card question-hard" data-admin-category="動畫" data-admin-difficulty="困難">
+          <div class="manage-card-title">題庫編輯｜動畫・困難</div>
+          <div class="manage-card-desc">編輯動畫作品相關的困難題庫。</div>
+        </button>
+
+        <button class="manage-card question-easy" data-admin-category="陀螺" data-admin-difficulty="簡單">
+          <div class="manage-card-title">題庫編輯｜陀螺・簡單</div>
+          <div class="manage-card-desc">編輯實體陀螺相關的簡單題庫。</div>
+        </button>
+
+        <button class="manage-card question-hard" data-admin-category="陀螺" data-admin-difficulty="困難">
+          <div class="manage-card-title">題庫編輯｜陀螺・困難</div>
+          <div class="manage-card-desc">編輯實體陀螺相關的困難題庫。</div>
+        </button>
+
+        <button class="manage-card text-setting" id="openTextSettingsBtn">
+          <div class="manage-card-title">頁面文字設定</div>
+          <div class="manage-card-desc">修改首頁標題、分類名稱、說明文字與難度頁提示。</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="screen editor" id="questionEditorScreen">
+      <div class="editor-head">
+        <div>
+          <div class="editor-title" id="questionEditorTitle">題庫編輯｜動畫・簡單</div>
+          <div class="editor-category-badge" id="questionEditorBadge">動畫｜簡單</div>
+        </div>
+        <button class="btn" id="questionEditorBackBtn">返回</button>
+      </div>
+      <p class="editor-help">
+        每行一題。格式：編號｜分類｜難度｜題目｜選項A｜選項B｜選項C｜選項D｜正確答案｜解說<br>
+        編號只供後臺查找使用，玩家遊玩時不會顯示。此頁只會顯示目前分類的題目。
+      </p>
+
+      <div class="question-editor-wrap">
+        <textarea id="editorBox" spellcheck="false"></textarea>
+      </div>
+
+      <div class="editor-actions">
+        <button class="btn dark" id="saveBtn">儲存題庫</button>
+        <button class="btn" id="sampleBtn">載入示範</button>
+        <button class="btn" id="importBtn">匯入 TXT</button>
+        <button class="btn" id="exportBtn">匯出 TXT</button>
+        <input id="importFile" type="file" accept=".txt,text/plain" style="display:none">
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <section class="screen settings-page" id="textSettingsScreen">
+      <div class="editor-head">
+        <div class="editor-title">頁面文字設定</div>
+        <button class="btn" id="textSettingsBackBtn">返回</button>
+      </div>
+
+      <div class="settings-scroll">
+        <div class="settings-panel">
+          <div class="settings-grid">
+            <div class="ui-field">
+              <label for="homeTitleInput">首頁主標題</label>
+              <input id="homeTitleInput" type="text" maxlength="80">
+            </div>
+            <div class="ui-field">
+              <label for="homeSubInput">首頁副標題</label>
+              <input id="homeSubInput" type="text" maxlength="100">
+            </div>
+            <div class="ui-field">
+              <label for="animeTitleInput">動畫題名稱</label>
+              <input id="animeTitleInput" type="text" maxlength="30">
+            </div>
+            <div class="ui-field">
+              <label for="animeDescInput">動畫題說明</label>
+              <input id="animeDescInput" type="text" maxlength="120">
+            </div>
+            <div class="ui-field">
+              <label for="beyTitleInput">陀螺題名稱</label>
+              <input id="beyTitleInput" type="text" maxlength="30">
+            </div>
+            <div class="ui-field">
+              <label for="beyDescInput">陀螺題說明</label>
+              <input id="beyDescInput" type="text" maxlength="120">
+            </div>
+            <div class="ui-field">
+              <label for="easyTitleInput">簡單名稱</label>
+              <input id="easyTitleInput" type="text" maxlength="30">
+            </div>
+            <div class="ui-field">
+              <label for="easyDescInput">簡單說明</label>
+              <input id="easyDescInput" type="text" maxlength="120">
+            </div>
+            <div class="ui-field">
+              <label for="hardTitleInput">困難名稱</label>
+              <input id="hardTitleInput" type="text" maxlength="30">
+            </div>
+            <div class="ui-field">
+              <label for="hardDescInput">困難說明</label>
+              <input id="hardDescInput" type="text" maxlength="120">
+            </div>
+            <div class="ui-field">
+              <label for="homeFootInput">首頁底部提示</label>
+              <input id="homeFootInput" type="text" maxlength="120">
+            </div>
+            <div class="ui-field">
+              <label for="difficultyFootInput">難度頁底部提示</label>
+              <input id="difficultyFootInput" type="text" maxlength="120">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button class="btn dark" id="saveTextSettingsBtn">儲存頁面文字</button>
+      </div>
+      <div class="status" id="textSettingsStatus"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const SAMPLE = `動畫｜簡單｜BEYBLADE X 中，假面X所屬的隊伍是哪一隊？｜Persona｜Pendragon｜Zonamos House｜Yggdrasil｜A｜假面X是 Persona 隊的成員。
+動畫｜簡單｜風見鳥加入 Persona 後，主要是以什麼身分活動？｜陀螺選手｜攝影師｜裁判｜主持人｜A｜風見鳥是 Persona 的陀螺選手。
+動畫｜簡單｜七色瑪媞在 Persona 隊中負責的工作之一是？｜宣傳｜廚師｜醫生｜裁判｜A｜七色瑪媞負責宣傳等多項工作。
+動畫｜簡單｜Persona 隊的成員之一是誰？｜假面X｜黑須九｜白星天華｜神成謝爾｜A｜假面X是 Persona 隊成員。
+動畫｜簡單｜BEYBLADE X 的主角群主要參加的是哪一種競技？｜戰鬥陀螺｜賽車｜足球｜卡牌｜A｜作品核心競技為戰鬥陀螺。
+動畫｜困難｜七色瑪媞在 Persona 隊身兼多項工作，以下哪一項不是她最主要的工作？｜宣傳｜製作陀螺｜陀螺選手｜財務管理｜D｜七色瑪媞主要負責宣傳、製作陀螺，也會作為選手出賽。
+動畫｜困難｜以下哪一項較符合 Persona 隊的活動內容？｜參加職業陀螺賽事｜經營餐廳｜拍攝電影｜經營遊樂園｜A｜Persona 主要參與職業陀螺競技。
+動畫｜困難｜假面X最具代表性的特徵之一是？｜戴著面具｜總是穿西裝｜不使用陀螺｜擔任裁判｜A｜假面X以面具造型聞名。
+動畫｜困難｜七色瑪媞除了選手身分之外，還會參與哪類工作？｜隊伍營運與宣傳｜醫療｜裁判｜保全｜A｜她同時負責多項隊伍營運工作。
+動畫｜困難｜風見鳥在故事中最主要的成長方向是？｜提升陀螺實力｜學習料理｜成為記者｜製作動畫｜A｜風見鳥主要是在陀螺競技中成長。
+陀螺｜簡單｜BEYBLADE X 的基本三大部件為何？｜Blade、Ratchet、Bit｜Layer、Disk、Driver｜Core、Ring、Tip｜Blade、Disk、Bit｜A｜BEYBLADE X 基本由 Blade、Ratchet、Bit 組成。
+陀螺｜簡單｜BEYBLADE X 對戰時使用的場地通常稱為？｜Xtreme Stadium｜Battle Box｜Spin Ring｜Gear Field｜A｜BEYBLADE X 使用 Xtreme Stadium。
+陀螺｜簡單｜Bit 位於陀螺的哪個位置？｜最下方｜最上方｜中間外側｜發射器內｜A｜Bit 是陀螺最下方接觸場地的部件。
+陀螺｜簡單｜Ratchet 位於 Blade 與哪個部件之間？｜Bit｜發射器｜拉條｜場地｜A｜Ratchet 位於 Blade 與 Bit 之間。
+陀螺｜簡單｜Xtreme Line 的主要作用是？｜讓陀螺高速加速｜停止旋轉｜固定中心｜增加重量｜A｜Xtreme Line 可讓陀螺產生高速衝刺。
+陀螺｜困難｜Ratchet 名稱中的第二個數字通常代表什麼？｜重量｜高度｜齒數｜直徑｜B｜第二個數字通常代表 Ratchet 高度。
+陀螺｜困難｜Blade 在 BEYBLADE X 中主要影響哪個面向？｜碰撞與重量分布｜電池續航｜發射器長度｜場地尺寸｜A｜Blade 是主要碰撞部件。
+陀螺｜困難｜Bit 的形狀最直接影響哪項表現？｜移動方式與穩定性｜Blade 顏色｜Ratchet 高度｜發射器齒數｜A｜Bit 的形狀會顯著影響移動與穩定。
+陀螺｜困難｜Xtreme Dash 發生時，主要是哪個部件與 Xtreme Line 接觸？｜Bit｜Blade｜Ratchet｜Launcher｜A｜Bit 與 Xtreme Line 接觸後產生高速衝刺。
+陀螺｜困難｜若要改變陀螺的高度設定，最直接會更換哪個部件？｜Ratchet｜Blade｜Launcher｜Grip｜A｜Ratchet 的高度規格會直接影響整體高度。`;
+
+const KEY="bbx_quiz_v4";
+const UI_KEY="bbx_quiz_ui_text_v1";
+const PER_GAME=5;
+
+const UI_DEFAULTS={
+  homeTitle:"你對 BEYBLADE X 有多了解？",
+  homeSub:"選擇題目分類，挑戰隨機 5 題",
+  animeTitle:"動畫題",
+  animeDesc:"角色、劇情、台詞、隊伍、事件等動畫作品內容。",
+  beyTitle:"陀螺題",
+  beyDesc:"實體陀螺、零件、名稱、規則、機構與商品相關知識。",
+  easyTitle:"簡單",
+  easyDesc:"適合新手或一般參加者。",
+  hardTitle:"困難",
+  hardDesc:"給熟悉作品或陀螺的玩家挑戰。",
+  homeFoot:"每次挑戰都會從對應題庫中重新隨機抽選。",
+  difficultyFoot:"每次會從所選分類與難度中隨機抽出 5 題。"
+};
+
+let bank=[];
+let current=[];
+let index=0;
+let score=0;
+let answered=false;
+let selectedCategory="動畫";
+let selectedDifficulty="簡單";
+let adminCategory="動畫";
+let adminDifficulty="簡單";
+
+const $=id=>document.getElementById(id);
+const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
+
+function show(id){
+  screens.forEach(x=>$(x).classList.remove("active"));
+  $(id).classList.add("active");
+}
+
+function parse(txt){
+  const out=[];
+  txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).forEach((line,i)=>{
+    let p=line.split("｜").map(x=>x.trim());
+
+    // 第一欄若是純數字，視為後臺管理編號；遊玩時忽略
+    let adminNo=null;
+    if(/^\d+$/.test(p[0]||"")){
+      adminNo=Number(p[0]);
+      p=p.slice(1);
+    }
+
+    const [category,difficulty,question,a,b,c,d,correct,...rest]=p;
+
+    if(!["動畫","陀螺"].includes(category))
+      throw new Error(`第 ${i+1} 行分類請填「動畫」或「陀螺」`);
+
+    if(!["簡單","困難"].includes(difficulty))
+      throw new Error(`第 ${i+1} 行難度請填「簡單」或「困難」`);
+
+    if(!question || !a || !b || !c || !d)
+      throw new Error(`第 ${i+1} 行題目或選項有空白`);
+
+    const map={A:0,B:1,C:2,D:3};
+    const ans=(correct||"").toUpperCase();
+
+    if(!(ans in map))
+      throw new Error(`第 ${i+1} 行答案需為 A／B／C／D`);
+
+    out.push({
+      adminNo,
+      category,
+      difficulty,
+      question,
+      options:[a,b,c,d],
+      answer:map[ans],
+      explanation:rest.join("｜")
+    });
+  });
+
+  if(!out.length) throw new Error("題庫沒有題目");
+  return out;
+}
+
+function shuffle(a){
+  a=[...a];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function load(){
+  let t=localStorage.getItem(KEY);
+  if(!t){
+    t=SAMPLE;
+    localStorage.setItem(KEY,t);
+  }
+  $("editorBox").value=t;
+  bank=parse(t);
+  const ui=getUI();
+  fillUIInputs(ui);
+  applyUI(ui);
+}
+
+function getUI(){
+  try{
+    return {...UI_DEFAULTS,...JSON.parse(localStorage.getItem(UI_KEY)||"{}")};
+  }catch(e){
+    return {...UI_DEFAULTS};
+  }
+}
+
+function applyUI(ui){
+  $("homeTitle").textContent=ui.homeTitle;
+  $("homeSub").textContent=ui.homeSub;
+  $("animeTitle").textContent=ui.animeTitle;
+  $("animeDesc").textContent=ui.animeDesc;
+  $("beyTitle").textContent=ui.beyTitle;
+  $("beyDesc").textContent=ui.beyDesc;
+  $("easyTitle").textContent=ui.easyTitle;
+  $("easyDesc").textContent=ui.easyDesc;
+  $("hardTitle").textContent=ui.hardTitle;
+  $("hardDesc").textContent=ui.hardDesc;
+  $("homeFoot").textContent=ui.homeFoot;
+  $("difficultyFoot").textContent=ui.difficultyFoot;
+}
+
+function fillUIInputs(ui){
+  $("homeTitleInput").value=ui.homeTitle;
+  $("homeSubInput").value=ui.homeSub;
+  $("animeTitleInput").value=ui.animeTitle;
+  $("animeDescInput").value=ui.animeDesc;
+  $("beyTitleInput").value=ui.beyTitle;
+  $("beyDescInput").value=ui.beyDesc;
+  $("easyTitleInput").value=ui.easyTitle;
+  $("easyDescInput").value=ui.easyDesc;
+  $("hardTitleInput").value=ui.hardTitle;
+  $("hardDescInput").value=ui.hardDesc;
+  $("homeFootInput").value=ui.homeFoot;
+  $("difficultyFootInput").value=ui.difficultyFoot;
+}
+
+function chooseCategory(category){
+  selectedCategory=category;
+  const ui=getUI();
+  const catName=category==="動畫" ? ui.animeTitle : ui.beyTitle;
+  $("difficultyTitle").textContent=`${catName}挑戰`;
+  $("difficultySub").textContent=`選擇難度，開始隨機 5 題挑戰`;
+  show("difficultyScreen");
+}
+
+function startGame(difficulty){
+  selectedDifficulty=difficulty;
+
+  try{
+    bank=parse(localStorage.getItem(KEY)||SAMPLE);
+  }catch(e){
+    alert("題庫格式有誤，請先到題庫管理修正。");
+    return;
+  }
+
+  const pool=bank.filter(q =>
+    q.category===selectedCategory &&
+    q.difficulty===selectedDifficulty
+  );
+
+  if(pool.length < PER_GAME){
+    alert(`「${selectedCategory}／${selectedDifficulty}」目前只有 ${pool.length} 題，至少需要 ${PER_GAME} 題才能開始。`);
+    return;
+  }
+
+  current=shuffle(pool).slice(0,PER_GAME).map(q=>({...q,_view:null}));
+  index=0;
+  score=0;
+  show("quizScreen");
+  render();
+}
+
+function fitQuestionText(){
+  const box=$("question").parentElement;
+  const q=$("question");
+
+  // 先恢復最大字級，再逐步縮小直到完整放入題目框
+  let size=46;
+  q.style.fontSize=size+"px";
+
+  const minSize=28;
+  let guard=0;
+
+  while(
+    (q.scrollHeight > box.clientHeight - 4 || q.scrollWidth > box.clientWidth - 4) &&
+    size > minSize &&
+    guard < 40
+  ){
+    size-=1;
+    q.style.fontSize=size+"px";
+    guard++;
+  }
+}
+
+function shuffledQuestionView(q){
+  const items=q.options.map((text,originalIndex)=>({
+    text,
+    isCorrect:originalIndex===q.answer
+  }));
+
+  const shuffled=shuffle(items);
+  return {
+    options:shuffled.map(x=>x.text),
+    answer:shuffled.findIndex(x=>x.isCorrect)
+  };
+}
+
+function render(){
+  answered=false;
+  const q=current[index];
+
+  if(!q._view){
+    q._view=shuffledQuestionView(q);
+  }
+
+  $("progress").textContent=`${index+1} / ${current.length}`;
+  $("question").textContent=q.question;
+  requestAnimationFrame(fitQuestionText);
+  $("feedbackTitle").textContent="";
+  $("feedbackAnswer").textContent="";
+  $("feedbackText").textContent="";
+  $("feedbackIcon").textContent="•";
+  $("bottomPanel").classList.remove("correct-state","wrong-state");
+  $("nextBtn").classList.add("hidden");
+
+  const cb=$("categoryBadge");
+  cb.textContent=q.category==="動畫" ? "動畫題" : "陀螺題";
+  cb.className="badge "+(q.category==="動畫"?"anime":"bey");
+
+  const db=$("difficultyBadge");
+  db.textContent=q.difficulty;
+  db.className="badge "+(q.difficulty==="簡單"?"easy":"hard");
+
+  $("answers").innerHTML="";
+
+  q._view.options.forEach((opt,i)=>{
+    const b=document.createElement("button");
+    b.className="answer";
+    b.textContent=`${String.fromCharCode(65+i)}. ${opt}`;
+    b.onclick=()=>chooseAnswer(i,b);
+    $("answers").appendChild(b);
+  });
+}
+
+function fitFeedbackText(){
+  const el=$("feedbackText");
+  const parent=el.parentElement;
+
+  let size=15;
+  const minSize=11;
+  el.style.fontSize=size+"px";
+
+  let guard=0;
+  while(parent.scrollHeight > parent.clientHeight && size > minSize && guard < 20){
+    size-=0.5;
+    el.style.fontSize=size+"px";
+    guard++;
+  }
+}
+
+function chooseAnswer(i,b){
+  if(answered)return;
+  answered=true;
+
+  const q=current[index];
+  const buttons=[...$("answers").querySelectorAll(".answer")];
+
+  buttons.forEach(x=>x.disabled=true);
+
+  if(i===q._view.answer){
+    score++;
+    b.classList.add("correct");
+    b.insertAdjacentHTML("beforeend",'<span class="answer-mark">✓</span>');
+    $("feedbackTitle").textContent="答對了！";
+    $("feedbackIcon").textContent="✓";
+    $("bottomPanel").classList.add("correct-state");
+  }else{
+    b.classList.add("wrong");
+    b.insertAdjacentHTML("beforeend",'<span class="answer-mark">✕</span>');
+    buttons[q._view.answer].classList.add("correct");
+    buttons[q._view.answer].insertAdjacentHTML("beforeend",'<span class="answer-mark">✓</span>');
+    $("feedbackTitle").textContent="答錯了！";
+    $("feedbackIcon").textContent="✕";
+    $("bottomPanel").classList.add("wrong-state");
+  }
+
+  const correctLetter=String.fromCharCode(65+q._view.answer);
+  $("feedbackAnswer").textContent=`正確答案：${correctLetter}. ${q._view.options[q._view.answer]}`;
+  $("feedbackText").textContent=q.explanation||"";
+  requestAnimationFrame(fitFeedbackText);
+  $("nextBtn").classList.remove("hidden");
+  $("nextBtn").textContent=index===current.length-1?"看結果":"下一題";
+}
+
+function clearResultEffects(){
+  const layer=$("resultEffects");
+  layer.innerHTML="";
+  $("resultScreen").classList.remove("result-success","result-fail");
+}
+
+function makeSuccessEffects(){
+  const layer=$("resultEffects");
+  for(let i=0;i<42;i++){
+    const piece=document.createElement("span");
+    piece.className="confetti";
+    piece.style.left=(Math.random()*100)+"%";
+    piece.style.animationDuration=(2.8+Math.random()*2.2)+"s";
+    piece.style.animationDelay=(Math.random()*.8)+"s";
+    piece.style.setProperty("--drift",(Math.random()*220-110)+"px");
+    piece.style.setProperty("--spin",(Math.random()*900-450)+"deg");
+    layer.appendChild(piece);
+  }
+}
+
+function makeFailEffects(){
+  const layer=$("resultEffects");
+  for(let i=0;i<18;i++){
+    const piece=document.createElement("span");
+    piece.className="fail-piece";
+    piece.textContent="×";
+    piece.style.left=(Math.random()*100)+"%";
+    piece.style.animationDuration=(3.2+Math.random()*2)+"s";
+    piece.style.animationDelay=(Math.random()*1.1)+"s";
+    piece.style.setProperty("--drift",(Math.random()*160-80)+"px");
+    piece.style.setProperty("--spin",(Math.random()*360-180)+"deg");
+    layer.appendChild(piece);
+  }
+}
+
+function showResult(){
+  clearResultEffects();
+
+  const passed=score>=3;
+  const screen=$("resultScreen");
+
+  $("progress").textContent="";
+  $("scoreText").textContent=`${score} / ${current.length}`;
+  $("resultText").textContent=`${selectedCategory}題・${selectedDifficulty}｜答對 ${score} 題`;
+
+  if(passed){
+    screen.classList.add("result-success");
+    $("resultTitle").textContent="挑戰成功！";
+    $("resultSymbol").textContent="★";
+    makeSuccessEffects();
+  }else{
+    screen.classList.add("result-fail");
+    $("resultTitle").textContent="挑戰失敗！";
+    $("resultSymbol").textContent="✕";
+    makeFailEffects();
+  }
+
+  show("resultScreen");
+}
+
+function next(){
+  index++;
+
+  if(index>=current.length){
+    showResult();
+  }else{
+    render();
+  }
+}
+
+function getAllRawLines(){
+  return (localStorage.getItem(KEY)||SAMPLE)
+    .split(/\r?\n/)
+    .map(x=>x.trim())
+    .filter(Boolean);
+}
+
+function getFilteredAdminText(category,difficulty){
+  const rows=[];
+  getAllRawLines().forEach(line=>{
+    let p=line.split("｜").map(x=>x.trim());
+    const hasNo=/^\d+$/.test(p[0]||"");
+    const categoryIndex=hasNo ? 1 : 0;
+    const difficultyIndex=hasNo ? 2 : 1;
+
+    if(p[categoryIndex]===category && p[difficultyIndex]===difficulty){
+      rows.push(line);
+    }
+  });
+  return rows.join("\n");
+}
+
+function renumberFilteredText(text){
+  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+
+  return lines.map((line,i)=>{
+    let p=line.split("｜").map(x=>x.trim());
+
+    // 去掉舊管理編號
+    if(/^\d+$/.test(p[0]||"")) p=p.slice(1);
+
+    // 若使用者貼入完整格式，就強制目前分類／難度
+    if(["動畫","陀螺"].includes(p[0]) && ["簡單","困難"].includes(p[1])){
+      p[0]=adminCategory;
+      p[1]=adminDifficulty;
+    }else{
+      // 若匯入不含分類難度，補上目前分類難度
+      p=[adminCategory,adminDifficulty,...p];
+    }
+
+    return `${i+1}｜${p.join("｜")}`;
+  }).join("\n");
+}
+
+function openAdminQuestionEditor(category,difficulty){
+  adminCategory=category;
+  adminDifficulty=difficulty;
+
+  $("questionEditorTitle").textContent=`題庫編輯｜${category}・${difficulty}`;
+  $("questionEditorBadge").textContent=`${category}｜${difficulty}`;
+
+  const filtered=getFilteredAdminText(category,difficulty);
+  $("editorBox").value=renumberFilteredText(filtered);
+  $("status").textContent="";
+  show("questionEditorScreen");
+}
+
+function ensureAdminNumbers(text){
+  const lines=text
+    .split(/\r?\n/)
+    .map(x=>x.trim())
+    .filter(Boolean);
+
+  return lines.map((line,i)=>{
+    const parts=line.split("｜").map(x=>x.trim());
+
+    // 已有編號就保留
+    if(/^\d+$/.test(parts[0]||"")){
+      return parts.join("｜");
+    }
+
+    // 沒有編號才自動補上
+    return `${i+1}｜${parts.join("｜")}`;
+  }).join("\n");
+}
+
+function save(){
+  try{
+    const current=renumberFilteredText($("editorBox").value);
+    const parsedCurrent=parse(current);
+
+    // 確保此頁所有題目都屬於目前分類
+    if(parsedCurrent.some(q=>q.category!==adminCategory || q.difficulty!==adminDifficulty)){
+      throw new Error("目前編輯頁中含有其他分類或難度的題目。");
+    }
+
+    const keep=[];
+    getAllRawLines().forEach(line=>{
+      let p=line.split("｜").map(x=>x.trim());
+      const hasNo=/^\d+$/.test(p[0]||"");
+      const ci=hasNo ? 1 : 0;
+      const di=hasNo ? 2 : 1;
+
+      if(!(p[ci]===adminCategory && p[di]===adminDifficulty)){
+        keep.push(line);
+      }
+    });
+
+    const merged=[...keep,...current.split(/\r?\n/).filter(Boolean)].join("\n");
+    parse(merged); // 全題庫再驗證一次
+
+    localStorage.setItem(KEY,merged);
+    bank=parse(merged);
+    $("editorBox").value=current;
+    $("status").textContent=`已儲存 ${adminCategory}／${adminDifficulty}，共 ${parsedCurrent.length} 題。`;
+    $("status").className="status ok";
+  }catch(e){
+    $("status").textContent=e.message;
+    $("status").className="status bad";
+  }
+}
+
+function importTxtFile(file){
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    try{
+      const raw=String(reader.result||"").replace(/^\uFEFF/,"").trim();
+      if(!raw) throw new Error("TXT 檔案是空的。");
+
+      const numbered=renumberFilteredText(raw);
+      const parsed=parse(numbered);
+
+      if(parsed.some(q=>q.category!==adminCategory || q.difficulty!==adminDifficulty)){
+        throw new Error("匯入內容無法套用到目前題庫分類。");
+      }
+
+      $("editorBox").value=numbered;
+      $("status").textContent=`已匯入 ${parsed.length} 題到 ${adminCategory}／${adminDifficulty}。確認後按「儲存題庫」才會正式套用。`;
+      $("status").className="status ok";
+    }catch(e){
+      $("status").textContent=`匯入失敗：${e.message}`;
+      $("status").className="status bad";
+    }finally{
+      $("importFile").value="";
+    }
+  };
+
+  reader.onerror=()=>{
+    $("status").textContent="匯入失敗：無法讀取 TXT 檔案。";
+    $("status").className="status bad";
+    $("importFile").value="";
+  };
+
+  reader.readAsText(file,"UTF-8");
+}
+
+function exportTxt(){
+  try{
+    const text=renumberFilteredText($("editorBox").value);
+    parse(text);
+    $("editorBox").value=text;
+
+    const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=`BBX_${adminCategory}_${adminDifficulty}_題庫.txt`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),500);
+  }catch(e){
+    $("status").textContent=`匯出失敗：${e.message}`;
+    $("status").className="status bad";
+  }
+}
+
+
+document.querySelectorAll("[data-category]").forEach(btn=>{
+  btn.onclick=()=>chooseCategory(btn.dataset.category);
+});
+
+document.querySelectorAll("[data-difficulty]").forEach(btn=>{
+  btn.onclick=()=>startGame(btn.dataset.difficulty);
+});
+
+$("nextBtn").onclick=next;
+$("restartBtn").onclick=()=>show("categoryScreen");
+
+$("topBtn").onclick=()=>{
+  $("progress").textContent="";
+  show("categoryScreen");
+};
+
+$("editorBtn").onclick=()=>{
+  $("progress").textContent="";
+  show("editorScreen");
+};
+
+
+
+document.querySelectorAll("[data-admin-category]").forEach(btn=>{
+  btn.onclick=()=>openAdminQuestionEditor(
+    btn.dataset.adminCategory,
+    btn.dataset.adminDifficulty
+  );
+});
+
+$("questionEditorBackBtn").addEventListener("click",()=>{
+  show("editorScreen");
+});
+
+$("openTextSettingsBtn").addEventListener("click",()=>{
+  fillUIInputs(getUI());
+  $("textSettingsStatus").textContent="";
+  show("textSettingsScreen");
+});
+
+
+
+
+$("textSettingsBackBtn").onclick=()=>show("editorScreen");
+
+$("saveTextSettingsBtn").onclick=()=>{
+  const ui={
+    homeTitle:$("homeTitleInput").value.trim() || UI_DEFAULTS.homeTitle,
+    homeSub:$("homeSubInput").value.trim() || UI_DEFAULTS.homeSub,
+    animeTitle:$("animeTitleInput").value.trim() || UI_DEFAULTS.animeTitle,
+    animeDesc:$("animeDescInput").value.trim() || UI_DEFAULTS.animeDesc,
+    beyTitle:$("beyTitleInput").value.trim() || UI_DEFAULTS.beyTitle,
+    beyDesc:$("beyDescInput").value.trim() || UI_DEFAULTS.beyDesc,
+    easyTitle:$("easyTitleInput").value.trim() || UI_DEFAULTS.easyTitle,
+    easyDesc:$("easyDescInput").value.trim() || UI_DEFAULTS.easyDesc,
+    hardTitle:$("hardTitleInput").value.trim() || UI_DEFAULTS.hardTitle,
+    hardDesc:$("hardDescInput").value.trim() || UI_DEFAULTS.hardDesc,
+    homeFoot:$("homeFootInput").value.trim() || UI_DEFAULTS.homeFoot,
+    difficultyFoot:$("difficultyFootInput").value.trim() || UI_DEFAULTS.difficultyFoot
+  };
+  localStorage.setItem(UI_KEY,JSON.stringify(ui));
+  applyUI(ui);
+  $("textSettingsStatus").textContent="頁面文字已儲存。";
+  $("textSettingsStatus").className="status ok";
+};
+
+$("importBtn").onclick=()=>{
+  $("importFile").click();
+};
+
+$("importFile").addEventListener("change",e=>{
+  importTxtFile(e.target.files && e.target.files[0]);
+});
+
+$("saveBtn").onclick=save;
+
+$("sampleBtn").onclick=()=>{
+  const sampleLines=SAMPLE.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const filtered=sampleLines.filter(line=>{
+    let p=line.split("｜").map(x=>x.trim());
+    return p[0]===adminCategory && p[1]===adminDifficulty;
+  }).join("\n");
+
+  $("editorBox").value=renumberFilteredText(filtered);
+  $("status").textContent=`已載入 ${adminCategory}／${adminDifficulty} 示範題，記得按「儲存題庫」。`;
+  $("status").className="status ok";
+};
+
+$("exportBtn").onclick=exportTxt;
+
+
+window.addEventListener("resize",()=>{ if($("quizScreen").classList.contains("active")) fitQuestionText(); });
+
+load();
+
+show("categoryScreen");
+</script>
+</body>
+</html>
