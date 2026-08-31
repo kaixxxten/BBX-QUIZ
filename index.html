@@ -6,6 +6,16 @@
 <title>BEYBLADE X QUIZ</title>
 <style>
 :root{
+  --design-width:1180px;
+  --design-height:850px;
+  --app-scale:1;
+  --scaled-width:1180px;
+  --scaled-height:850px;
+  --question-max-size:46px;
+  --question-min-size:28px;
+  --answer-max-size:38px;
+  --answer-min-size:22px;
+
   --bg:#ffffff;
   --text:#172033;
   --muted:#667085;
@@ -45,7 +55,12 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:0;
+  height:100dvh;
+  padding:
+    max(8px,env(safe-area-inset-top))
+    max(8px,env(safe-area-inset-right))
+    max(8px,env(safe-area-inset-bottom))
+    max(8px,env(safe-area-inset-left));
 }
 button,textarea,input,select{font:inherit}
 
@@ -55,8 +70,11 @@ button,textarea,input,select{font:inherit}
   這樣不會因為不同解析度把內部元件硬擠到跑版。
 */
 .app{
-  width:1180px;
-  height:850px;
+  position:absolute;
+  left:0;
+  top:0;
+  width:var(--design-width);
+  height:var(--design-height);
   flex:0 0 auto;
   border:1.5px solid var(--line);
   border-radius:28px;
@@ -65,9 +83,16 @@ button,textarea,input,select{font:inherit}
   background:#fff;
   display:flex;
   flex-direction:column;
-  transform:scale(1);
-  transform-origin:center center;
+  transform:scale(var(--app-scale));
+  transform-origin:top left;
   will-change:transform;
+}
+
+.app-stage{
+  position:relative;
+  flex:0 0 auto;
+  width:var(--scaled-width);
+  height:var(--scaled-height);
 }
 
 .topbar{
@@ -741,14 +766,6 @@ h1{
   margin-top:20px !important;
   font-size:17px !important;
 }
-
-/* 平板橫向時保持大塊按鈕 */
-@media (min-width:900px){
-  #categoryScreen .hero-panel{
-    transform:translateY(-10px);
-  }
-}
-
 
 /* V11：分類卡標題加大、移除上方符號 */
 #categoryScreen .hero-card{
@@ -1507,12 +1524,12 @@ h1{
   position:absolute;
   left:28px;
   right:28px;
-  top:14px;
+  top:18px;
   z-index:8;
-  display:flex;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
   align-items:center;
-  justify-content:space-between;
-  gap:14px;
+  gap:16px;
   pointer-events:none;
 }
 .ta-pill{
@@ -1533,9 +1550,6 @@ h1{
   border-color:var(--wrong);
 }
 
-#quizScreen.timeattack-active .quiz{
-  padding-top:72px;
-}
 .ta-result-title{
   font-size:clamp(28px,3vw,44px);
   font-weight:1000;
@@ -1596,15 +1610,6 @@ h1{
 
 
 
-/* ===== TIME ATTACK HUD V4 ===== */
-.ta-hud{
-  left:28px;
-  right:28px;
-  top:18px;
-  grid-template-columns:1fr 1fr 1fr;
-  align-items:center;
-  gap:16px;
-}
 #taMode{
   justify-self:start;
   min-width:190px;
@@ -1623,16 +1628,10 @@ h1{
 }
 
 
-/* ===== TIME ATTACK V5：避免分類／難度重複顯示 ===== */
-#quizScreen.timeattack-active .meta-row{
-  display:none;
-}
-
-
 /* ===== TIME ATTACK RESULT EFFECTS V6 ===== */
 #timeAttackResultScreen{
   overflow:hidden;
-  position:relative;
+  position:absolute;
 }
 #timeAttackResultScreen > *:not(.ta-effects){
   position:relative;
@@ -1710,7 +1709,7 @@ h1{
 }
 
 
-/* ===== TIME ATTACK V7：重新整理答題畫面 ===== */
+/* ===== TIME ATTACK ANSWER LAYOUT ===== */
 #quizScreen.timeattack-active .quiz{
   padding-top:72px !important;
   grid-template-rows:132px minmax(0,1fr) !important;
@@ -1813,18 +1812,12 @@ h1{
 }
 
 
-/* ===== V8：一般模式 / 極限模式 HUD 完全分離 ===== */
+/* 一般模式 / 極限模式 HUD 完全分離 */
 #taHud{
-  display:none !important;
+  display:none;
 }
 #quizScreen.timeattack-active #taHud{
-  display:grid !important;
-}
-#quizScreen:not(.timeattack-active) .meta-row{
-  display:flex !important;
-}
-#quizScreen:not(.timeattack-active) .bottom{
-  display:grid !important;
+  display:grid;
 }
 
 
@@ -1880,86 +1873,183 @@ h1{
 }
 
 
-/* ===== CLEAN RESPONSIVE V19 ===== */
-html,body{width:100%;height:100%;margin:0;overflow:hidden}
-body{display:flex;align-items:center;justify-content:center;padding:0!important;background:var(--bg)}
-.app-stage{position:relative;flex:0 0 auto;width:1180px;height:850px}
-.app-stage>.app{position:absolute;left:0;top:0;width:1180px!important;height:850px!important;margin:0!important;transform-origin:top left!important}
-body[data-layout="phone-portrait"]{align-items:flex-start;padding-top:8px!important}
-body[data-layout="phone-landscape"]{display:block;overflow:hidden;background:#fff}
-body[data-layout="phone-landscape"] .app-stage{width:100vw!important;height:var(--vvh,100vh)!important}
-body[data-layout="phone-landscape"] .app{position:relative!important;width:100vw!important;height:var(--vvh,100vh)!important;transform:none!important;border-radius:0!important;border-left:0!important;border-right:0!important;box-shadow:none!important}
-body[data-layout="phone-landscape"] .topbar{height:44px!important;flex-basis:44px!important;padding:0 14px!important}
-body[data-layout="phone-landscape"] .brand{font-size:19px!important}
-body[data-layout="phone-landscape"] .progress{font-size:14px!important;min-width:52px!important}
-body[data-layout="phone-landscape"] .small-top{padding:6px 10px!important;font-size:12px!important;border-radius:10px!important}
-body[data-layout="phone-landscape"] .screen{padding:7px 12px!important}
-body[data-layout="phone-landscape"] #categoryScreen{align-items:stretch!important;justify-content:stretch!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-panel{width:100%!important;height:100%!important;max-width:none!important;padding:5px 10px!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;display:grid!important;grid-template-rows:27px 17px minmax(0,1fr) 54px 12px!important;gap:4px!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-kicker{display:none!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-title{font-size:24px!important;line-height:27px!important;margin:0!important;text-align:center!important;white-space:nowrap!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-sub{font-size:10px!important;line-height:17px!important;margin:0!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-actions{min-height:0!important;height:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:0!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-card{min-height:0!important;height:100%!important;padding:10px 14px!important;border-radius:14px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;overflow:hidden!important}
-body[data-layout="phone-landscape"] #categoryScreen .card-title{font-size:27px!important;line-height:1!important;margin:0 0 7px!important}
-body[data-layout="phone-landscape"] #categoryScreen .card-desc{font-size:11px!important;line-height:1.28!important;margin:0!important}
-body[data-layout="phone-landscape"] #categoryScreen .timeattack-card{width:100%!important;height:54px!important;min-height:54px!important;margin:0!important;padding:5px 16px!important;border-width:3px!important;border-radius:13px!important}
-body[data-layout="phone-landscape"] #categoryScreen .timeattack-title{font-size:20px!important;line-height:1!important}
-body[data-layout="phone-landscape"] #categoryScreen .timeattack-sub{font-size:8px!important;line-height:1!important;margin-top:3px!important}
-body[data-layout="phone-landscape"] #categoryScreen .timeattack-card::before,body[data-layout="phone-landscape"] #categoryScreen .timeattack-card::after{width:58px!important}
-body[data-layout="phone-landscape"] #categoryScreen .hero-foot{font-size:7px!important;line-height:12px!important;margin:0!important;text-align:center!important}
-body[data-layout="phone-landscape"] #difficultyScreen{align-items:stretch!important;justify-content:stretch!important}
-body[data-layout="phone-landscape"] .difficulty-panel{width:100%!important;height:100%!important;max-width:none!important;padding:7px 14px!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;display:grid!important;grid-template-rows:32px 18px minmax(0,1fr) 12px!important;gap:5px!important}
-body[data-layout="phone-landscape"] .difficulty-big-title{font-size:28px!important;line-height:32px!important;margin:0!important}
-body[data-layout="phone-landscape"] .difficulty-big-sub{font-size:11px!important;line-height:18px!important;margin:0!important}
-body[data-layout="phone-landscape"] .diff-wrap{min-height:0!important;height:100%!important;grid-template-columns:1fr 1fr!important;grid-template-rows:1fr!important;gap:10px!important}
-body[data-layout="phone-landscape"] .diff-card{min-height:0!important;height:100%!important;padding:10px 14px!important;overflow:hidden!important}
-body[data-layout="phone-landscape"] .diff-name{font-size:52px!important;line-height:1!important}
-body[data-layout="phone-landscape"] .diff-desc{font-size:11px!important;margin-top:8px!important}
-body[data-layout="phone-landscape"] .difficulty-foot{font-size:7px!important;line-height:12px!important;margin:0!important}
-body[data-layout="phone-landscape"] #quizScreen .quiz{width:100%!important;height:100%!important;padding:0!important;grid-template-rows:30px 70px minmax(0,1fr) 68px!important;gap:6px!important}
-body[data-layout="phone-landscape"] #quizScreen .badge{padding:5px 9px!important;font-size:12px!important}
-body[data-layout="phone-landscape"] #quizScreen .question-box{min-height:0!important;padding:8px 13px!important;border-radius:14px!important;overflow:hidden!important}
-body[data-layout="phone-landscape"] #quizScreen .question{font-size:23px!important;line-height:1.16!important}
-body[data-layout="phone-landscape"] #quizScreen .answers{min-height:0!important;height:100%!important;grid-template-columns:1fr 1fr!important;grid-template-rows:minmax(54px,1fr) minmax(54px,1fr)!important;gap:7px!important}
-body[data-layout="phone-landscape"] #quizScreen .answer{min-height:54px!important;height:100%!important;padding:7px 11px!important;font-size:18px!important;line-height:1.15!important;border-radius:12px!important;overflow:hidden!important;display:flex!important;align-items:center!important}
-body[data-layout="phone-landscape"] #quizScreen .bottom{min-height:68px!important;height:68px!important;padding:5px 8px!important;border-radius:12px!important;grid-template-columns:minmax(0,1fr) 104px!important;gap:7px!important}
-body[data-layout="phone-landscape"] #quizScreen .feedback-wrap{grid-template-columns:28px minmax(0,1fr)!important;gap:6px!important}
-body[data-layout="phone-landscape"] #quizScreen .feedback-icon{width:27px!important;height:27px!important;font-size:17px!important}
-body[data-layout="phone-landscape"] #quizScreen .feedback-title{font-size:15px!important;line-height:1!important}
-body[data-layout="phone-landscape"] #quizScreen .feedback-answer{font-size:9px!important;line-height:1.12!important}
-body[data-layout="phone-landscape"] #quizScreen .feedback-text{font-size:8px!important;line-height:1.1!important;margin-top:1px!important}
-body[data-layout="phone-landscape"] #quizScreen .next{font-size:12px!important;padding:6px!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active .quiz{padding-top:38px!important;grid-template-rows:66px minmax(0,1fr)!important;gap:6px!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active .meta-row,body[data-layout="phone-landscape"] #quizScreen.timeattack-active .bottom{display:none!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active .ta-hud{top:3px!important;left:12px!important;right:12px!important;grid-template-columns:1fr 1fr 1fr!important;gap:7px!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active .ta-pill{min-width:0!important;padding:5px 8px!important;font-size:12px!important;border-width:2px!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active #taTimer{min-width:0!important;padding:5px 9px!important;font-size:18px!important}
-body[data-layout="phone-landscape"] #quizScreen.timeattack-active #taMode,body[data-layout="phone-landscape"] #quizScreen.timeattack-active #taScore{min-width:0!important}
-body[data-layout="phone-landscape"] #timeAttackResultScreen{padding:5px 14px!important}
-body[data-layout="phone-landscape"] .ta-result-title{font-size:22px!important;margin-bottom:1px!important}
-body[data-layout="phone-landscape"] .ta-result-message{font-size:15px!important;margin-bottom:1px!important}
-body[data-layout="phone-landscape"] .ta-big-number{font-size:60px!important}
-body[data-layout="phone-landscape"] .ta-big-label{font-size:14px!important;margin:0 0 2px!important}
-body[data-layout="phone-landscape"] .ta-stars{font-size:25px!important;margin:0 0 3px!important}
-body[data-layout="phone-landscape"] .ta-rank{font-size:29px!important;margin:0 0 2px!important}
-body[data-layout="phone-landscape"] .ta-rank-note{font-size:9px!important;margin:0 0 3px!important}
-body[data-layout="phone-landscape"] .ta-stats{font-size:11px!important;margin:0 0 7px!important}
-body[data-layout="phone-landscape"] .ta-result-actions .btn,body[data-layout="phone-landscape"] .ta-result-actions .primary{min-width:130px!important;padding:7px 10px!important;font-size:12px!important}
-body[data-layout="phone-landscape"] #timeAttackReviewScreen{padding:6px 12px!important}
-body[data-layout="phone-landscape"] .review-wrap{grid-template-rows:28px 64px 24px minmax(0,1fr) 34px!important;gap:5px!important}
-body[data-layout="phone-landscape"] .review-title{font-size:22px!important}body[data-layout="phone-landscape"] .review-count{font-size:12px!important}
-body[data-layout="phone-landscape"] .review-question{padding:8px 12px!important;font-size:18px!important;border-radius:12px!important}
-body[data-layout="phone-landscape"] .review-status{font-size:15px!important}
-body[data-layout="phone-landscape"] .review-body{padding:8px 12px!important;border-radius:12px!important}
-body[data-layout="phone-landscape"] .review-row{font-size:12px!important;margin-bottom:5px!important}
-body[data-layout="phone-landscape"] .review-explanation{font-size:11px!important;line-height:1.3!important;margin-top:6px!important;padding-top:6px!important}
-body[data-layout="phone-landscape"] .review-actions .btn,body[data-layout="phone-landscape"] .review-actions .primary{min-width:110px!important;padding:6px 8px!important;font-size:11px!important}
+/* =========================================================
+   RESPONSIVE CANVAS
+   default / phone-portrait：1180 × 850
+   compact-landscape：1180 × 680
+   只在短邊手機橫式使用一套集中式緊湊尺寸。
+   ========================================================= */
+body[data-layout="phone-portrait"]{
+  align-items:flex-start;
+}
+
+body[data-layout="compact-landscape"]{
+  --question-max-size:38px;
+  --question-min-size:24px;
+  --answer-max-size:32px;
+  --answer-min-size:20px;
+}
+
+body[data-layout="compact-landscape"] .topbar{
+  height:60px;
+  flex-basis:60px;
+  padding:0 24px;
+}
+body[data-layout="compact-landscape"] .brand{
+  font-size:26px;
+}
+body[data-layout="compact-landscape"] .screen{
+  padding:16px 28px;
+}
+
+/* 手機橫式首頁 */
+body[data-layout="compact-landscape"] #categoryScreen{
+  padding:14px 28px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-panel{
+  width:min(1080px,100%) !important;
+  padding:8px 24px 12px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-title{
+  font-size:68px !important;
+  margin:0 0 10px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-sub{
+  font-size:23px !important;
+  margin:0 0 20px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-actions{
+  gap:18px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-card{
+  min-height:175px !important;
+  padding:22px 30px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-card .card-title{
+  font-size:48px !important;
+  margin:0 0 14px !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-card .card-desc{
+  font-size:20px !important;
+  line-height:1.4 !important;
+}
+body[data-layout="compact-landscape"] #categoryScreen .timeattack-card{
+  margin-top:14px;
+  padding:14px 24px;
+}
+body[data-layout="compact-landscape"] #categoryScreen .timeattack-title{
+  font-size:34px;
+}
+body[data-layout="compact-landscape"] #categoryScreen .timeattack-sub{
+  margin-top:4px;
+  font-size:15px;
+}
+body[data-layout="compact-landscape"] #categoryScreen .hero-foot{
+  margin-top:14px !important;
+  font-size:14px !important;
+}
+
+/* 手機橫式難度頁 */
+body[data-layout="compact-landscape"] #difficultyScreen{
+  padding:12px 28px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .difficulty-panel{
+  width:min(1080px,100%) !important;
+  padding:8px 28px !important;
+  transform:none !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .difficulty-big-title{
+  font-size:56px !important;
+  margin-bottom:10px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .difficulty-big-sub{
+  font-size:22px !important;
+  margin-bottom:18px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .diff-wrap{
+  gap:20px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .diff-card{
+  min-height:280px !important;
+  padding:28px !important;
+  border-radius:26px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .diff-name{
+  font-size:82px !important;
+  margin-bottom:18px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .diff-desc{
+  font-size:20px !important;
+}
+body[data-layout="compact-landscape"] #difficultyScreen .difficulty-foot{
+  margin-top:16px !important;
+  transform:none;
+  font-size:15px !important;
+}
+
+/* 手機橫式一般答題與 30 秒模式 */
+body[data-layout="compact-landscape"] #quizScreen{
+  padding:12px 28px 16px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .quiz{
+  grid-template-rows:44px 112px minmax(0,1fr) 116px !important;
+  gap:10px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .question-box{
+  padding:16px 22px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .answers{
+  gap:12px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .answer{
+  padding:14px 18px;
+  overflow:hidden;
+}
+body[data-layout="compact-landscape"] #quizScreen .bottom{
+  min-height:116px !important;
+  padding:10px 14px !important;
+  grid-template-columns:minmax(0,1fr) 160px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .feedback-wrap > div:last-child{
+  max-height:94px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .feedback-title{
+  font-size:26px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .feedback-answer{
+  font-size:15px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen .feedback-text{
+  font-size:13px;
+}
+body[data-layout="compact-landscape"] #quizScreen .next{
+  padding:11px;
+  font-size:17px;
+}
+body[data-layout="compact-landscape"] #quizScreen.timeattack-active .quiz{
+  padding-top:60px !important;
+  grid-template-rows:112px minmax(0,1fr) !important;
+  gap:10px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen.timeattack-active .ta-hud{
+  top:8px !important;
+  left:28px !important;
+  right:28px !important;
+}
+body[data-layout="compact-landscape"] #quizScreen.timeattack-active .ta-pill{
+  padding:8px 14px;
+  font-size:20px;
+}
+body[data-layout="compact-landscape"] #quizScreen.timeattack-active #taTimer{
+  min-width:180px;
+  font-size:30px;
+}
 
 </style>
 </head>
 <body>
-<div class="app-stage" id="appStage"><div class="app">
+<div class="app-stage" id="appStage">
+<div class="app">
   <header class="topbar">
     <div class="brand">BEYBLADE X QUIZ</div>
     <div class="top-actions">
@@ -2691,11 +2781,11 @@ function fitQuestionText(){
   const box=$("question").parentElement;
   const q=$("question");
 
-  // 先恢復最大字級，再逐步縮小直到完整放入題目框
-  let size=46;
+  q.style.fontSize="";
+  let size=readCSSSize("--question-max-size",46);
   q.style.fontSize=size+"px";
 
-  const minSize=28;
+  const minSize=readCSSSize("--question-min-size",28);
   let guard=0;
 
   while(
@@ -2707,6 +2797,41 @@ function fitQuestionText(){
     q.style.fontSize=size+"px";
     guard++;
   }
+}
+
+function readCSSSize(name,fallback){
+  const value=parseFloat(getComputedStyle(document.body).getPropertyValue(name));
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function fitAnswerText(){
+  const compact=document.body.dataset.layout!=="default";
+  const configuredMax=readCSSSize("--answer-max-size",38);
+  const minSize=readCSSSize("--answer-min-size",22);
+
+  document.querySelectorAll("#answers .answer").forEach(answer=>{
+    answer.style.fontSize="";
+    let size=compact
+      ? configuredMax
+      : Math.min(configuredMax,parseFloat(getComputedStyle(answer).fontSize)||configuredMax);
+    answer.style.fontSize=size+"px";
+
+    let guard=0;
+    while(
+      (answer.scrollHeight > answer.clientHeight + 1 || answer.scrollWidth > answer.clientWidth + 1) &&
+      size > minSize &&
+      guard < 40
+    ){
+      size-=1;
+      answer.style.fontSize=size+"px";
+      guard++;
+    }
+  });
+}
+
+function fitQuizText(){
+  fitQuestionText();
+  fitAnswerText();
 }
 
 function shuffledQuestionView(q){
@@ -2733,7 +2858,6 @@ function render(){
   if(!timeAttackMode) $("progress").textContent=`${index+1} / ${current.length}`;
   else $("progress").textContent="";
   $("question").textContent=q.question;
-  requestAnimationFrame(fitQuestionText);
   $("feedbackTitle").textContent="";
   $("feedbackAnswer").textContent="";
   $("feedbackText").textContent="";
@@ -2762,6 +2886,8 @@ function render(){
     b.onclick=()=>chooseAnswer(i,b);
     $("answers").appendChild(b);
   });
+
+  requestAnimationFrame(fitQuizText);
 }
 
 function fitFeedbackText(){
@@ -2810,6 +2936,7 @@ function chooseAnswer(i,b){
   const correctLetter=String.fromCharCode(65+q._view.answer);
   $("feedbackAnswer").textContent=`正確答案：${correctLetter}. ${q._view.options[q._view.answer]}`;
   $("feedbackText").textContent=q.explanation||"";
+  requestAnimationFrame(fitAnswerText);
   requestAnimationFrame(fitFeedbackText);
 
   if(timeAttackMode){
@@ -3170,10 +3297,6 @@ $("topBtn").onclick=()=>{
   show("categoryScreen");
 };
 
-if($("editorBtn")) $("editorBtn").onclick=()=>show("editorScreen");
-
-
-
 document.querySelectorAll("[data-admin-category]").forEach(btn=>{
   btn.onclick=()=>openAdminQuestionEditor(
     btn.dataset.adminCategory,
@@ -3244,35 +3367,87 @@ $("exportBtn").onclick=exportTxt;
 
 const DESIGN_WIDTH=1180;
 const DESIGN_HEIGHT=850;
-function applyResponsiveLayout(){
+const COMPACT_LANDSCAPE_HEIGHT=680;
+const PHONE_PORTRAIT_MAX_WIDTH=600;
+const PHONE_LANDSCAPE_MAX_WIDTH=1000;
+const PHONE_LANDSCAPE_MAX_HEIGHT=600;
+
+function getViewportSize(){
   const vv=window.visualViewport;
-  const vw=Math.max(1,vv?vv.width:window.innerWidth);
-  const vh=Math.max(1,vv?vv.height:window.innerHeight);
-  const touch=(navigator.maxTouchPoints||0)>0 || ("ontouchstart" in window);
-  const phoneLandscape=touch && vw>vh && Math.min(vw,vh)<=620;
-  const phonePortrait=touch && vh>=vw && vw<=620;
-  const body=document.body, app=document.querySelector('.app'), stage=document.getElementById('appStage');
-  if(!app||!stage)return;
-  document.documentElement.style.setProperty('--vvh',`${vh}px`);
-  if(phoneLandscape){
-    body.dataset.layout='phone-landscape';
-    app.style.transform='none'; stage.style.width=vw+'px'; stage.style.height=vh+'px';
-  }else{
-    body.dataset.layout=phonePortrait?'phone-portrait':'canvas';
-    const safeX=touch?12:16,safeY=touch?12:16;
-    let scale=Math.min((vw-safeX)/DESIGN_WIDTH,(vh-safeY)/DESIGN_HEIGHT);
-    scale=Math.max(.18,Math.min(scale,1.35));
-    app.style.width=DESIGN_WIDTH+'px'; app.style.height=DESIGN_HEIGHT+'px'; app.style.transform=`scale(${scale})`;
-    stage.style.width=(DESIGN_WIDTH*scale)+'px'; stage.style.height=(DESIGN_HEIGHT*scale)+'px';
-  }
-  if($("quizScreen")&&$("quizScreen").classList.contains('active'))requestAnimationFrame(fitQuestionText);
+  const zoom=vv && vv.scale ? vv.scale : 1;
+  const visualWidth=vv ? vv.width*zoom : window.innerWidth;
+  const visualHeight=vv ? vv.height*zoom : window.innerHeight;
+  const staleVisualViewport=Math.abs(visualWidth-window.innerWidth)>2;
+  return {
+    width:Math.max(1,staleVisualViewport ? window.innerWidth : Math.min(window.innerWidth,visualWidth)),
+    height:Math.max(1,staleVisualViewport ? window.innerHeight : Math.min(window.innerHeight,visualHeight))
+  };
 }
-let responsiveRAF=0;
-function scheduleResponsiveLayout(){cancelAnimationFrame(responsiveRAF);responsiveRAF=requestAnimationFrame(applyResponsiveLayout)}
-window.addEventListener('resize',scheduleResponsiveLayout);
-window.addEventListener('orientationchange',()=>{scheduleResponsiveLayout();setTimeout(applyResponsiveLayout,120);setTimeout(applyResponsiveLayout,350)});
-if(window.visualViewport)window.visualViewport.addEventListener('resize',scheduleResponsiveLayout);
-applyResponsiveLayout();
+
+function getCanvasLayout(width,height){
+  if(
+    width>height &&
+    width<=PHONE_LANDSCAPE_MAX_WIDTH &&
+    height<=PHONE_LANDSCAPE_MAX_HEIGHT
+  ){
+    return {name:"compact-landscape",height:COMPACT_LANDSCAPE_HEIGHT};
+  }
+
+  if(height>width && width<=PHONE_PORTRAIT_MAX_WIDTH){
+    return {name:"phone-portrait",height:DESIGN_HEIGHT};
+  }
+
+  return {name:"default",height:DESIGN_HEIGHT};
+}
+
+function refreshDeviceScale(){
+  if(!document.querySelector(".app") || !$("appStage")) return;
+
+  const viewport=getViewportSize();
+  const layout=getCanvasLayout(viewport.width,viewport.height);
+  document.body.dataset.layout=layout.name;
+
+  const bodyStyle=getComputedStyle(document.body);
+  const horizontalPadding=parseFloat(bodyStyle.paddingLeft)+parseFloat(bodyStyle.paddingRight);
+  const verticalPadding=parseFloat(bodyStyle.paddingTop)+parseFloat(bodyStyle.paddingBottom);
+  const availableWidth=Math.max(1,viewport.width-horizontalPadding);
+  const availableHeight=Math.max(1,viewport.height-verticalPadding);
+
+  const scale=Math.max(0.1,Math.min(
+    availableWidth/DESIGN_WIDTH,
+    availableHeight/layout.height,
+    1.35
+  ));
+
+  const rootStyle=document.documentElement.style;
+  rootStyle.setProperty("--design-width",DESIGN_WIDTH+"px");
+  rootStyle.setProperty("--design-height",layout.height+"px");
+  rootStyle.setProperty("--app-scale",scale.toFixed(6));
+  rootStyle.setProperty("--scaled-width",(DESIGN_WIDTH*scale)+"px");
+  rootStyle.setProperty("--scaled-height",(layout.height*scale)+"px");
+
+  if($("quizScreen") && $("quizScreen").classList.contains("active")){
+    requestAnimationFrame(fitQuizText);
+  }
+}
+
+let deviceScaleRAF=0;
+function scheduleDeviceScale(){
+  cancelAnimationFrame(deviceScaleRAF);
+  deviceScaleRAF=requestAnimationFrame(refreshDeviceScale);
+}
+
+window.addEventListener("resize",scheduleDeviceScale);
+window.addEventListener("orientationchange",()=>{
+  scheduleDeviceScale();
+  setTimeout(refreshDeviceScale,200);
+});
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize",scheduleDeviceScale);
+}
+
+refreshDeviceScale();
+
 load().then(()=>show("categoryScreen")).catch(()=>{});
 </script>
 </body>
