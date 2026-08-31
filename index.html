@@ -2302,6 +2302,169 @@ body.mobile-landscape #quizScreen.timeattack-active .answer{
   padding:5px 8px !important;
 }
 
+
+/* =========================================================
+   V15 MOBILE DEBUG
+   1) 直式靠上，不再垂直置中
+   2) 橫式難度頁避免標題疊字
+   3) 一般答題未作答前隱藏空白解說區
+   ========================================================= */
+
+/* 手機直式：仍維持整體縮放，但從畫面上方開始 */
+body.mobile-portrait{
+  align-items:flex-start !important;
+  justify-content:center !important;
+  padding-top:8px !important;
+  overflow:hidden !important;
+}
+body.mobile-portrait .app{
+  transform-origin:top center !important;
+  margin-top:0 !important;
+}
+
+/* 橫式難度頁 */
+body.mobile-landscape #difficultyScreen{
+  align-items:stretch !important;
+  justify-content:stretch !important;
+}
+body.mobile-landscape .difficulty-panel{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:6px 12px !important;
+  display:grid !important;
+  grid-template-rows:34px 18px minmax(0,1fr) 12px !important;
+  gap:4px !important;
+  align-content:stretch !important;
+}
+body.mobile-landscape .difficulty-big-title{
+  font-size:25px !important;
+  line-height:34px !important;
+  height:34px !important;
+  margin:0 !important;
+  padding:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+body.mobile-landscape .difficulty-big-sub{
+  font-size:10px !important;
+  line-height:18px !important;
+  height:18px !important;
+  margin:0 !important;
+  padding:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+body.mobile-landscape .diff-wrap{
+  min-height:0 !important;
+  height:100% !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-template-rows:1fr !important;
+  gap:8px !important;
+}
+body.mobile-landscape .diff-card{
+  height:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  padding:8px 12px !important;
+  overflow:hidden !important;
+}
+body.mobile-landscape .diff-name{
+  font-size:42px !important;
+  line-height:1 !important;
+  margin:0 0 6px !important;
+}
+body.mobile-landscape .diff-desc{
+  font-size:10px !important;
+  line-height:1.25 !important;
+}
+body.mobile-landscape .difficulty-foot{
+  height:12px !important;
+  font-size:7px !important;
+  line-height:12px !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+
+/* 一般 5 題：未作答時把答案區吃滿剩餘高度 */
+body.mobile-landscape #quizScreen:not(.timeattack-active) .quiz.mobile-waiting{
+  grid-template-rows:26px 64px minmax(0,1fr) !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .quiz.mobile-waiting .bottom{
+  display:none !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .quiz.mobile-answered{
+  grid-template-rows:26px 58px minmax(0,1fr) 66px !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .quiz.mobile-answered .bottom{
+  display:grid !important;
+  height:66px !important;
+  min-height:66px !important;
+}
+
+/* 選項不能再被壓成細條 */
+body.mobile-landscape #quizScreen:not(.timeattack-active) .answers{
+  min-height:0 !important;
+  height:100% !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-template-rows:minmax(58px,1fr) minmax(58px,1fr) !important;
+  gap:7px !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .answer{
+  min-height:58px !important;
+  height:100% !important;
+  padding:7px 11px !important;
+  font-size:17px !important;
+  line-height:1.15 !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+}
+
+/* 橫式題目框稍微再壓低 */
+body.mobile-landscape #quizScreen:not(.timeattack-active) .question-box{
+  min-height:0 !important;
+  height:auto !important;
+  padding:7px 13px !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .question{
+  font-size:20px !important;
+  line-height:1.15 !important;
+}
+
+/* 回饋區只在答完後出現，內容也要緊湊 */
+body.mobile-landscape #quizScreen:not(.timeattack-active) .feedback-wrap{
+  min-height:0 !important;
+  height:100% !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .feedback-wrap > div:last-child{
+  max-height:56px !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .feedback-title{
+  font-size:15px !important;
+  line-height:1 !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .feedback-answer{
+  font-size:9px !important;
+  line-height:1.1 !important;
+}
+body.mobile-landscape #quizScreen:not(.timeattack-active) .feedback-text{
+  font-size:8px !important;
+  line-height:1.08 !important;
+}
+
+
+/* ===== V16 viewport single-controller guard ===== */
+body.mobile-portrait .app{
+  transform-origin:top center !important;
+}
+body.mobile-landscape .app{
+  transform:none !important;
+}
+
 </style>
 </head>
 <body>
@@ -2882,6 +3045,10 @@ function startTimeAttack(){
   $("progress").textContent="";
   $("taHud").style.display="";
   $("quizScreen").classList.add("timeattack-active");
+  {
+    const quiz=$("quizScreen").querySelector(".quiz");
+    quiz.classList.remove("mobile-waiting","mobile-answered");
+  }
   $("taTimer").textContent="30.0 秒";
   $("taTimer").classList.remove("danger");
   $("taScore").textContent="0 CORRECT";
@@ -3085,6 +3252,11 @@ function render(){
   $("feedbackIcon").textContent="•";
   $("bottomPanel").classList.remove("correct-state","wrong-state");
   $("nextBtn").classList.add("hidden");
+  if(!timeAttackMode){
+    const quiz=$("quizScreen").querySelector(".quiz");
+    quiz.classList.add("mobile-waiting");
+    quiz.classList.remove("mobile-answered");
+  }
 
   const cb=$("categoryBadge");
   cb.textContent=q.category==="動畫" ? "動畫題" : "陀螺題";
@@ -3186,6 +3358,11 @@ function chooseAnswer(i,b){
     return;
   }
 
+  {
+    const quiz=$("quizScreen").querySelector(".quiz");
+    quiz.classList.remove("mobile-waiting");
+    quiz.classList.add("mobile-answered");
+  }
   $("nextBtn").classList.remove("hidden");
   $("nextBtn").textContent=index===current.length-1?"看結果":"下一題";
 }
@@ -3616,12 +3793,13 @@ function updateMobileLandscapeMode(){
   const landscape=vw>vh;
 
   const isMobileLandscape=touch && landscape && vh<=620;
+  const isMobilePortrait=touch && !landscape && vw<=760;
 
-  // 使用真正的可視區尺寸，不使用可能包含瀏覽器工具列的 100vh。
   document.documentElement.style.setProperty("--mobile-vh", `${vh}px`);
   document.documentElement.style.setProperty("--mobile-vw", `${vw}px`);
 
   document.body.classList.toggle("mobile-landscape",isMobileLandscape);
+  document.body.classList.toggle("mobile-portrait",isMobilePortrait);
 
   const app=document.querySelector(".app");
   if(isMobileLandscape){
@@ -3631,32 +3809,24 @@ function updateMobileLandscapeMode(){
   }
 }
 
-window.addEventListener("resize",()=>{
-  fitAppToViewport();
-  if($("quizScreen").classList.contains("active")) fitQuestionText();
-});
+load().then(()=>{ show("categoryScreen"); refreshResponsiveLayout(); }).catch(()=>{});
 
-window.addEventListener("orientationchange",()=>{
-  setTimeout(fitAppToViewport,80);
-});
-
-if(window.visualViewport){
-  window.visualViewport.addEventListener("resize",fitAppToViewport);
+function refreshResponsiveLayout(){
+  updateMobileLandscapeMode();
+  if($("quizScreen").classList.contains("active")){
+    requestAnimationFrame(fitQuestionText);
+  }
 }
 
-updateMobileLandscapeMode();
-
-load().then(()=>show("categoryScreen")).catch(()=>{});
-
-window.addEventListener("resize",updateMobileLandscapeMode);
+window.addEventListener("resize",refreshResponsiveLayout);
 window.addEventListener("orientationchange",()=>{
-  setTimeout(updateMobileLandscapeMode,100);
-  setTimeout(updateMobileLandscapeMode,350);
+  setTimeout(refreshResponsiveLayout,100);
+  setTimeout(refreshResponsiveLayout,350);
 });
 if(window.visualViewport){
-  window.visualViewport.addEventListener("resize",updateMobileLandscapeMode);
+  window.visualViewport.addEventListener("resize",refreshResponsiveLayout);
 }
-setTimeout(updateMobileLandscapeMode,0);
+setTimeout(refreshResponsiveLayout,0);
 
 </script>
 </body>
