@@ -1,5 +1,5 @@
-1｜陀螺｜簡單｜BEYBLADE X 的基本三大部件為何？｜戰刃、固鎖輪盤、軸心｜陀螺盤、圓盤、驅動器｜核心、環、尖端｜戰刃、圓盤、軸心｜A｜BEYBLADE X 基本由戰刃、固鎖輪盤、軸心三大部件組成。
-2｜陀螺｜簡單｜BEYBLADE X 對戰時使用的場地通常稱為？｜極限衝擊戰鬥盤｜戰鬥箱｜旋轉環｜齒輪場地｜A｜BEYBLADE X 對戰使用具有極限軌道的專用戰鬥盤。
-3｜陀螺｜簡單｜軸心位於陀螺的哪個位置？｜最下方｜最上方｜中間外側｜發射器內｜A｜軸心位於陀螺最下方，是直接接觸戰鬥盤的部件。
-4｜陀螺｜簡單｜固鎖輪盤位於戰刃與哪個部件之間？｜軸心｜發射器｜拉條｜戰鬥盤｜A｜固鎖輪盤位於戰刃與軸心之間。
-5｜陀螺｜簡單｜極限加速帶的主要作用是？｜讓陀螺高速加速｜停止旋轉｜固定在中央｜增加重量｜A｜軸心的齒輪與極限軌道咬合後，可讓陀螺高速加速並發動極限衝刺。
+1｜陀螺｜簡單｜BEYBLADE X 的基本三大部件為何？｜Blade、Ratchet、Bit｜Layer、Disk、Driver｜Core、Ring、Tip｜Blade、Disk、Bit｜A｜BEYBLADE X 基本由 Blade、Ratchet、Bit 組成。
+2｜陀螺｜簡單｜BEYBLADE X 對戰時使用的場地通常稱為？｜Xtreme Stadium｜Battle Box｜Spin Ring｜Gear Field｜A｜BEYBLADE X 使用 Xtreme Stadium。
+3｜陀螺｜簡單｜Bit 位於陀螺的哪個位置？｜最下方｜最上方｜中間外側｜發射器內｜A｜Bit 是陀螺最下方接觸場地的部件。
+4｜陀螺｜簡單｜Ratchet 位於 Blade 與哪個部件之間？｜Bit｜發射器｜拉條｜場地｜A｜Ratchet 位於 Blade 與 Bit 之間。
+5｜陀螺｜簡單｜Xtreme Line 的主要作用是？｜讓陀螺高速加速｜停止旋轉｜固定中心｜增加重量｜A｜Xtreme Line 可讓陀螺產生高速衝刺。
