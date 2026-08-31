@@ -2311,6 +2311,139 @@ h1{
   }
 }
 
+
+/* ===== V12：手機橫式首頁改為三欄模式選擇 ===== */
+/* 以寬度判斷手機橫式，避免只看高度造成瀏覽器工具列影響 */
+@media (orientation: landscape) and (max-width: 1000px){
+
+  #categoryScreen{
+    padding:6px 12px !important;
+    align-items:stretch !important;
+    justify-content:stretch !important;
+  }
+
+  #categoryScreen .hero-panel{
+    width:100% !important;
+    height:100% !important;
+    max-width:none !important;
+    padding:6px 10px !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    background:#fff !important;
+
+    display:grid !important;
+    grid-template-rows:30px 18px minmax(0,1fr) 14px !important;
+    grid-template-columns:1fr !important;
+    gap:4px !important;
+  }
+
+  #categoryScreen .hero-kicker{
+    display:none !important;
+  }
+
+  #categoryScreen .hero-title{
+    grid-row:1 !important;
+    font-size:26px !important;
+    line-height:30px !important;
+    margin:0 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+  }
+
+  #categoryScreen .hero-sub{
+    grid-row:2 !important;
+    font-size:11px !important;
+    line-height:18px !important;
+    margin:0 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  /* hero-actions 和 timeattack-card 在視覺上合成三欄 */
+  #categoryScreen .hero-actions{
+    grid-row:3 !important;
+    min-height:0 !important;
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+    gap:9px !important;
+  }
+
+  #categoryScreen .hero-card{
+    min-width:0 !important;
+    min-height:0 !important;
+    height:100% !important;
+    padding:12px 14px !important;
+    border-radius:16px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+  }
+
+  #categoryScreen .card-title{
+    font-size:28px !important;
+    line-height:1.05 !important;
+    margin:0 0 8px !important;
+  }
+
+  #categoryScreen .card-desc{
+    font-size:12px !important;
+    line-height:1.3 !important;
+    margin:0 !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:3 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  /* 把極限挑戰移進第三欄的位置 */
+  #categoryScreen .timeattack-card{
+    position:absolute !important;
+    /* 位置由 JS 動態插入 hero-actions 後這段不再需要定位；
+       若 DOM 尚未移動，以下 fallback 確保不會擠垂直空間 */
+    margin:0 !important;
+  }
+
+  #categoryScreen .hero-foot{
+    grid-row:4 !important;
+    font-size:9px !important;
+    line-height:14px !important;
+    margin:0 !important;
+    text-align:center !important;
+  }
+
+  #categoryScreen .timeattack-card{
+    height:100% !important;
+    min-height:0 !important;
+    padding:12px 12px !important;
+    border-radius:16px !important;
+    border-width:3px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+  }
+
+  #categoryScreen .timeattack-title{
+    font-size:24px !important;
+    line-height:1.05 !important;
+  }
+
+  #categoryScreen .timeattack-sub{
+    font-size:9px !important;
+    line-height:1.15 !important;
+    margin-top:7px !important;
+  }
+
+  #categoryScreen .timeattack-card::before,
+  #categoryScreen .timeattack-card::after{
+    display:none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3641,6 +3774,38 @@ window.addEventListener("orientationchange",()=>{
 if(window.visualViewport){
   window.visualViewport.addEventListener("resize",fitAppToViewport);
 }
+
+
+function arrangeMobileHome(){
+  const heroActions=document.querySelector("#categoryScreen .hero-actions");
+  const heroPanel=document.querySelector("#categoryScreen .hero-panel");
+  const ta=$("timeAttackBtn");
+  const homeFoot=$("homeFoot");
+  if(!heroActions || !heroPanel || !ta || !homeFoot) return;
+
+  const mobileLandscape=window.matchMedia("(orientation: landscape) and (max-width: 1000px)").matches;
+
+  if(mobileLandscape){
+    if(ta.parentElement!==heroActions){
+      heroActions.appendChild(ta);
+    }
+    ta.style.position="static";
+  }else{
+    if(ta.parentElement!==heroPanel){
+      heroPanel.insertBefore(ta,homeFoot);
+    }
+    ta.style.position="";
+  }
+}
+
+window.addEventListener("resize",arrangeMobileHome);
+window.addEventListener("orientationchange",()=>{
+  setTimeout(arrangeMobileHome,80);
+});
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize",arrangeMobileHome);
+}
+arrangeMobileHome();
 
 fitAppToViewport();
 
