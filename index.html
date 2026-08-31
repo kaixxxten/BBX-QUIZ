@@ -1532,16 +1532,7 @@ h1{
   color:var(--wrong);
   border-color:var(--wrong);
 }
-#taCombo{
-  min-width:150px;
-  opacity:0;
-  transform:scale(.9);
-  transition:opacity .1s ease,transform .1s ease;
-}
-#taCombo.show{
-  opacity:1;
-  transform:scale(1);
-}
+
 #quizScreen.timeattack-active .quiz{
   padding-top:72px;
 }
@@ -1639,6 +1630,35 @@ h1{
   margin-bottom:18px;
 }
 
+
+
+/* ===== TIME ATTACK HUD V4 ===== */
+.ta-hud{
+  left:28px;
+  right:28px;
+  top:18px;
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr;
+  align-items:center;
+  gap:16px;
+}
+#taMode{
+  justify-self:start;
+  min-width:190px;
+}
+#taScore{
+  justify-self:center;
+  min-width:190px;
+}
+#taTimer{
+  justify-self:end;
+  min-width:190px;
+  padding:10px 22px;
+  font-size:clamp(28px,3vw,42px);
+  border-width:4px;
+  letter-spacing:.02em;
+}
+
 </style>
 </head>
 <body>
@@ -1705,9 +1725,9 @@ h1{
 
     <section class="screen" id="quizScreen">
       <div class="ta-hud" id="taHud" style="display:none">
-        <div class="ta-pill" id="taTimer">30.0</div>
+        <div class="ta-pill" id="taMode">陀螺題・簡單</div>
         <div class="ta-pill" id="taScore">0 CORRECT</div>
-        <div class="ta-pill" id="taCombo">0 COMBO</div>
+        <div class="ta-pill" id="taTimer">30.0 秒</div>
       </div>
       <div class="quiz">
         <div class="meta-row">
@@ -1946,8 +1966,6 @@ let taEndTime=0;
 let taTimerId=null;
 let taAnsweredTotal=0;
 let taCorrect=0;
-let taCombo=0;
-let taBestCombo=0;
 let taRemainingPool=[];
 
 let adminCategory="動畫";
@@ -2172,18 +2190,16 @@ function startTimeAttack(){
   answered=false;
   taAnsweredTotal=0;
   taCorrect=0;
-  taCombo=0;
-  taBestCombo=0;
   taRemainingPool=shuffle(bank.map(q=>({...q,_view:null})));
 
   $("progress").textContent="";
   $("taHud").style.display="flex";
   $("quizScreen").classList.add("timeattack-active");
-  $("taTimer").textContent="30.0";
+  $("taTimer").textContent="30.0 秒";
   $("taTimer").classList.remove("danger");
   $("taScore").textContent="0 CORRECT";
-  $("taCombo").textContent="0 COMBO";
-  $("taCombo").classList.remove("show");
+  
+  
 
   show("quizScreen");
   taEndTime=performance.now()+30000;
@@ -2192,7 +2208,7 @@ function startTimeAttack(){
   clearInterval(taTimerId);
   taTimerId=setInterval(()=>{
     const remain=Math.max(0,taEndTime-performance.now());
-    $("taTimer").textContent=(remain/1000).toFixed(1);
+    $("taTimer").textContent=(remain/1000).toFixed(1)+" 秒";
     $("taTimer").classList.toggle("danger",remain<=5000);
     if(remain<=0) finishTimeAttack();
   },50);
@@ -2233,7 +2249,7 @@ function finishTimeAttack(){
   $("taFinalCorrect").textContent=taCorrect;
   $("taFinalStars").textContent=result.stars;
   $("taFinalRank").textContent=result.rank;
-  $("taFinalStats").textContent=`作答 ${taAnsweredTotal} 題｜答對 ${taCorrect} 題｜正確率 ${rate}%｜最高 ${taBestCombo} COMBO`;
+  $("taFinalStats").textContent=`作答 ${taAnsweredTotal} 題｜答對 ${taCorrect} 題｜正確率 ${rate}%`;
 
   show("timeAttackResultScreen");
 }
@@ -2300,6 +2316,10 @@ function render(){
   db.textContent=q.difficulty;
   db.className="badge "+(q.difficulty==="簡單"?"easy":"hard");
 
+  if(timeAttackMode){
+    $("taMode").textContent=`${q.category==="動畫" ? "動畫題" : "陀螺題"}・${q.difficulty}`;
+  }
+
   $("answers").innerHTML="";
 
   q._view.options.forEach((opt,i)=>{
@@ -2364,15 +2384,12 @@ function chooseAnswer(i,b){
 
     if(isCorrect){
       taCorrect++;
-      taCombo++;
-      taBestCombo=Math.max(taBestCombo,taCombo);
     }else{
-      taCombo=0;
-    }
+        }
 
     $("taScore").textContent=`${taCorrect} CORRECT`;
-    $("taCombo").textContent=`${taCombo} COMBO`;
-    $("taCombo").classList.toggle("show",taCombo>=2);
+    
+    
     $("nextBtn").classList.add("hidden");
 
     setTimeout(()=>{

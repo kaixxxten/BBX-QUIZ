@@ -65,3 +65,18 @@ LEGEND BLADER：答對 ≥15 題 且 正確率 ≥90%
 10/11 = 91% 為 X塔級 BLADER
 12/14 = 86% 為 MASTER BLADER
 15/16 = 94% 為 LEGEND BLADER
+
+【V3 HUD】
+30秒極限挑戰的 HUD 改為：
+左：COMBO
+中：CORRECT
+右：倒數秒數
+倒數秒數加大，最後 5 秒維持紅色警示。
+
+【V4 HUD】
+極限挑戰上方 HUD 改為同一排三欄：
+左：目前題型與難度（例：陀螺題・簡單）
+中：CORRECT
+右：大讀秒
+
+COMBO 顯示與結算中的最高 COMBO 已移除。
