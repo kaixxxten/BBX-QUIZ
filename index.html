@@ -1931,6 +1931,181 @@ body.phone-device.phone-portrait{
   padding-top:10px !important;
 }
 
+
+/* =========================================================
+   V18 — PHONE LANDSCAPE RATIO
+   橫式手機使用較扁的 1180×560 畫布比例，
+   保留原本雙欄 UI，只壓縮垂直空間。
+   ========================================================= */
+body.phone-landscape-ratio .app-stage{
+  width:1180px;
+  height:560px;
+}
+
+body.phone-landscape-ratio .app{
+  width:1180px !important;
+  height:560px !important;
+}
+
+body.phone-landscape-ratio .topbar{
+  height:54px !important;
+  flex-basis:54px !important;
+  padding:0 22px !important;
+}
+body.phone-landscape-ratio .brand{
+  font-size:24px !important;
+}
+body.phone-landscape-ratio .main{
+  min-height:0 !important;
+}
+body.phone-landscape-ratio .screen{
+  padding:12px 26px !important;
+}
+
+/* 首頁 */
+body.phone-landscape-ratio #categoryScreen .hero-panel{
+  width:min(1040px,100%) !important;
+  padding:12px 24px !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-kicker{
+  display:none !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-title{
+  font-size:42px !important;
+  margin:0 0 4px !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-sub{
+  font-size:18px !important;
+  margin:0 0 12px !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-actions{
+  gap:14px !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-card{
+  min-height:150px !important;
+  padding:16px 22px !important;
+}
+body.phone-landscape-ratio #categoryScreen .card-title{
+  font-size:38px !important;
+  margin-bottom:8px !important;
+}
+body.phone-landscape-ratio #categoryScreen .card-desc{
+  font-size:16px !important;
+  line-height:1.35 !important;
+}
+body.phone-landscape-ratio #categoryScreen .timeattack-card{
+  margin-top:12px !important;
+  padding:12px 22px !important;
+}
+body.phone-landscape-ratio #categoryScreen .timeattack-title{
+  font-size:30px !important;
+}
+body.phone-landscape-ratio #categoryScreen .timeattack-sub{
+  font-size:13px !important;
+  margin-top:3px !important;
+}
+body.phone-landscape-ratio #categoryScreen .hero-foot{
+  margin-top:8px !important;
+  font-size:11px !important;
+}
+
+/* 難度頁 */
+body.phone-landscape-ratio .difficulty-panel{
+  width:min(1040px,100%) !important;
+  padding:10px 22px !important;
+}
+body.phone-landscape-ratio .difficulty-big-title{
+  font-size:38px !important;
+  margin-bottom:2px !important;
+}
+body.phone-landscape-ratio .difficulty-big-sub{
+  font-size:17px !important;
+  margin-bottom:10px !important;
+}
+body.phone-landscape-ratio .diff-wrap{
+  gap:14px !important;
+}
+body.phone-landscape-ratio .diff-card{
+  min-height:190px !important;
+  padding:16px 22px !important;
+}
+body.phone-landscape-ratio .diff-name{
+  font-size:68px !important;
+}
+body.phone-landscape-ratio .diff-desc{
+  font-size:15px !important;
+}
+body.phone-landscape-ratio .difficulty-foot{
+  margin-top:8px !important;
+  font-size:11px !important;
+}
+
+/* 一般答題 */
+body.phone-landscape-ratio #quizScreen .quiz{
+  grid-template-rows:38px 92px minmax(0,1fr) 86px !important;
+  gap:8px !important;
+}
+body.phone-landscape-ratio #quizScreen .badge{
+  padding:6px 11px !important;
+  font-size:14px !important;
+}
+body.phone-landscape-ratio #quizScreen .question-box{
+  padding:12px 18px !important;
+}
+body.phone-landscape-ratio #quizScreen .question{
+  font-size:30px !important;
+}
+body.phone-landscape-ratio #quizScreen .answers{
+  gap:10px !important;
+}
+body.phone-landscape-ratio #quizScreen .answer{
+  font-size:25px !important;
+  padding:12px 16px !important;
+  overflow:hidden !important;
+}
+body.phone-landscape-ratio #quizScreen .bottom{
+  min-height:86px !important;
+  padding:8px 10px !important;
+  grid-template-columns:minmax(0,1fr) 130px !important;
+}
+body.phone-landscape-ratio #quizScreen .feedback-title{
+  font-size:21px !important;
+}
+body.phone-landscape-ratio #quizScreen .feedback-answer{
+  font-size:12px !important;
+}
+body.phone-landscape-ratio #quizScreen .feedback-text{
+  font-size:11px !important;
+}
+body.phone-landscape-ratio #quizScreen .next{
+  font-size:15px !important;
+  padding:9px !important;
+}
+
+/* 30秒 */
+body.phone-landscape-ratio #quizScreen.timeattack-active .quiz{
+  padding-top:52px !important;
+  grid-template-rows:92px minmax(0,1fr) !important;
+  gap:8px !important;
+}
+body.phone-landscape-ratio #quizScreen.timeattack-active .meta-row,
+body.phone-landscape-ratio #quizScreen.timeattack-active .bottom{
+  display:none !important;
+}
+body.phone-landscape-ratio #quizScreen.timeattack-active .ta-hud{
+  top:6px !important;
+  left:26px !important;
+  right:26px !important;
+}
+body.phone-landscape-ratio #quizScreen.timeattack-active .ta-pill{
+  font-size:18px !important;
+  padding:7px 12px !important;
+}
+body.phone-landscape-ratio #quizScreen.timeattack-active #taTimer{
+  font-size:28px !important;
+  min-width:170px !important;
+}
+
 </style>
 </head>
 <body>
@@ -3241,33 +3416,37 @@ function refreshDeviceScale(){
 
   const touch=(navigator.maxTouchPoints||0)>0 || ("ontouchstart" in window);
   const portrait=vh>vw;
-
-  /*
-    不再重排手機 UI。
-    只計算一個可以完整容納 1180×850 的 scale。
-    手機再乘 0.94 留少量安全邊界，避免瀏覽器工具列剛好壓到外框。
-  */
-  const safeX=touch ? 12 : 16;
-  const safeY=touch ? 12 : 16;
-
-  let scale=Math.min(
-    (vw-safeX)/DESIGN_WIDTH,
-    (vh-safeY)/DESIGN_HEIGHT
-  );
-
-  if(touch) scale*=0.94;
-  scale=Math.max(0.18,Math.min(scale,1.35));
+  const phone=touch && Math.min(vw,vh)<760;
+  const phoneLandscape=phone && !portrait;
 
   const app=document.querySelector(".app");
   const stage=document.getElementById("appStage");
   if(!app || !stage) return;
 
-  app.style.transform=`scale(${scale})`;
-  stage.style.width=(DESIGN_WIDTH*scale)+"px";
-  stage.style.height=(DESIGN_HEIGHT*scale)+"px";
+  document.body.classList.toggle("phone-device",phone);
+  document.body.classList.toggle("phone-portrait",phone && portrait);
+  document.body.classList.toggle("phone-landscape-ratio",phoneLandscape);
 
-  document.body.classList.toggle("phone-device",touch && Math.min(vw,vh)<760);
-  document.body.classList.toggle("phone-portrait",touch && portrait && Math.min(vw,vh)<760);
+  const designW=1180;
+  const designH=phoneLandscape ? 560 : 850;
+
+  const safeX=touch ? 12 : 16;
+  const safeY=touch ? 12 : 16;
+
+  let scale=Math.min(
+    (vw-safeX)/designW,
+    (vh-safeY)/designH
+  );
+
+  if(touch) scale*=0.96;
+  scale=Math.max(0.18,Math.min(scale,1.35));
+
+  app.style.width=designW+"px";
+  app.style.height=designH+"px";
+  app.style.transform=`scale(${scale})`;
+
+  stage.style.width=(designW*scale)+"px";
+  stage.style.height=(designH*scale)+"px";
 
   if($("quizScreen") && $("quizScreen").classList.contains("active")){
     requestAnimationFrame(fitQuestionText);
