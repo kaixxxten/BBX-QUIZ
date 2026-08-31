@@ -1746,6 +1746,109 @@ h1{
   100%{transform:scale(1);text-shadow:0 0 0 rgba(41,75,142,0)}
 }
 
+
+/* ===== TIME ATTACK V7：重新整理答題畫面 ===== */
+#quizScreen.timeattack-active .quiz{
+  padding-top:72px !important;
+  grid-template-rows:132px minmax(0,1fr) !important;
+  gap:14px !important;
+}
+#quizScreen.timeattack-active .meta-row{
+  display:none !important;
+}
+#quizScreen.timeattack-active .bottom{
+  display:none !important;
+}
+#quizScreen.timeattack-active .answers{
+  min-height:0 !important;
+  grid-template-rows:1fr 1fr !important;
+  gap:16px !important;
+}
+#quizScreen.timeattack-active .answer{
+  min-height:0 !important;
+  overflow:hidden !important;
+  display:flex;
+  align-items:center;
+}
+
+/* ===== 本次答題回顧 ===== */
+.review-wrap{
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-rows:auto auto auto minmax(0,1fr) auto;
+  gap:12px;
+}
+.review-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+}
+.review-title{
+  color:var(--navy);
+  font-size:clamp(26px,3vw,40px);
+  font-weight:1000;
+}
+.review-count{
+  color:var(--muted);
+  font-size:18px;
+  font-weight:900;
+}
+.review-question{
+  background:var(--navy);
+  color:#fff;
+  border-radius:20px;
+  padding:20px 24px;
+  font-size:clamp(24px,2.8vw,36px);
+  font-weight:1000;
+  line-height:1.3;
+}
+.review-status{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:clamp(20px,2.2vw,28px);
+  font-weight:1000;
+}
+.review-status.correct{color:var(--correct)}
+.review-status.wrong{color:var(--wrong)}
+.review-body{
+  min-height:0;
+  overflow:auto;
+  border:2px solid var(--line);
+  border-radius:18px;
+  padding:18px 22px;
+  background:#fff;
+}
+.review-row{
+  font-size:clamp(17px,1.8vw,24px);
+  line-height:1.5;
+  margin-bottom:12px;
+  color:var(--text);
+}
+.review-row strong{color:var(--navy)}
+.review-explanation{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1.5px solid var(--line);
+  color:var(--muted);
+  font-size:clamp(16px,1.6vw,21px);
+  line-height:1.55;
+}
+.review-actions,
+.ta-result-actions{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+.review-actions .primary,
+.review-actions .btn,
+.ta-result-actions .primary,
+.ta-result-actions .btn{
+  min-width:190px;
+}
+
 </style>
 </head>
 <body>
@@ -1863,7 +1966,35 @@ h1{
       <div class="ta-rank" id="taFinalRank">見習 BLADER</div>
       <div class="ta-rank-note" id="taRankNote">速度與正確率都會影響稱號</div>
       <div class="ta-stats" id="taFinalStats">作答 0 題｜答對 0 題｜正確率 0%</div>
-      <button class="primary" id="taRestartBtn">回到 TOP</button>
+      <div class="ta-result-actions">
+        <button class="btn" id="taReviewBtn">查看本次答題</button>
+        <button class="primary" id="taRestartBtn">回到 TOP</button>
+      </div>
+    </section>
+
+    
+    <section class="screen" id="timeAttackReviewScreen">
+      <div class="review-wrap">
+        <div class="review-head">
+          <div class="review-title">本次答題</div>
+          <div class="review-count" id="reviewCount">1 / 1</div>
+        </div>
+
+        <div class="review-question" id="reviewQuestion"></div>
+        <div class="review-status" id="reviewStatus"></div>
+
+        <div class="review-body">
+          <div class="review-row"><strong>你的答案：</strong><span id="reviewYourAnswer"></span></div>
+          <div class="review-row"><strong>正確答案：</strong><span id="reviewCorrectAnswer"></span></div>
+          <div class="review-explanation" id="reviewExplanation"></div>
+        </div>
+
+        <div class="review-actions">
+          <button class="btn" id="reviewPrevBtn">上一題</button>
+          <button class="btn" id="reviewBackBtn">返回結算</button>
+          <button class="primary" id="reviewNextBtn">下一題</button>
+        </div>
+      </div>
     </section>
 
     <section class="screen manage-home" id="editorScreen">
@@ -2056,12 +2187,14 @@ let taTimerId=null;
 let taAnsweredTotal=0;
 let taCorrect=0;
 let taRemainingPool=[];
+let taHistory=[];
+let reviewIndex=0;
 
 let adminCategory="動畫";
 let adminDifficulty="簡單";
 
 const $=id=>document.getElementById(id);
-const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","timeAttackResultScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
+const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","timeAttackResultScreen","timeAttackReviewScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
 
 function show(id){
   screens.forEach(x=>$(x).classList.remove("active"));
@@ -2280,6 +2413,8 @@ function startTimeAttack(){
   taAnsweredTotal=0;
   taCorrect=0;
   taRemainingPool=shuffle(bank.map(q=>({...q,_view:null})));
+  taHistory=[];
+  reviewIndex=0;
 
   $("progress").textContent="";
   $("taHud").style.display="flex";
@@ -2564,8 +2699,18 @@ function chooseAnswer(i,b){
 
     if(isCorrect){
       taCorrect++;
-    }else{
-        }
+    }
+
+    taHistory.push({
+      category:q.category,
+      difficulty:q.difficulty,
+      question:q.question,
+      options:[...q._view.options],
+      selectedIndex:i,
+      correctIndex:q._view.answer,
+      isCorrect,
+      explanation:q.explanation||""
+    });
 
     $("taScore").textContent=`${taCorrect} CORRECT`;
     
@@ -2580,6 +2725,45 @@ function chooseAnswer(i,b){
 
   $("nextBtn").classList.remove("hidden");
   $("nextBtn").textContent=index===current.length-1?"看結果":"下一題";
+}
+
+
+function renderTimeAttackReview(){
+  if(!taHistory.length){
+    $("reviewCount").textContent="0 / 0";
+    $("reviewQuestion").textContent="本次沒有完成作答的題目。";
+    $("reviewStatus").textContent="";
+    $("reviewYourAnswer").textContent="—";
+    $("reviewCorrectAnswer").textContent="—";
+    $("reviewExplanation").textContent="";
+    $("reviewPrevBtn").disabled=true;
+    $("reviewNextBtn").disabled=true;
+    return;
+  }
+
+  const item=taHistory[reviewIndex];
+  const yourLetter=String.fromCharCode(65+item.selectedIndex);
+  const correctLetter=String.fromCharCode(65+item.correctIndex);
+
+  $("reviewCount").textContent=`${reviewIndex+1} / ${taHistory.length}`;
+  $("reviewQuestion").textContent=`${item.category==="動畫"?"動畫題":"陀螺題"}・${item.difficulty}｜${item.question}`;
+
+  const status=$("reviewStatus");
+  status.textContent=item.isCorrect ? "✓ 答對了" : "✕ 答錯了";
+  status.className="review-status "+(item.isCorrect?"correct":"wrong");
+
+  $("reviewYourAnswer").textContent=`${yourLetter}. ${item.options[item.selectedIndex]}`;
+  $("reviewCorrectAnswer").textContent=`${correctLetter}. ${item.options[item.correctIndex]}`;
+  $("reviewExplanation").textContent=item.explanation || "此題沒有解說。";
+
+  $("reviewPrevBtn").disabled=reviewIndex===0;
+  $("reviewNextBtn").disabled=reviewIndex===taHistory.length-1;
+}
+
+function openTimeAttackReview(){
+  reviewIndex=0;
+  renderTimeAttackReview();
+  show("timeAttackReviewScreen");
 }
 
 function clearResultEffects(){
@@ -2831,6 +3015,22 @@ document.querySelectorAll("[data-difficulty]").forEach(btn=>{
 
 $("nextBtn").onclick=next;
 $("timeAttackBtn").onclick=startTimeAttack;
+$("taReviewBtn").onclick=openTimeAttackReview;
+
+$("reviewPrevBtn").onclick=()=>{
+  if(reviewIndex>0){
+    reviewIndex--;
+    renderTimeAttackReview();
+  }
+};
+$("reviewNextBtn").onclick=()=>{
+  if(reviewIndex<taHistory.length-1){
+    reviewIndex++;
+    renderTimeAttackReview();
+  }
+};
+$("reviewBackBtn").onclick=()=>show("timeAttackResultScreen");
+
 $("taRestartBtn").onclick=()=>{
   timeAttackMode=false;
   clearInterval(taTimerId);
