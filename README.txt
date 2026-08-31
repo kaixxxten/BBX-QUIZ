@@ -47,3 +47,21 @@ animeTitle=動畫題
 首頁極限挑戰文字也可在 settings/page_text.txt 修改：
 timeAttackTitle=
 timeAttackSub=
+
+【30秒極限挑戰 V2 稱號規則】
+稱號必須同時達到「答對題數」與「正確率」兩個門檻：
+
+見習 BLADER：未達以下門檻
+新星 BLADER：答對 ≥4 題 且 正確率 ≥50%
+職業 BLADER：答對 ≥6 題 且 正確率 ≥60%
+頂尖 BLADER：答對 ≥8 題 且 正確率 ≥70%
+X塔級 BLADER：答對 ≥10 題 且 正確率 ≥80%
+MASTER BLADER：答對 ≥12 題 且 正確率 ≥85%
+LEGEND BLADER：答對 ≥15 題 且 正確率 ≥90%
+
+結算頁會顯示星等。
+例如：
+1/1 = 100% 仍為見習 BLADER
+10/11 = 91% 為 X塔級 BLADER
+12/14 = 86% 為 MASTER BLADER
+15/16 = 94% 為 LEGEND BLADER

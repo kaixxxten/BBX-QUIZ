@@ -1622,6 +1622,23 @@ h1{
   .feedback-icon{width:38px;height:38px;font-size:24px}
   .next{font-size:16px}
 }
+
+.ta-stars{
+  font-size:clamp(34px,4vw,58px);
+  line-height:1;
+  letter-spacing:.08em;
+  color:var(--navy);
+  font-weight:1000;
+  margin:4px 0 14px;
+}
+.ta-rank-note{
+  font-size:clamp(15px,1.45vw,20px);
+  color:var(--muted);
+  font-weight:800;
+  margin-top:-4px;
+  margin-bottom:18px;
+}
+
 </style>
 </head>
 <body>
@@ -1733,7 +1750,9 @@ h1{
       <div class="ta-result-title">TIME UP!</div>
       <div class="ta-big-number" id="taFinalCorrect">0</div>
       <div class="ta-big-label">CORRECT</div>
+      <div class="ta-stars" id="taFinalStars">★☆☆☆☆</div>
       <div class="ta-rank" id="taFinalRank">見習 BLADER</div>
+      <div class="ta-rank-note" id="taRankNote">速度與正確率都會影響稱號</div>
       <div class="ta-stats" id="taFinalStats">作答 0 題｜答對 0 題｜正確率 0%</div>
       <button class="primary" id="taRestartBtn">回到 TOP</button>
     </section>
@@ -2117,14 +2136,29 @@ function startGame(difficulty){
 }
 
 
-function getTimeAttackRank(correct){
-  if(correct>=15) return "LEGEND BLADER";
-  if(correct>=12) return "MASTER BLADER";
-  if(correct>=10) return "X塔級 BLADER";
-  if(correct>=8) return "頂尖 BLADER";
-  if(correct>=6) return "職業 BLADER";
-  if(correct>=4) return "新星 BLADER";
-  return "見習 BLADER";
+function getTimeAttackResult(correct,total){
+  const rate=total ? Math.round(correct/total*100) : 0;
+
+  // 必須同時達到「答對題數」與「正確率」門檻。
+  if(correct>=15 && rate>=90){
+    return {rank:"LEGEND BLADER",stars:"★★★★★＋"};
+  }
+  if(correct>=12 && rate>=85){
+    return {rank:"MASTER BLADER",stars:"★★★★★"};
+  }
+  if(correct>=10 && rate>=80){
+    return {rank:"X塔級 BLADER",stars:"★★★★☆"};
+  }
+  if(correct>=8 && rate>=70){
+    return {rank:"頂尖 BLADER",stars:"★★★☆☆"};
+  }
+  if(correct>=6 && rate>=60){
+    return {rank:"職業 BLADER",stars:"★★☆☆☆"};
+  }
+  if(correct>=4 && rate>=50){
+    return {rank:"新星 BLADER",stars:"★★☆☆☆"};
+  }
+  return {rank:"見習 BLADER",stars:"★☆☆☆☆"};
 }
 
 function startTimeAttack(){
@@ -2194,8 +2228,11 @@ function finishTimeAttack(){
   $("progress").textContent="";
 
   const rate=taAnsweredTotal ? Math.round(taCorrect/taAnsweredTotal*100) : 0;
+  const result=getTimeAttackResult(taCorrect,taAnsweredTotal);
+
   $("taFinalCorrect").textContent=taCorrect;
-  $("taFinalRank").textContent=getTimeAttackRank(taCorrect);
+  $("taFinalStars").textContent=result.stars;
+  $("taFinalRank").textContent=result.rank;
   $("taFinalStats").textContent=`作答 ${taAnsweredTotal} 題｜答對 ${taCorrect} 題｜正確率 ${rate}%｜最高 ${taBestCombo} COMBO`;
 
   show("timeAttackResultScreen");
