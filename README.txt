@@ -30,3 +30,20 @@ animeTitle=動畫題
 
 注意：本版本使用 fetch() 讀 TXT，請從 GitHub Pages 網址開啟。
 直接在電腦雙擊 index.html，瀏覽器可能因 file:// 安全限制無法讀取 TXT。
+
+【30秒極限挑戰】
+首頁新增 30 秒極限挑戰。
+會從四份題庫（動畫/陀螺 × 簡單/困難）全部混合隨機出題。
+答題後約 0.25 秒自動切到下一題，30 秒到立即結算。
+稱號：
+0–3 見習 BLADER
+4–5 新星 BLADER
+6–7 職業 BLADER
+8–9 頂尖 BLADER
+10–11 X塔級 BLADER
+12–14 MASTER BLADER
+15+ LEGEND BLADER
+
+首頁極限挑戰文字也可在 settings/page_text.txt 修改：
+timeAttackTitle=
+timeAttackSub=

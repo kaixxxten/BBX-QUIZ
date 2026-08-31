@@ -10,3 +10,5 @@ hardTitle=困難
 hardDesc=給熟悉作品或陀螺的玩家挑戰。
 homeFoot=每次挑戰都會從對應題庫中重新隨機抽選。
 difficultyFoot=每次會從所選分類與難度中隨機抽出 5 題。
+timeAttackTitle=30秒 極限挑戰
+timeAttackSub=ALL QUESTION TIME ATTACK

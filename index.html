@@ -1476,6 +1476,107 @@ h1{
   margin-top:3px !important;
 }
 
+
+/* ===== 30秒極限挑戰 ===== */
+.timeattack-card{
+  width:100%;
+  margin-top:20px;
+  padding:22px 28px;
+  border:4px solid var(--navy);
+  border-radius:24px;
+  background:var(--navy);
+  color:#fff;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+  box-shadow:0 10px 24px rgba(20,44,88,.16);
+}
+.timeattack-card:hover{transform:translateY(-2px)}
+.timeattack-card:active{transform:translateY(0)}
+.timeattack-title{
+  font-size:clamp(29px,3vw,44px);
+  font-weight:1000;
+  line-height:1.05;
+}
+.timeattack-sub{
+  margin-top:7px;
+  font-size:clamp(14px,1.45vw,20px);
+  font-weight:850;
+  opacity:.9;
+}
+.ta-hud{
+  position:absolute;
+  left:28px;
+  right:28px;
+  top:14px;
+  z-index:8;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  pointer-events:none;
+}
+.ta-pill{
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:#fff;
+  color:var(--navy);
+  padding:8px 16px;
+  font-size:clamp(17px,1.8vw,25px);
+  font-weight:1000;
+  line-height:1;
+  min-width:126px;
+  text-align:center;
+  box-shadow:0 6px 18px rgba(20,44,88,.08);
+}
+#taTimer.danger{
+  color:var(--wrong);
+  border-color:var(--wrong);
+}
+#taCombo{
+  min-width:150px;
+  opacity:0;
+  transform:scale(.9);
+  transition:opacity .1s ease,transform .1s ease;
+}
+#taCombo.show{
+  opacity:1;
+  transform:scale(1);
+}
+#quizScreen.timeattack-active .quiz{
+  padding-top:72px;
+}
+.ta-result-title{
+  font-size:clamp(28px,3vw,44px);
+  font-weight:1000;
+  color:var(--navy);
+  margin-bottom:10px;
+}
+.ta-big-number{
+  font-size:clamp(90px,10vw,150px);
+  line-height:.9;
+  font-weight:1000;
+  color:var(--navy);
+  letter-spacing:-.05em;
+}
+.ta-big-label{
+  font-size:clamp(20px,2.1vw,30px);
+  font-weight:900;
+  color:var(--muted);
+  margin:8px 0 20px;
+}
+.ta-rank{
+  font-size:clamp(34px,4vw,58px);
+  font-weight:1000;
+  color:var(--navy);
+  margin-bottom:12px;
+}
+.ta-stats{
+  font-size:clamp(17px,1.8vw,25px);
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:26px;
+}
+
 @media(max-width:760px){
   .manage-grid{grid-template-columns:1fr !important}
   .manage-card.text-setting{grid-column:auto}
@@ -1554,7 +1655,13 @@ h1{
           </button>
         </div>
 
-        <div class="hero-foot" id="homeFoot">每次挑戰都會從對應題庫中重新隨機抽選。</div>
+        
+        <button class="timeattack-card" id="timeAttackBtn">
+          <div class="timeattack-title" id="timeAttackTitle">30秒 極限挑戰</div>
+          <div class="timeattack-sub" id="timeAttackSub">ALL QUESTION TIME ATTACK</div>
+        </button>
+
+<div class="hero-foot" id="homeFoot">每次挑戰都會從對應題庫中重新隨機抽選。</div>
       </div>
     </section>
 
@@ -1580,6 +1687,11 @@ h1{
     </section>
 
     <section class="screen" id="quizScreen">
+      <div class="ta-hud" id="taHud" style="display:none">
+        <div class="ta-pill" id="taTimer">30.0</div>
+        <div class="ta-pill" id="taScore">0 CORRECT</div>
+        <div class="ta-pill" id="taCombo">0 COMBO</div>
+      </div>
       <div class="quiz">
         <div class="meta-row">
           <div class="badges">
@@ -1615,6 +1727,15 @@ h1{
       <div class="score" id="scoreText">0 / 5</div>
       <div class="result-text" id="resultText"></div>
       <button class="primary" id="restartBtn">重新選擇分類</button>
+    </section>
+
+    <section class="screen center" id="timeAttackResultScreen">
+      <div class="ta-result-title">TIME UP!</div>
+      <div class="ta-big-number" id="taFinalCorrect">0</div>
+      <div class="ta-big-label">CORRECT</div>
+      <div class="ta-rank" id="taFinalRank">見習 BLADER</div>
+      <div class="ta-stats" id="taFinalStats">作答 0 題｜答對 0 題｜正確率 0%</div>
+      <button class="primary" id="taRestartBtn">回到 TOP</button>
     </section>
 
     <section class="screen manage-home" id="editorScreen">
@@ -1789,7 +1910,9 @@ const UI_DEFAULTS={
   hardTitle:"困難",
   hardDesc:"給熟悉作品或陀螺的玩家挑戰。",
   homeFoot:"每次挑戰都會從對應題庫中重新隨機抽選。",
-  difficultyFoot:"每次會從所選分類與難度中隨機抽出 5 題。"
+  difficultyFoot:"每次會從所選分類與難度中隨機抽出 5 題。",
+  timeAttackTitle:"30秒 極限挑戰",
+  timeAttackSub:"ALL QUESTION TIME ATTACK"
 };
 
 let bank=[];
@@ -1799,11 +1922,20 @@ let score=0;
 let answered=false;
 let selectedCategory="動畫";
 let selectedDifficulty="簡單";
+let timeAttackMode=false;
+let taEndTime=0;
+let taTimerId=null;
+let taAnsweredTotal=0;
+let taCorrect=0;
+let taCombo=0;
+let taBestCombo=0;
+let taRemainingPool=[];
+
 let adminCategory="動畫";
 let adminDifficulty="簡單";
 
 const $=id=>document.getElementById(id);
-const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
+const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","timeAttackResultScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
 
 function show(id){
   screens.forEach(x=>$(x).classList.remove("active"));
@@ -1931,6 +2063,8 @@ function applyUI(ui){
   $("hardDesc").textContent=ui.hardDesc;
   $("homeFoot").textContent=ui.homeFoot;
   $("difficultyFoot").textContent=ui.difficultyFoot;
+  $("timeAttackTitle").textContent=ui.timeAttackTitle;
+  $("timeAttackSub").textContent=ui.timeAttackSub;
 }
 
 function fillUIInputs(ui){
@@ -1958,14 +2092,12 @@ function chooseCategory(category){
 }
 
 function startGame(difficulty){
-  selectedDifficulty=difficulty;
+  timeAttackMode=false;
+  $("quizScreen").classList.remove("timeattack-active");
+  $("taHud").style.display="none";
+  clearInterval(taTimerId);
 
-  try{
-    bank=parse(localStorage.getItem(KEY)||SAMPLE);
-  }catch(e){
-    alert("題庫格式有誤，請先到題庫管理修正。");
-    return;
-  }
+  selectedDifficulty=difficulty;
 
   const pool=bank.filter(q =>
     q.category===selectedCategory &&
@@ -1982,6 +2114,91 @@ function startGame(difficulty){
   score=0;
   show("quizScreen");
   render();
+}
+
+
+function getTimeAttackRank(correct){
+  if(correct>=15) return "LEGEND BLADER";
+  if(correct>=12) return "MASTER BLADER";
+  if(correct>=10) return "X塔級 BLADER";
+  if(correct>=8) return "頂尖 BLADER";
+  if(correct>=6) return "職業 BLADER";
+  if(correct>=4) return "新星 BLADER";
+  return "見習 BLADER";
+}
+
+function startTimeAttack(){
+  if(!bank.length){
+    alert("題庫尚未載入完成。");
+    return;
+  }
+
+  timeAttackMode=true;
+  score=0;
+  answered=false;
+  taAnsweredTotal=0;
+  taCorrect=0;
+  taCombo=0;
+  taBestCombo=0;
+  taRemainingPool=shuffle(bank.map(q=>({...q,_view:null})));
+
+  $("progress").textContent="";
+  $("taHud").style.display="flex";
+  $("quizScreen").classList.add("timeattack-active");
+  $("taTimer").textContent="30.0";
+  $("taTimer").classList.remove("danger");
+  $("taScore").textContent="0 CORRECT";
+  $("taCombo").textContent="0 COMBO";
+  $("taCombo").classList.remove("show");
+
+  show("quizScreen");
+  taEndTime=performance.now()+30000;
+  nextTimeAttackQuestion();
+
+  clearInterval(taTimerId);
+  taTimerId=setInterval(()=>{
+    const remain=Math.max(0,taEndTime-performance.now());
+    $("taTimer").textContent=(remain/1000).toFixed(1);
+    $("taTimer").classList.toggle("danger",remain<=5000);
+    if(remain<=0) finishTimeAttack();
+  },50);
+}
+
+function nextTimeAttackQuestion(){
+  if(!timeAttackMode) return;
+  if(performance.now()>=taEndTime){
+    finishTimeAttack();
+    return;
+  }
+
+  if(!taRemainingPool.length){
+    taRemainingPool=shuffle(bank.map(q=>({...q,_view:null})));
+  }
+
+  current=[taRemainingPool.pop()];
+  index=0;
+  answered=false;
+  render();
+  $("progress").textContent="";
+}
+
+function finishTimeAttack(){
+  if(!timeAttackMode) return;
+
+  timeAttackMode=false;
+  clearInterval(taTimerId);
+  taTimerId=null;
+
+  $("quizScreen").classList.remove("timeattack-active");
+  $("taHud").style.display="none";
+  $("progress").textContent="";
+
+  const rate=taAnsweredTotal ? Math.round(taCorrect/taAnsweredTotal*100) : 0;
+  $("taFinalCorrect").textContent=taCorrect;
+  $("taFinalRank").textContent=getTimeAttackRank(taCorrect);
+  $("taFinalStats").textContent=`作答 ${taAnsweredTotal} 題｜答對 ${taCorrect} 題｜正確率 ${rate}%｜最高 ${taBestCombo} COMBO`;
+
+  show("timeAttackResultScreen");
 }
 
 function fitQuestionText(){
@@ -2027,7 +2244,8 @@ function render(){
     q._view=shuffledQuestionView(q);
   }
 
-  $("progress").textContent=`${index+1} / ${current.length}`;
+  if(!timeAttackMode) $("progress").textContent=`${index+1} / ${current.length}`;
+  else $("progress").textContent="";
   $("question").textContent=q.question;
   requestAnimationFrame(fitQuestionText);
   $("feedbackTitle").textContent="";
@@ -2078,11 +2296,12 @@ function chooseAnswer(i,b){
 
   const q=current[index];
   const buttons=[...$("answers").querySelectorAll(".answer")];
-
   buttons.forEach(x=>x.disabled=true);
 
-  if(i===q._view.answer){
-    score++;
+  const isCorrect=i===q._view.answer;
+
+  if(isCorrect){
+    if(!timeAttackMode) score++;
     b.classList.add("correct");
     b.insertAdjacentHTML("beforeend",'<span class="answer-mark">✓</span>');
     $("feedbackTitle").textContent="答對了！";
@@ -2102,6 +2321,29 @@ function chooseAnswer(i,b){
   $("feedbackAnswer").textContent=`正確答案：${correctLetter}. ${q._view.options[q._view.answer]}`;
   $("feedbackText").textContent=q.explanation||"";
   requestAnimationFrame(fitFeedbackText);
+
+  if(timeAttackMode){
+    taAnsweredTotal++;
+
+    if(isCorrect){
+      taCorrect++;
+      taCombo++;
+      taBestCombo=Math.max(taBestCombo,taCombo);
+    }else{
+      taCombo=0;
+    }
+
+    $("taScore").textContent=`${taCorrect} CORRECT`;
+    $("taCombo").textContent=`${taCombo} COMBO`;
+    $("taCombo").classList.toggle("show",taCombo>=2);
+    $("nextBtn").classList.add("hidden");
+
+    setTimeout(()=>{
+      if(timeAttackMode) nextTimeAttackQuestion();
+    },250);
+    return;
+  }
+
   $("nextBtn").classList.remove("hidden");
   $("nextBtn").textContent=index===current.length-1?"看結果":"下一題";
 }
@@ -2354,9 +2596,22 @@ document.querySelectorAll("[data-difficulty]").forEach(btn=>{
 });
 
 $("nextBtn").onclick=next;
+$("timeAttackBtn").onclick=startTimeAttack;
+$("taRestartBtn").onclick=()=>{
+  timeAttackMode=false;
+  clearInterval(taTimerId);
+  $("quizScreen").classList.remove("timeattack-active");
+  $("taHud").style.display="none";
+  show("categoryScreen");
+};
 $("restartBtn").onclick=()=>show("categoryScreen");
 
 $("topBtn").onclick=()=>{
+  timeAttackMode=false;
+  clearInterval(taTimerId);
+  taTimerId=null;
+  $("quizScreen").classList.remove("timeattack-active");
+  $("taHud").style.display="none";
   $("progress").textContent="";
   show("categoryScreen");
 };
