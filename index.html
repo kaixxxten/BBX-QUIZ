@@ -1916,540 +1916,10 @@ h1{
 }
 
 
-/* ===== V10 手機兼容 ===== */
-.rotate-hint{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:#fff;
-  color:var(--navy);
-}
-.rotate-card{
-  width:min(320px,88vw);
-  text-align:center;
-  border:3px solid var(--navy);
-  border-radius:24px;
-  padding:28px 22px;
-  box-shadow:0 14px 34px rgba(23,43,85,.12);
-}
-.rotate-icon{
-  font-size:54px;
-  font-weight:1000;
-  line-height:1;
-  margin-bottom:10px;
-}
-.rotate-title{
-  font-size:28px;
-  font-weight:1000;
-  margin-bottom:8px;
-}
-.rotate-text{
-  font-size:16px;
-  line-height:1.5;
-  color:var(--muted);
-}
-
-/* 手機直式：顯示旋轉提示 */
-@media (max-width: 760px) and (orientation: portrait){
-  .rotate-hint{display:flex}
-  .app{visibility:hidden}
-}
-
-/* 手機橫式：不要把整個平板版縮成小卡，改成緊湊版 */
-@media (max-height: 520px) and (orientation: landscape){
-  html,body{
-    overflow:hidden !important;
-  }
-
-  body{
-    padding:0 !important;
-    align-items:stretch !important;
-    justify-content:stretch !important;
-  }
-
-  .app{
-    width:100vw !important;
-    height:100vh !important;
-    max-width:none !important;
-    max-height:none !important;
-    transform:none !important;
-    border-radius:0 !important;
-    border-left:0 !important;
-    border-right:0 !important;
-    box-shadow:none !important;
-  }
-
-  .topbar{
-    height:48px !important;
-    flex-basis:48px !important;
-    padding:0 18px !important;
-  }
-  .brand{
-    font-size:21px !important;
-  }
-  .top-btn,
-  .small-top{
-    padding:7px 12px !important;
-    font-size:14px !important;
-    border-radius:12px !important;
-  }
-
-  .main{
-    min-height:0 !important;
-  }
-  .screen{
-    padding:10px 18px !important;
-  }
-
-  /* 首頁 */
-  .hero-panel{
-    width:min(920px,96vw) !important;
-    padding:10px 18px !important;
-  }
-  .hero-kicker{
-    display:none !important;
-  }
-  .hero-title{
-    font-size:34px !important;
-    margin-bottom:4px !important;
-  }
-  .hero-sub{
-    font-size:15px !important;
-    margin-bottom:10px !important;
-  }
-  .hero-actions{
-    gap:12px !important;
-  }
-  .hero-card{
-    min-height:118px !important;
-    padding:14px 18px !important;
-    border-radius:18px !important;
-  }
-  .card-title{
-    font-size:30px !important;
-  }
-  .card-desc{
-    font-size:14px !important;
-    line-height:1.35 !important;
-  }
-  .timeattack-card{
-    margin-top:10px !important;
-    padding:10px 18px !important;
-    border-radius:18px !important;
-  }
-  .timeattack-title{
-    font-size:25px !important;
-  }
-  .timeattack-sub{
-    font-size:12px !important;
-    margin-top:2px !important;
-  }
-  .hero-foot{
-    margin-top:8px !important;
-    font-size:11px !important;
-  }
-
-  /* 難度頁 */
-  .difficulty-panel{
-    width:min(930px,96vw) !important;
-    padding:12px 18px !important;
-  }
-  .difficulty-big-title{
-    font-size:34px !important;
-  }
-  .difficulty-big-sub{
-    font-size:15px !important;
-    margin-bottom:10px !important;
-  }
-  .diff-wrap{
-    gap:12px !important;
-  }
-  .diff-card{
-    min-height:150px !important;
-    padding:14px 18px !important;
-  }
-  .diff-name{
-    font-size:54px !important;
-  }
-  .diff-desc{
-    font-size:14px !important;
-  }
-  .difficulty-foot{
-    margin-top:8px !important;
-    font-size:11px !important;
-  }
-
-  /* 一般答題 */
-  #quizScreen .quiz{
-    grid-template-rows:36px 82px minmax(0,1fr) 84px !important;
-    gap:8px !important;
-  }
-  #quizScreen .meta-row{
-    min-height:0 !important;
-  }
-  #quizScreen .badge{
-    padding:5px 10px !important;
-    font-size:13px !important;
-  }
-  #quizScreen .question-box{
-    padding:10px 18px !important;
-    border-radius:16px !important;
-  }
-  #quizScreen .question{
-    font-size:28px !important;
-  }
-  #quizScreen .answers{
-    gap:8px !important;
-  }
-  #quizScreen .answer{
-    padding:9px 14px !important;
-    font-size:22px !important;
-    border-radius:14px !important;
-    overflow:hidden !important;
-  }
-  #quizScreen .bottom{
-    min-height:84px !important;
-    padding:7px 10px !important;
-    border-radius:14px !important;
-    grid-template-columns:minmax(0,1fr) 120px !important;
-  }
-  #quizScreen .feedback-icon{
-    width:34px !important;
-    height:34px !important;
-    font-size:20px !important;
-  }
-  #quizScreen .feedback-title{
-    font-size:20px !important;
-  }
-  #quizScreen .feedback-answer{
-    font-size:12px !important;
-  }
-  #quizScreen .feedback-text{
-    font-size:11px !important;
-    line-height:1.2 !important;
-  }
-  #quizScreen .next{
-    padding:8px !important;
-    font-size:14px !important;
-  }
-
-  /* 30秒模式 */
-  #quizScreen.timeattack-active .quiz{
-    padding-top:48px !important;
-    grid-template-rows:82px minmax(0,1fr) !important;
-    gap:8px !important;
-  }
-  .ta-hud{
-    top:6px !important;
-    left:18px !important;
-    right:18px !important;
-    gap:8px !important;
-  }
-  .ta-pill{
-    padding:6px 10px !important;
-    font-size:16px !important;
-    min-width:0 !important;
-    border-width:2px !important;
-  }
-  #taTimer{
-    padding:6px 14px !important;
-    font-size:24px !important;
-    min-width:130px !important;
-  }
-  #taMode{
-    min-width:150px !important;
-  }
-  #taScore{
-    min-width:150px !important;
-  }
-
-  /* 結算 */
-  #timeAttackResultScreen{
-    padding:8px 18px !important;
-  }
-  .ta-result-title{
-    font-size:26px !important;
-    margin-bottom:2px !important;
-  }
-  .ta-result-message{
-    font-size:18px !important;
-    margin-bottom:2px !important;
-  }
-  .ta-big-number{
-    font-size:72px !important;
-  }
-  .ta-big-label{
-    font-size:18px !important;
-    margin:2px 0 6px !important;
-  }
-  .ta-stars{
-    font-size:30px !important;
-    margin:0 0 6px !important;
-  }
-  .ta-rank{
-    font-size:34px !important;
-    margin-bottom:4px !important;
-  }
-  .ta-rank-note{
-    font-size:12px !important;
-    margin-bottom:6px !important;
-  }
-  .ta-stats{
-    font-size:14px !important;
-    margin-bottom:10px !important;
-  }
-  .ta-result-actions .primary,
-  .ta-result-actions .btn{
-    min-width:150px !important;
-    padding:9px 14px !important;
-  }
-}
-
-
-/* ===== V11 手機橫式首頁重新排版 ===== */
-@media (max-height: 520px) and (orientation: landscape){
-
-  #categoryScreen{
-    padding:6px 16px !important;
-    align-items:stretch !important;
-    justify-content:center !important;
-  }
-
-  #categoryScreen .hero-panel{
-    width:100% !important;
-    height:100% !important;
-    max-width:none !important;
-    padding:6px 16px !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-    background:#fff !important;
-    display:grid !important;
-    grid-template-rows:auto auto minmax(0,1fr) 58px auto !important;
-    gap:6px !important;
-    align-content:stretch !important;
-  }
-
-  #categoryScreen .hero-title{
-    font-size:24px !important;
-    line-height:1 !important;
-    margin:0 !important;
-    text-align:center !important;
-  }
-
-  #categoryScreen .hero-sub{
-    font-size:12px !important;
-    line-height:1.2 !important;
-    margin:0 !important;
-    text-align:center !important;
-  }
-
-  #categoryScreen .hero-actions{
-    min-height:0 !important;
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:10px !important;
-  }
-
-  #categoryScreen .hero-card{
-    min-height:0 !important;
-    height:100% !important;
-    padding:12px 18px !important;
-    border-radius:16px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-  }
-
-  #categoryScreen .card-title{
-    font-size:30px !important;
-    line-height:1 !important;
-    margin-bottom:8px !important;
-  }
-
-  #categoryScreen .card-desc{
-    font-size:13px !important;
-    line-height:1.35 !important;
-    margin:0 !important;
-  }
-
-  #categoryScreen .timeattack-card{
-    width:100% !important;
-    height:58px !important;
-    min-height:58px !important;
-    margin:0 !important;
-    padding:5px 18px !important;
-    border-width:3px !important;
-    border-radius:14px !important;
-  }
-
-  #categoryScreen .timeattack-title{
-    font-size:21px !important;
-    line-height:1 !important;
-  }
-
-  #categoryScreen .timeattack-sub{
-    font-size:10px !important;
-    line-height:1 !important;
-    margin-top:3px !important;
-  }
-
-  #categoryScreen .timeattack-card::before,
-  #categoryScreen .timeattack-card::after{
-    width:54px !important;
-  }
-
-  #categoryScreen .hero-foot{
-    font-size:9px !important;
-    line-height:1 !important;
-    margin:0 !important;
-    text-align:center !important;
-  }
-}
-
-
-/* ===== V12：手機橫式首頁改為三欄模式選擇 ===== */
-/* 以寬度判斷手機橫式，避免只看高度造成瀏覽器工具列影響 */
-@media (orientation: landscape) and (max-width: 1000px){
-
-  #categoryScreen{
-    padding:6px 12px !important;
-    align-items:stretch !important;
-    justify-content:stretch !important;
-  }
-
-  #categoryScreen .hero-panel{
-    width:100% !important;
-    height:100% !important;
-    max-width:none !important;
-    padding:6px 10px !important;
-    margin:0 !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-    background:#fff !important;
-
-    display:grid !important;
-    grid-template-rows:30px 18px minmax(0,1fr) 14px !important;
-    grid-template-columns:1fr !important;
-    gap:4px !important;
-  }
-
-  #categoryScreen .hero-kicker{
-    display:none !important;
-  }
-
-  #categoryScreen .hero-title{
-    grid-row:1 !important;
-    font-size:26px !important;
-    line-height:30px !important;
-    margin:0 !important;
-    text-align:center !important;
-    white-space:nowrap !important;
-  }
-
-  #categoryScreen .hero-sub{
-    grid-row:2 !important;
-    font-size:11px !important;
-    line-height:18px !important;
-    margin:0 !important;
-    text-align:center !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-  }
-
-  /* hero-actions 和 timeattack-card 在視覺上合成三欄 */
-  #categoryScreen .hero-actions{
-    grid-row:3 !important;
-    min-height:0 !important;
-    display:grid !important;
-    grid-template-columns:1fr 1fr 1fr !important;
-    gap:9px !important;
-  }
-
-  #categoryScreen .hero-card{
-    min-width:0 !important;
-    min-height:0 !important;
-    height:100% !important;
-    padding:12px 14px !important;
-    border-radius:16px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-    overflow:hidden !important;
-  }
-
-  #categoryScreen .card-title{
-    font-size:28px !important;
-    line-height:1.05 !important;
-    margin:0 0 8px !important;
-  }
-
-  #categoryScreen .card-desc{
-    font-size:12px !important;
-    line-height:1.3 !important;
-    margin:0 !important;
-    display:-webkit-box !important;
-    -webkit-line-clamp:3 !important;
-    -webkit-box-orient:vertical !important;
-    overflow:hidden !important;
-  }
-
-  /* 把極限挑戰移進第三欄的位置 */
-  #categoryScreen .timeattack-card{
-    position:absolute !important;
-    /* 位置由 JS 動態插入 hero-actions 後這段不再需要定位；
-       若 DOM 尚未移動，以下 fallback 確保不會擠垂直空間 */
-    margin:0 !important;
-  }
-
-  #categoryScreen .hero-foot{
-    grid-row:4 !important;
-    font-size:9px !important;
-    line-height:14px !important;
-    margin:0 !important;
-    text-align:center !important;
-  }
-
-  #categoryScreen .timeattack-card{
-    height:100% !important;
-    min-height:0 !important;
-    padding:12px 12px !important;
-    border-radius:16px !important;
-    border-width:3px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-  }
-
-  #categoryScreen .timeattack-title{
-    font-size:24px !important;
-    line-height:1.05 !important;
-  }
-
-  #categoryScreen .timeattack-sub{
-    font-size:9px !important;
-    line-height:1.15 !important;
-    margin-top:7px !important;
-  }
-
-  #categoryScreen .timeattack-card::before,
-  #categoryScreen .timeattack-card::after{
-    display:none !important;
-  }
-}
-
-
 /* =========================================================
-   V13 FINAL MOBILE LANDSCAPE OVERRIDE
-   由 JS 依「觸控裝置 + 實際橫向可視區」套用，不再依賴瀏覽器 media query 判斷
+   MOBILE LANDSCAPE MODE
+   由 JS 依觸控裝置 + 橫向 + visualViewport 實際高度判斷
    ========================================================= */
-
 body.mobile-landscape{
   display:block !important;
   padding:0 !important;
@@ -2470,9 +1940,9 @@ body.mobile-landscape .app{
 }
 
 body.mobile-landscape .topbar{
-  height:46px !important;
-  min-height:46px !important;
-  flex-basis:46px !important;
+  height:48px !important;
+  min-height:48px !important;
+  flex-basis:48px !important;
   padding:0 16px !important;
 }
 body.mobile-landscape .brand{
@@ -2480,23 +1950,22 @@ body.mobile-landscape .brand{
 }
 body.mobile-landscape .top-btn,
 body.mobile-landscape .small-top{
-  font-size:13px !important;
   padding:6px 11px !important;
+  font-size:13px !important;
   border-radius:11px !important;
 }
 
 body.mobile-landscape .main{
-  height:calc(100vh - 46px) !important;
+  height:calc(100vh - 48px) !important;
   min-height:0 !important;
 }
 body.mobile-landscape .screen{
-  inset:0 !important;
-  padding:6px 12px !important;
+  padding:7px 12px !important;
   min-height:0 !important;
   overflow:hidden !important;
 }
 
-/* ---------- 手機橫式首頁 ---------- */
+/* 首頁 */
 body.mobile-landscape #categoryScreen{
   align-items:stretch !important;
   justify-content:stretch !important;
@@ -2504,36 +1973,32 @@ body.mobile-landscape #categoryScreen{
 body.mobile-landscape #categoryScreen .hero-panel{
   width:100% !important;
   height:100% !important;
-  min-height:0 !important;
   max-width:none !important;
+  padding:7px 12px !important;
   margin:0 !important;
-  padding:5px 8px !important;
   border:0 !important;
   border-radius:0 !important;
   box-shadow:none !important;
   background:#fff !important;
-
   display:grid !important;
-  grid-template-rows:26px 14px minmax(0,1fr) 12px !important;
-  gap:4px !important;
+  grid-template-rows:30px 18px minmax(0,1fr) 58px 14px !important;
+  gap:5px !important;
 }
 body.mobile-landscape #categoryScreen .hero-kicker{
   display:none !important;
 }
 body.mobile-landscape #categoryScreen .hero-title{
-  font-size:23px !important;
-  line-height:26px !important;
+  font-size:25px !important;
+  line-height:30px !important;
   margin:0 !important;
-  padding:0 !important;
   text-align:center !important;
   white-space:nowrap !important;
   overflow:hidden !important;
 }
 body.mobile-landscape #categoryScreen .hero-sub{
-  font-size:10px !important;
-  line-height:14px !important;
+  font-size:11px !important;
+  line-height:18px !important;
   margin:0 !important;
-  padding:0 !important;
   text-align:center !important;
   white-space:nowrap !important;
   overflow:hidden !important;
@@ -2541,123 +2006,101 @@ body.mobile-landscape #categoryScreen .hero-sub{
 }
 body.mobile-landscape #categoryScreen .hero-actions{
   min-height:0 !important;
-  height:100% !important;
   display:grid !important;
-  grid-template-columns:1fr 1fr 1fr !important;
-  grid-template-rows:1fr !important;
-  gap:7px !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:9px !important;
 }
-body.mobile-landscape #categoryScreen .hero-card,
-body.mobile-landscape #categoryScreen .timeattack-card{
-  position:static !important;
-  width:auto !important;
-  height:100% !important;
-  min-width:0 !important;
+body.mobile-landscape #categoryScreen .hero-card{
   min-height:0 !important;
-  max-height:none !important;
-  margin:0 !important;
-  padding:10px 12px !important;
-  border-radius:14px !important;
-  overflow:hidden !important;
+  height:100% !important;
+  padding:10px 14px !important;
+  border-radius:15px !important;
   display:flex !important;
   flex-direction:column !important;
   justify-content:center !important;
+  overflow:hidden !important;
 }
 body.mobile-landscape #categoryScreen .card-title{
-  font-size:26px !important;
+  font-size:27px !important;
   line-height:1 !important;
-  margin:0 0 7px !important;
+  margin-bottom:7px !important;
 }
 body.mobile-landscape #categoryScreen .card-desc{
   font-size:11px !important;
-  line-height:1.28 !important;
+  line-height:1.3 !important;
   margin:0 !important;
   overflow:hidden !important;
-  display:-webkit-box !important;
-  -webkit-line-clamp:3 !important;
-  -webkit-box-orient:vertical !important;
 }
 body.mobile-landscape #categoryScreen .timeattack-card{
+  margin:0 !important;
+  height:58px !important;
+  min-height:58px !important;
+  padding:6px 16px !important;
+  border-radius:14px !important;
   border-width:3px !important;
 }
 body.mobile-landscape #categoryScreen .timeattack-title{
-  font-size:22px !important;
-  line-height:1.05 !important;
-  margin:0 !important;
+  font-size:21px !important;
+  line-height:1 !important;
 }
 body.mobile-landscape #categoryScreen .timeattack-sub{
   font-size:9px !important;
-  line-height:1.1 !important;
-  margin-top:6px !important;
-}
-body.mobile-landscape #categoryScreen .timeattack-card::before,
-body.mobile-landscape #categoryScreen .timeattack-card::after{
-  display:none !important;
+  margin-top:4px !important;
 }
 body.mobile-landscape #categoryScreen .hero-foot{
   font-size:8px !important;
-  line-height:12px !important;
+  line-height:14px !important;
   margin:0 !important;
-  padding:0 !important;
   text-align:center !important;
 }
 
-/* ---------- 手機橫式難度頁 ---------- */
-body.mobile-landscape #difficultyScreen{
-  align-items:stretch !important;
-}
+/* 難度頁 */
 body.mobile-landscape .difficulty-panel{
   width:100% !important;
   height:100% !important;
-  padding:5px 10px !important;
+  padding:8px 12px !important;
   display:grid !important;
-  grid-template-rows:28px 16px minmax(0,1fr) 12px !important;
-  gap:4px !important;
+  grid-template-rows:30px 18px minmax(0,1fr) 14px !important;
+  gap:5px !important;
 }
 body.mobile-landscape .difficulty-big-title{
-  font-size:25px !important;
-  line-height:28px !important;
+  font-size:27px !important;
+  line-height:30px !important;
   margin:0 !important;
 }
 body.mobile-landscape .difficulty-big-sub{
-  font-size:10px !important;
-  line-height:16px !important;
+  font-size:11px !important;
+  line-height:18px !important;
   margin:0 !important;
 }
 body.mobile-landscape .diff-wrap{
   min-height:0 !important;
   grid-template-columns:1fr 1fr !important;
-  gap:8px !important;
+  gap:9px !important;
 }
 body.mobile-landscape .diff-card{
   min-height:0 !important;
   height:100% !important;
-  padding:8px 12px !important;
+  padding:10px 14px !important;
 }
 body.mobile-landscape .diff-name{
   font-size:48px !important;
-  line-height:1 !important;
 }
 body.mobile-landscape .diff-desc{
   font-size:11px !important;
 }
 body.mobile-landscape .difficulty-foot{
   font-size:8px !important;
-  line-height:12px !important;
+  line-height:14px !important;
   margin:0 !important;
 }
 
-/* ---------- 手機橫式一般 5 題 ---------- */
+/* 一般 5 題 */
 body.mobile-landscape #quizScreen .quiz{
-  padding:0 !important;
   height:100% !important;
-  min-height:0 !important;
-  grid-template-rows:30px 74px minmax(0,1fr) 70px !important;
+  padding:0 !important;
+  grid-template-rows:30px 74px minmax(0,1fr) 72px !important;
   gap:6px !important;
-}
-body.mobile-landscape #quizScreen .meta-row{
-  display:flex !important;
-  min-height:0 !important;
 }
 body.mobile-landscape #quizScreen .badge{
   padding:4px 9px !important;
@@ -2674,7 +2117,6 @@ body.mobile-landscape #quizScreen .question{
 }
 body.mobile-landscape #quizScreen .answers{
   min-height:0 !important;
-  height:100% !important;
   grid-template-columns:1fr 1fr !important;
   grid-template-rows:1fr 1fr !important;
   gap:6px !important;
@@ -2692,15 +2134,11 @@ body.mobile-landscape #quizScreen .answer{
 }
 body.mobile-landscape #quizScreen .bottom{
   min-height:0 !important;
-  height:70px !important;
+  height:72px !important;
   padding:5px 8px !important;
   border-radius:12px !important;
   grid-template-columns:minmax(0,1fr) 105px !important;
   gap:7px !important;
-}
-body.mobile-landscape #quizScreen .feedback-wrap{
-  grid-template-columns:30px minmax(0,1fr) !important;
-  gap:6px !important;
 }
 body.mobile-landscape #quizScreen .feedback-icon{
   width:28px !important;
@@ -2709,23 +2147,20 @@ body.mobile-landscape #quizScreen .feedback-icon{
 }
 body.mobile-landscape #quizScreen .feedback-title{
   font-size:17px !important;
-  line-height:1 !important;
 }
 body.mobile-landscape #quizScreen .feedback-answer{
   font-size:10px !important;
-  line-height:1.15 !important;
 }
 body.mobile-landscape #quizScreen .feedback-text{
   font-size:9px !important;
   line-height:1.1 !important;
-  margin-top:1px !important;
 }
 body.mobile-landscape #quizScreen .next{
   font-size:12px !important;
   padding:6px !important;
 }
 
-/* ---------- 手機橫式 30 秒模式 ---------- */
+/* 30 秒模式 */
 body.mobile-landscape #quizScreen.timeattack-active .quiz{
   padding:42px 0 0 !important;
   grid-template-rows:70px minmax(0,1fr) !important;
@@ -2739,7 +2174,6 @@ body.mobile-landscape #quizScreen.timeattack-active .ta-hud{
   top:4px !important;
   left:12px !important;
   right:12px !important;
-  height:34px !important;
   grid-template-columns:1fr 1fr 1fr !important;
   gap:6px !important;
 }
@@ -2758,47 +2192,10 @@ body.mobile-landscape #quizScreen.timeattack-active #taMode,
 body.mobile-landscape #quizScreen.timeattack-active #taScore{
   min-width:0 !important;
 }
-body.mobile-landscape #quizScreen.timeattack-active .question-box{
-  min-height:0 !important;
-  height:70px !important;
-}
-body.mobile-landscape #quizScreen.timeattack-active .answers{
-  min-height:0 !important;
-  height:100% !important;
-  grid-template-rows:1fr 1fr !important;
-}
-
-/* ---------- 手機橫式結算 / 回顧 ---------- */
-body.mobile-landscape #timeAttackResultScreen{
-  padding:5px 12px !important;
-}
-body.mobile-landscape .ta-result-title{font-size:20px !important;margin:0 !important}
-body.mobile-landscape .ta-result-message{font-size:14px !important;margin:0 !important}
-body.mobile-landscape .ta-big-number{font-size:58px !important}
-body.mobile-landscape .ta-big-label{font-size:13px !important;margin:0 0 2px !important}
-body.mobile-landscape .ta-stars{font-size:24px !important;margin:0 0 3px !important}
-body.mobile-landscape .ta-rank{font-size:27px !important;margin:0 0 2px !important}
-body.mobile-landscape .ta-rank-note{font-size:9px !important;margin:0 0 3px !important}
-body.mobile-landscape .ta-stats{font-size:11px !important;margin:0 0 7px !important}
-body.mobile-landscape .ta-result-actions .btn,
-body.mobile-landscape .ta-result-actions .primary{
-  min-width:130px !important;
-  padding:7px 10px !important;
-  font-size:12px !important;
-}
 
 </style>
 </head>
 <body>
-
-<div id="rotateHint" class="rotate-hint" aria-hidden="true">
-  <div class="rotate-card">
-    <div class="rotate-icon">↻</div>
-    <div class="rotate-title">建議橫向遊玩</div>
-    <div class="rotate-text">將手機旋轉為橫向，畫面會更好操作。</div>
-  </div>
-</div>
-
 <div class="app">
   <header class="topbar">
     <div class="brand">BEYBLADE X QUIZ</div>
@@ -4085,58 +3482,37 @@ const DESIGN_WIDTH=1180;
 const DESIGN_HEIGHT=850;
 
 function fitAppToViewport(){
-  const app=document.querySelector(".app");
   const viewport=window.visualViewport;
   const vw=viewport ? viewport.width : window.innerWidth;
   const vh=viewport ? viewport.height : window.innerHeight;
 
-  // 手機橫式使用專用 CSS，不做整體 scale。
-  const phoneLandscape=window.matchMedia("(max-height: 520px) and (orientation: landscape)").matches;
-  if(phoneLandscape){
-    app.style.transform="none";
-    return;
-  }
-
+  // 留一點安全邊界，避免貼到瀏覽器最外緣。
   const safeX=16;
   const safeY=16;
+
   const scaleX=(vw-safeX)/DESIGN_WIDTH;
   const scaleY=(vh-safeY)/DESIGN_HEIGHT;
+
+  // 大螢幕可適度放大；小平板則完整等比例縮小。
   const scale=Math.max(0.35,Math.min(scaleX,scaleY,1.35));
-  app.style.transform=`scale(${scale})`;
+  document.querySelector(".app").style.transform=`scale(${scale})`;
 }
 
 
-function updateDeviceLayoutClass(){
+function updateMobileLandscapeMode(){
   const vv=window.visualViewport;
   const vw=vv ? vv.width : window.innerWidth;
   const vh=vv ? vv.height : window.innerHeight;
-  const isLandscape=vw>vh;
-  const touch=(navigator.maxTouchPoints||0)>0 || "ontouchstart" in window;
+  const touch=(navigator.maxTouchPoints||0)>0 || ("ontouchstart" in window);
+  const landscape=vw>vh;
 
-  // 內建瀏覽器的 CSS viewport 常與螢幕寬度不同，所以用實際可視高度判斷。
-  const mobileLandscape=touch && isLandscape && vh<=620;
+  // 觸控裝置 + 橫向 + 實際可視高度偏低，視為手機橫式。
+  const isMobileLandscape=touch && landscape && vh<=620;
 
-  document.body.classList.toggle("mobile-landscape",mobileLandscape);
+  document.body.classList.toggle("mobile-landscape",isMobileLandscape);
 
-  // 手機橫式把極限挑戰移到第三欄；其他尺寸恢復桌面結構。
-  const heroActions=document.querySelector("#categoryScreen .hero-actions");
-  const heroPanel=document.querySelector("#categoryScreen .hero-panel");
-  const ta=document.getElementById("timeAttackBtn");
-  const foot=document.getElementById("homeFoot");
-
-  if(heroActions && heroPanel && ta && foot){
-    if(mobileLandscape){
-      if(ta.parentElement!==heroActions) heroActions.appendChild(ta);
-      ta.style.position="static";
-    }else{
-      if(ta.parentElement!==heroPanel) heroPanel.insertBefore(ta,foot);
-      ta.style.position="";
-    }
-  }
-
-  // 強制取消手機橫式的整體縮放
   const app=document.querySelector(".app");
-  if(app && mobileLandscape){
+  if(isMobileLandscape){
     app.style.transform="none";
   }else{
     fitAppToViewport();
@@ -4156,19 +3532,16 @@ if(window.visualViewport){
   window.visualViewport.addEventListener("resize",fitAppToViewport);
 }
 
-
-
-
-updateDeviceLayoutClass();
+updateMobileLandscapeMode();
 
 load().then(()=>show("categoryScreen")).catch(()=>{});
 
-window.addEventListener("resize",updateDeviceLayoutClass);
-window.addEventListener("orientationchange",()=>setTimeout(updateDeviceLayoutClass,100));
+window.addEventListener("resize",updateMobileLandscapeMode);
+window.addEventListener("orientationchange",()=>setTimeout(updateMobileLandscapeMode,100));
 if(window.visualViewport){
-  window.visualViewport.addEventListener("resize",updateDeviceLayoutClass);
+  window.visualViewport.addEventListener("resize",updateMobileLandscapeMode);
 }
-setTimeout(updateDeviceLayoutClass,0);
+setTimeout(updateMobileLandscapeMode,0);
 
 </script>
 </body>
