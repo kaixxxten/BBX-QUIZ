@@ -1659,6 +1659,93 @@ h1{
   letter-spacing:.02em;
 }
 
+
+/* ===== TIME ATTACK V5：避免分類／難度重複顯示 ===== */
+#quizScreen.timeattack-active .meta-row{
+  display:none;
+}
+
+
+/* ===== TIME ATTACK RESULT EFFECTS V6 ===== */
+#timeAttackResultScreen{
+  overflow:hidden;
+  position:relative;
+}
+#timeAttackResultScreen > *:not(.ta-effects){
+  position:relative;
+  z-index:2;
+}
+.ta-effects{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+.ta-confetti{
+  position:absolute;
+  top:-30px;
+  width:10px;
+  height:20px;
+  border-radius:2px;
+  background:var(--navy);
+  opacity:.9;
+  animation:taConfettiFall var(--dur,2.6s) linear forwards;
+}
+.ta-confetti.alt{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+.ta-star{
+  position:absolute;
+  font-size:26px;
+  color:var(--navy);
+  opacity:0;
+  animation:taStarPop 1.4s ease-out forwards;
+}
+.ta-sad{
+  position:absolute;
+  top:-30px;
+  color:#9aa6bb;
+  font-size:26px;
+  opacity:.7;
+  animation:taSadFall var(--dur,2.8s) linear forwards;
+}
+.ta-result-message{
+  font-size:clamp(22px,2.3vw,32px);
+  font-weight:1000;
+  letter-spacing:.04em;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.ta-result-message.sad{
+  color:#7d899e;
+}
+.ta-rank.glow{
+  animation:taRankGlow 1.2s ease-out 1;
+}
+@keyframes taConfettiFall{
+  0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  100%{transform:translate3d(var(--drift,0px),1050px,0) rotate(var(--spin,540deg));opacity:.8}
+}
+@keyframes taStarPop{
+  0%{transform:scale(.3) rotate(-20deg);opacity:0}
+  35%{transform:scale(1.25) rotate(8deg);opacity:1}
+  100%{transform:scale(.9) rotate(0);opacity:0}
+}
+@keyframes taSadFall{
+  0%{transform:translateY(-30px) rotate(0);opacity:0}
+  15%{opacity:.65}
+  100%{transform:translateY(1000px) rotate(180deg);opacity:.25}
+}
+@keyframes taRankGlow{
+  0%{transform:scale(.92);text-shadow:0 0 0 rgba(41,75,142,0)}
+  45%{transform:scale(1.05);text-shadow:0 0 24px rgba(41,75,142,.35)}
+  100%{transform:scale(1);text-shadow:0 0 0 rgba(41,75,142,0)}
+}
+
 </style>
 </head>
 <body>
@@ -1767,7 +1854,9 @@ h1{
     </section>
 
     <section class="screen center" id="timeAttackResultScreen">
+      <div class="ta-effects" id="taEffects"></div>
       <div class="ta-result-title">TIME UP!</div>
+      <div class="ta-result-message" id="taResultMessage">GOOD!</div>
       <div class="ta-big-number" id="taFinalCorrect">0</div>
       <div class="ta-big-label">CORRECT</div>
       <div class="ta-stars" id="taFinalStars">★☆☆☆☆</div>
@@ -2232,6 +2321,96 @@ function nextTimeAttackQuestion(){
   $("progress").textContent="";
 }
 
+
+function clearTimeAttackEffects(){
+  const layer=$("taEffects");
+  if(layer) layer.innerHTML="";
+  $("taFinalRank").classList.remove("glow");
+}
+
+function spawnConfetti(count){
+  const layer=$("taEffects");
+  for(let i=0;i<count;i++){
+    const el=document.createElement("span");
+    el.className="ta-confetti"+(i%4===0?" alt":"");
+    el.style.left=(Math.random()*100)+"%";
+    el.style.setProperty("--dur",(1.8+Math.random()*1.6)+"s");
+    el.style.setProperty("--drift",(Math.random()*240-120)+"px");
+    el.style.setProperty("--spin",(Math.random()*900+360)+"deg");
+    el.style.animationDelay=(Math.random()*.45)+"s";
+    layer.appendChild(el);
+  }
+}
+
+function spawnStars(count){
+  const layer=$("taEffects");
+  for(let i=0;i<count;i++){
+    const el=document.createElement("span");
+    el.className="ta-star";
+    el.textContent="★";
+    el.style.left=(8+Math.random()*84)+"%";
+    el.style.top=(12+Math.random()*66)+"%";
+    el.style.animationDelay=(Math.random()*.5)+"s";
+    el.style.fontSize=(18+Math.random()*24)+"px";
+    layer.appendChild(el);
+  }
+}
+
+function spawnSad(count){
+  const layer=$("taEffects");
+  const marks=["×","⋯","•"];
+  for(let i=0;i<count;i++){
+    const el=document.createElement("span");
+    el.className="ta-sad";
+    el.textContent=marks[Math.floor(Math.random()*marks.length)];
+    el.style.left=(Math.random()*100)+"%";
+    el.style.setProperty("--dur",(2.2+Math.random()*1.5)+"s");
+    el.style.animationDelay=(Math.random()*.5)+"s";
+    el.style.fontSize=(18+Math.random()*20)+"px";
+    layer.appendChild(el);
+  }
+}
+
+function playTimeAttackResultEffects(rank){
+  clearTimeAttackEffects();
+
+  const msg=$("taResultMessage");
+  msg.className="ta-result-message";
+
+  if(rank==="LEGEND BLADER"){
+    msg.textContent="EXCELLENT!";
+    spawnConfetti(56);
+    spawnStars(18);
+    $("taFinalRank").classList.add("glow");
+    return;
+  }
+
+  if(rank==="MASTER BLADER"){
+    msg.textContent="EXCELLENT!";
+    spawnConfetti(42);
+    spawnStars(14);
+    $("taFinalRank").classList.add("glow");
+    return;
+  }
+
+  if(rank==="X塔級 BLADER" || rank==="頂尖 BLADER"){
+    msg.textContent="GREAT!";
+    spawnConfetti(24);
+    spawnStars(10);
+    return;
+  }
+
+  if(rank==="職業 BLADER" || rank==="新星 BLADER"){
+    msg.textContent="GOOD!";
+    spawnStars(7);
+    return;
+  }
+
+  msg.textContent="TRY AGAIN...";
+  msg.classList.add("sad");
+  spawnSad(22);
+}
+
 function finishTimeAttack(){
   if(!timeAttackMode) return;
 
@@ -2249,6 +2428,7 @@ function finishTimeAttack(){
   $("taFinalCorrect").textContent=taCorrect;
   $("taFinalStars").textContent=result.stars;
   $("taFinalRank").textContent=result.rank;
+  playTimeAttackResultEffects(result.rank);
   $("taFinalStats").textContent=`作答 ${taAnsweredTotal} 題｜答對 ${taCorrect} 題｜正確率 ${rate}%`;
 
   show("timeAttackResultScreen");
@@ -2656,6 +2836,7 @@ $("taRestartBtn").onclick=()=>{
   clearInterval(taTimerId);
   $("quizScreen").classList.remove("timeattack-active");
   $("taHud").style.display="none";
+  clearTimeAttackEffects();
   show("categoryScreen");
 };
 $("restartBtn").onclick=()=>show("categoryScreen");
@@ -2667,6 +2848,7 @@ $("topBtn").onclick=()=>{
   $("quizScreen").classList.remove("timeattack-active");
   $("taHud").style.display="none";
   $("progress").textContent="";
+  clearTimeAttackEffects();
   show("categoryScreen");
 };
 
