@@ -131,11 +131,12 @@ X塔級 / 頂尖：少量綵帶 + 星星 + GREAT!
 - 左右加入短金色速度線
 - hover 時增加輕微金色光暈
 
-【Responsive Canvas】
+【Responsive Layouts】
 - 桌機／平板：1180×850 固定設計畫布，整體等比例縮放並置中
 - 手機直式：維持 1180×850，不重新排版，整體縮小並靠上顯示
-- 短邊手機橫式：使用 1180×680 緊湊畫布，比直式明顯放大
+- 手機橫式：直接使用實際可視區尺寸，採獨立版面，不使用 transform 縮放
+- 橫式的 HUD、題目、四個選項與回饋區會依實際高度分配空間
+- 667×375、844×390 為主要驗證尺寸
 - 手機判斷依實際 viewport 尺寸，不依賴觸控裝置訊號
-- CSS 只保留 default／phone-portrait／compact-landscape 三種畫布狀態
-- app-stage 以縮放後的實際寬高參與置中，避免 transform 定位偏移
+- CSS 使用 default／phone-portrait／mobile-landscape 三種版面狀態
 - 長題目與長選項會在容器內自動縮字，避免互相重疊或被裁切
