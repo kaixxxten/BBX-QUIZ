@@ -143,3 +143,10 @@ X塔級 / 頂尖：少量綵帶 + 星星 + GREAT!
 由最後一層 CSS 接管首頁、難度頁、一般5題與30秒模式。
 不再依賴 max-width / max-height media query 猜手機。
 平板／桌機維持 V9 原本版型。
+
+【V14 手機橫式高度修正】
+- 偵測邏輯沿用 JS + visualViewport
+- app 高度不再使用 100vh
+- 直接使用 visualViewport.height 寫入 --mobile-vh
+- 可避開 Chrome / 內建瀏覽器上下工具列造成的假高度
+- 首頁與答題頁再縮緊，確保完整內容落在真正可視範圍內

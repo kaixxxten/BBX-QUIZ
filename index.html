@@ -1929,7 +1929,7 @@ body.mobile-landscape{
 
 body.mobile-landscape .app{
   width:100vw !important;
-  height:100vh !important;
+  height:var(--mobile-vh, 100vh) !important;
   max-width:none !important;
   max-height:none !important;
   margin:0 !important;
@@ -1956,7 +1956,7 @@ body.mobile-landscape .small-top{
 }
 
 body.mobile-landscape .main{
-  height:calc(100vh - 48px) !important;
+  height:calc(var(--mobile-vh, 100vh) - 44px) !important;
   min-height:0 !important;
 }
 body.mobile-landscape .screen{
@@ -2191,6 +2191,115 @@ body.mobile-landscape #quizScreen.timeattack-active #taTimer{
 body.mobile-landscape #quizScreen.timeattack-active #taMode,
 body.mobile-landscape #quizScreen.timeattack-active #taScore{
   min-width:0 !important;
+}
+
+
+/* ===== V14：依 visualViewport 真實高度修正 ===== */
+body.mobile-landscape .topbar{
+  height:44px !important;
+  min-height:44px !important;
+  flex-basis:44px !important;
+}
+body.mobile-landscape .brand{
+  font-size:18px !important;
+}
+
+/* 首頁：避免瀏覽器工具列把底部吃掉 */
+body.mobile-landscape #categoryScreen .hero-panel{
+  grid-template-rows:24px 14px minmax(0,1fr) 48px 11px !important;
+  gap:3px !important;
+  padding:4px 10px !important;
+}
+body.mobile-landscape #categoryScreen .hero-title{
+  font-size:21px !important;
+  line-height:24px !important;
+}
+body.mobile-landscape #categoryScreen .hero-sub{
+  font-size:9px !important;
+  line-height:14px !important;
+}
+body.mobile-landscape #categoryScreen .hero-card{
+  padding:8px 12px !important;
+}
+body.mobile-landscape #categoryScreen .card-title{
+  font-size:23px !important;
+  margin-bottom:5px !important;
+}
+body.mobile-landscape #categoryScreen .card-desc{
+  font-size:9px !important;
+  line-height:1.25 !important;
+}
+body.mobile-landscape #categoryScreen .timeattack-card{
+  height:48px !important;
+  min-height:48px !important;
+  padding:4px 14px !important;
+}
+body.mobile-landscape #categoryScreen .timeattack-title{
+  font-size:18px !important;
+}
+body.mobile-landscape #categoryScreen .timeattack-sub{
+  font-size:8px !important;
+  margin-top:2px !important;
+}
+body.mobile-landscape #categoryScreen .hero-foot{
+  font-size:7px !important;
+  line-height:11px !important;
+}
+
+/* 一般答題再壓緊一點 */
+body.mobile-landscape #quizScreen .quiz{
+  grid-template-rows:26px 64px minmax(0,1fr) 60px !important;
+  gap:5px !important;
+}
+body.mobile-landscape #quizScreen .question{
+  font-size:21px !important;
+}
+body.mobile-landscape #quizScreen .answer{
+  font-size:17px !important;
+  padding:6px 9px !important;
+}
+body.mobile-landscape #quizScreen .bottom{
+  height:60px !important;
+  min-height:60px !important;
+}
+body.mobile-landscape #quizScreen .feedback-title{
+  font-size:15px !important;
+}
+body.mobile-landscape #quizScreen .feedback-answer{
+  font-size:9px !important;
+}
+body.mobile-landscape #quizScreen .feedback-text{
+  font-size:8px !important;
+}
+
+/* 30秒模式：完整四選項必須塞進可視高度 */
+body.mobile-landscape #quizScreen.timeattack-active .quiz{
+  padding-top:36px !important;
+  grid-template-rows:62px minmax(0,1fr) !important;
+  gap:5px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active .ta-hud{
+  top:2px !important;
+  height:30px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active .ta-pill{
+  font-size:11px !important;
+  padding:4px 7px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active #taTimer{
+  font-size:17px !important;
+  padding:4px 8px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active .question-box{
+  height:62px !important;
+  padding:7px 12px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active .question{
+  font-size:20px !important;
+}
+body.mobile-landscape #quizScreen.timeattack-active .answer{
+  font-size:16px !important;
+  padding:5px 8px !important;
 }
 
 </style>
@@ -3506,8 +3615,11 @@ function updateMobileLandscapeMode(){
   const touch=(navigator.maxTouchPoints||0)>0 || ("ontouchstart" in window);
   const landscape=vw>vh;
 
-  // 觸控裝置 + 橫向 + 實際可視高度偏低，視為手機橫式。
   const isMobileLandscape=touch && landscape && vh<=620;
+
+  // 使用真正的可視區尺寸，不使用可能包含瀏覽器工具列的 100vh。
+  document.documentElement.style.setProperty("--mobile-vh", `${vh}px`);
+  document.documentElement.style.setProperty("--mobile-vw", `${vw}px`);
 
   document.body.classList.toggle("mobile-landscape",isMobileLandscape);
 
@@ -3537,7 +3649,10 @@ updateMobileLandscapeMode();
 load().then(()=>show("categoryScreen")).catch(()=>{});
 
 window.addEventListener("resize",updateMobileLandscapeMode);
-window.addEventListener("orientationchange",()=>setTimeout(updateMobileLandscapeMode,100));
+window.addEventListener("orientationchange",()=>{
+  setTimeout(updateMobileLandscapeMode,100);
+  setTimeout(updateMobileLandscapeMode,350);
+});
 if(window.visualViewport){
   window.visualViewport.addEventListener("resize",updateMobileLandscapeMode);
 }
