@@ -6,16 +6,6 @@
 <title>BEYBLADE X QUIZ</title>
 <style>
 :root{
-  --design-width:1180px;
-  --design-height:850px;
-  --app-scale:1;
-  --scaled-width:1180px;
-  --scaled-height:850px;
-  --question-max-size:46px;
-  --question-min-size:28px;
-  --answer-max-size:38px;
-  --answer-min-size:22px;
-
   --bg:#ffffff;
   --text:#172033;
   --muted:#667085;
@@ -55,12 +45,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  height:100dvh;
-  padding:
-    max(8px,env(safe-area-inset-top))
-    max(8px,env(safe-area-inset-right))
-    max(8px,env(safe-area-inset-bottom))
-    max(8px,env(safe-area-inset-left));
+  padding:0;
 }
 button,textarea,input,select{font:inherit}
 
@@ -70,11 +55,8 @@ button,textarea,input,select{font:inherit}
   這樣不會因為不同解析度把內部元件硬擠到跑版。
 */
 .app{
-  position:absolute;
-  left:0;
-  top:0;
-  width:var(--design-width);
-  height:var(--design-height);
+  width:1180px;
+  height:850px;
   flex:0 0 auto;
   border:1.5px solid var(--line);
   border-radius:28px;
@@ -83,16 +65,9 @@ button,textarea,input,select{font:inherit}
   background:#fff;
   display:flex;
   flex-direction:column;
-  transform:scale(var(--app-scale));
-  transform-origin:top left;
+  transform:scale(1);
+  transform-origin:center center;
   will-change:transform;
-}
-
-.app-stage{
-  position:relative;
-  flex:0 0 auto;
-  width:var(--scaled-width);
-  height:var(--scaled-height);
 }
 
 .topbar{
@@ -766,6 +741,14 @@ h1{
   margin-top:20px !important;
   font-size:17px !important;
 }
+
+/* 平板橫向時保持大塊按鈕 */
+@media (min-width:900px){
+  #categoryScreen .hero-panel{
+    transform:translateY(-10px);
+  }
+}
+
 
 /* V11：分類卡標題加大、移除上方符號 */
 #categoryScreen .hero-card{
@@ -1524,12 +1507,12 @@ h1{
   position:absolute;
   left:28px;
   right:28px;
-  top:18px;
+  top:14px;
   z-index:8;
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  display:flex;
   align-items:center;
-  gap:16px;
+  justify-content:space-between;
+  gap:14px;
   pointer-events:none;
 }
 .ta-pill{
@@ -1550,6 +1533,9 @@ h1{
   border-color:var(--wrong);
 }
 
+#quizScreen.timeattack-active .quiz{
+  padding-top:72px;
+}
 .ta-result-title{
   font-size:clamp(28px,3vw,44px);
   font-weight:1000;
@@ -1582,15 +1568,51 @@ h1{
   margin-bottom:26px;
 }
 
+@media(max-width:760px){
+  .manage-grid{grid-template-columns:1fr !important}
+  .manage-card.text-setting{grid-column:auto}
+}
 
+@media(max-width:760px){
+  .manage-grid,.settings-grid{grid-template-columns:1fr}
+}
 
+@media(max-width:760px){
+  .ui-settings-grid{grid-template-columns:1fr}
+}
 
+@media(max-width:760px){
+  .difficulty-panel{padding:24px 20px}
+  .diff-card{min-height:160px !important;padding:20px !important}
+  .diff-name{font-size:32px !important}
+  .diff-desc{font-size:15px !important}
+  .ui-field{grid-template-columns:1fr}
+}
 
-
-
-
-
-
+@media(max-width:760px){
+  body{padding:5px}
+  .app{height:99vh;border-radius:18px}
+  .topbar{height:62px;flex-basis:62px;padding:0 14px}
+  .brand{font-size:20px}
+  .screen{padding:14px}
+  .cards,.diff-wrap{grid-template-columns:1fr 1fr}
+  .quiz{
+    grid-template-rows:54px 105px minmax(0,1fr) 98px;
+    gap:9px
+  }
+  .question{font-size:29px}
+  .answer{font-size:26px;padding:13px}
+  .bottom{
+    grid-template-columns:1fr 130px;
+    padding:9px
+  }
+  .feedback-title{font-size:25px !important}
+  .feedback-answer{font-size:14px}
+  .feedback-text{font-size:13px}
+  .feedback-wrap{grid-template-columns:42px minmax(0,1fr);gap:9px}
+  .feedback-icon{width:38px;height:38px;font-size:24px}
+  .next{font-size:16px}
+}
 
 .ta-stars{
   font-size:clamp(34px,4vw,58px);
@@ -1610,6 +1632,15 @@ h1{
 
 
 
+/* ===== TIME ATTACK HUD V4 ===== */
+.ta-hud{
+  left:28px;
+  right:28px;
+  top:18px;
+  grid-template-columns:1fr 1fr 1fr;
+  align-items:center;
+  gap:16px;
+}
 #taMode{
   justify-self:start;
   min-width:190px;
@@ -1628,10 +1659,16 @@ h1{
 }
 
 
+/* ===== TIME ATTACK V5：避免分類／難度重複顯示 ===== */
+#quizScreen.timeattack-active .meta-row{
+  display:none;
+}
+
+
 /* ===== TIME ATTACK RESULT EFFECTS V6 ===== */
 #timeAttackResultScreen{
   overflow:hidden;
-  position:absolute;
+  position:relative;
 }
 #timeAttackResultScreen > *:not(.ta-effects){
   position:relative;
@@ -1709,7 +1746,7 @@ h1{
 }
 
 
-/* ===== TIME ATTACK ANSWER LAYOUT ===== */
+/* ===== TIME ATTACK V7：重新整理答題畫面 ===== */
 #quizScreen.timeattack-active .quiz{
   padding-top:72px !important;
   grid-template-rows:132px minmax(0,1fr) !important;
@@ -1812,12 +1849,18 @@ h1{
 }
 
 
-/* 一般模式 / 極限模式 HUD 完全分離 */
+/* ===== V8：一般模式 / 極限模式 HUD 完全分離 ===== */
 #taHud{
-  display:none;
+  display:none !important;
 }
 #quizScreen.timeattack-active #taHud{
-  display:grid;
+  display:grid !important;
+}
+#quizScreen:not(.timeattack-active) .meta-row{
+  display:flex !important;
+}
+#quizScreen:not(.timeattack-active) .bottom{
+  display:grid !important;
 }
 
 
@@ -1873,183 +1916,40 @@ h1{
 }
 
 
-/* =========================================================
-   RESPONSIVE CANVAS
-   default / phone-portrait：1180 × 850
-   compact-landscape：1180 × 680
-   只在短邊手機橫式使用一套集中式緊湊尺寸。
-   ========================================================= */
+/* ===== V20 CLEAN RESPONSIVE / DEBUG ===== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 !important;
+}
+.app-stage{
+  position:relative;
+  flex:0 0 auto;
+  width:1180px;
+  height:850px;
+}
+.app-stage>.app{
+  position:absolute;
+  left:0;top:0;
+  width:1180px !important;
+  height:850px !important;
+  margin:0 !important;
+  transform-origin:top left !important;
+}
 body[data-layout="phone-portrait"]{
   align-items:flex-start;
-}
-
-body[data-layout="compact-landscape"]{
-  --question-max-size:38px;
-  --question-min-size:24px;
-  --answer-max-size:32px;
-  --answer-min-size:20px;
-}
-
-body[data-layout="compact-landscape"] .topbar{
-  height:60px;
-  flex-basis:60px;
-  padding:0 24px;
-}
-body[data-layout="compact-landscape"] .brand{
-  font-size:26px;
-}
-body[data-layout="compact-landscape"] .screen{
-  padding:16px 28px;
-}
-
-/* 手機橫式首頁 */
-body[data-layout="compact-landscape"] #categoryScreen{
-  padding:14px 28px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-panel{
-  width:min(1080px,100%) !important;
-  padding:8px 24px 12px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-title{
-  font-size:68px !important;
-  margin:0 0 10px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-sub{
-  font-size:23px !important;
-  margin:0 0 20px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-actions{
-  gap:18px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-card{
-  min-height:175px !important;
-  padding:22px 30px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-card .card-title{
-  font-size:48px !important;
-  margin:0 0 14px !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-card .card-desc{
-  font-size:20px !important;
-  line-height:1.4 !important;
-}
-body[data-layout="compact-landscape"] #categoryScreen .timeattack-card{
-  margin-top:14px;
-  padding:14px 24px;
-}
-body[data-layout="compact-landscape"] #categoryScreen .timeattack-title{
-  font-size:34px;
-}
-body[data-layout="compact-landscape"] #categoryScreen .timeattack-sub{
-  margin-top:4px;
-  font-size:15px;
-}
-body[data-layout="compact-landscape"] #categoryScreen .hero-foot{
-  margin-top:14px !important;
-  font-size:14px !important;
-}
-
-/* 手機橫式難度頁 */
-body[data-layout="compact-landscape"] #difficultyScreen{
-  padding:12px 28px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .difficulty-panel{
-  width:min(1080px,100%) !important;
-  padding:8px 28px !important;
-  transform:none !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .difficulty-big-title{
-  font-size:56px !important;
-  margin-bottom:10px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .difficulty-big-sub{
-  font-size:22px !important;
-  margin-bottom:18px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .diff-wrap{
-  gap:20px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .diff-card{
-  min-height:280px !important;
-  padding:28px !important;
-  border-radius:26px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .diff-name{
-  font-size:82px !important;
-  margin-bottom:18px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .diff-desc{
-  font-size:20px !important;
-}
-body[data-layout="compact-landscape"] #difficultyScreen .difficulty-foot{
-  margin-top:16px !important;
-  transform:none;
-  font-size:15px !important;
-}
-
-/* 手機橫式一般答題與 30 秒模式 */
-body[data-layout="compact-landscape"] #quizScreen{
-  padding:12px 28px 16px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .quiz{
-  grid-template-rows:44px 112px minmax(0,1fr) 116px !important;
-  gap:10px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .question-box{
-  padding:16px 22px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .answers{
-  gap:12px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .answer{
-  padding:14px 18px;
-  overflow:hidden;
-}
-body[data-layout="compact-landscape"] #quizScreen .bottom{
-  min-height:116px !important;
-  padding:10px 14px !important;
-  grid-template-columns:minmax(0,1fr) 160px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .feedback-wrap > div:last-child{
-  max-height:94px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .feedback-title{
-  font-size:26px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .feedback-answer{
-  font-size:15px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen .feedback-text{
-  font-size:13px;
-}
-body[data-layout="compact-landscape"] #quizScreen .next{
-  padding:11px;
-  font-size:17px;
-}
-body[data-layout="compact-landscape"] #quizScreen.timeattack-active .quiz{
-  padding-top:60px !important;
-  grid-template-rows:112px minmax(0,1fr) !important;
-  gap:10px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen.timeattack-active .ta-hud{
-  top:8px !important;
-  left:28px !important;
-  right:28px !important;
-}
-body[data-layout="compact-landscape"] #quizScreen.timeattack-active .ta-pill{
-  padding:8px 14px;
-  font-size:20px;
-}
-body[data-layout="compact-landscape"] #quizScreen.timeattack-active #taTimer{
-  min-width:180px;
-  font-size:30px;
+  padding-top:8px !important;
 }
 
 </style>
 </head>
 <body>
-<div class="app-stage" id="appStage">
-<div class="app">
+<div id="debugPanel" style="display:none;position:fixed;left:6px;bottom:6px;z-index:999999;
+background:rgba(0,0,0,.84);color:#fff;padding:8px 10px;border-radius:8px;
+font:12px/1.35 monospace;white-space:pre;max-width:94vw;pointer-events:none"></div>
+<div class="app-stage" id="appStage"><div class="app">
   <header class="topbar">
     <div class="brand">BEYBLADE X QUIZ</div>
     <div class="top-actions">
@@ -2781,11 +2681,11 @@ function fitQuestionText(){
   const box=$("question").parentElement;
   const q=$("question");
 
-  q.style.fontSize="";
-  let size=readCSSSize("--question-max-size",46);
+  // 先恢復最大字級，再逐步縮小直到完整放入題目框
+  let size=46;
   q.style.fontSize=size+"px";
 
-  const minSize=readCSSSize("--question-min-size",28);
+  const minSize=28;
   let guard=0;
 
   while(
@@ -2797,41 +2697,6 @@ function fitQuestionText(){
     q.style.fontSize=size+"px";
     guard++;
   }
-}
-
-function readCSSSize(name,fallback){
-  const value=parseFloat(getComputedStyle(document.body).getPropertyValue(name));
-  return Number.isFinite(value) ? value : fallback;
-}
-
-function fitAnswerText(){
-  const compact=document.body.dataset.layout!=="default";
-  const configuredMax=readCSSSize("--answer-max-size",38);
-  const minSize=readCSSSize("--answer-min-size",22);
-
-  document.querySelectorAll("#answers .answer").forEach(answer=>{
-    answer.style.fontSize="";
-    let size=compact
-      ? configuredMax
-      : Math.min(configuredMax,parseFloat(getComputedStyle(answer).fontSize)||configuredMax);
-    answer.style.fontSize=size+"px";
-
-    let guard=0;
-    while(
-      (answer.scrollHeight > answer.clientHeight + 1 || answer.scrollWidth > answer.clientWidth + 1) &&
-      size > minSize &&
-      guard < 40
-    ){
-      size-=1;
-      answer.style.fontSize=size+"px";
-      guard++;
-    }
-  });
-}
-
-function fitQuizText(){
-  fitQuestionText();
-  fitAnswerText();
 }
 
 function shuffledQuestionView(q){
@@ -2858,6 +2723,7 @@ function render(){
   if(!timeAttackMode) $("progress").textContent=`${index+1} / ${current.length}`;
   else $("progress").textContent="";
   $("question").textContent=q.question;
+  requestAnimationFrame(fitQuestionText);
   $("feedbackTitle").textContent="";
   $("feedbackAnswer").textContent="";
   $("feedbackText").textContent="";
@@ -2886,8 +2752,6 @@ function render(){
     b.onclick=()=>chooseAnswer(i,b);
     $("answers").appendChild(b);
   });
-
-  requestAnimationFrame(fitQuizText);
 }
 
 function fitFeedbackText(){
@@ -2936,7 +2800,6 @@ function chooseAnswer(i,b){
   const correctLetter=String.fromCharCode(65+q._view.answer);
   $("feedbackAnswer").textContent=`正確答案：${correctLetter}. ${q._view.options[q._view.answer]}`;
   $("feedbackText").textContent=q.explanation||"";
-  requestAnimationFrame(fitAnswerText);
   requestAnimationFrame(fitFeedbackText);
 
   if(timeAttackMode){
@@ -3297,6 +3160,10 @@ $("topBtn").onclick=()=>{
   show("categoryScreen");
 };
 
+if($("editorBtn")) $("editorBtn").onclick=()=>show("editorScreen");
+
+
+
 document.querySelectorAll("[data-admin-category]").forEach(btn=>{
   btn.onclick=()=>openAdminQuestionEditor(
     btn.dataset.adminCategory,
@@ -3365,88 +3232,89 @@ $("sampleBtn").onclick=()=>{
 $("exportBtn").onclick=exportTxt;
 
 
+
 const DESIGN_WIDTH=1180;
 const DESIGN_HEIGHT=850;
-const COMPACT_LANDSCAPE_HEIGHT=680;
-const PHONE_PORTRAIT_MAX_WIDTH=600;
-const PHONE_LANDSCAPE_MAX_WIDTH=1000;
-const PHONE_LANDSCAPE_MAX_HEIGHT=600;
 
 function getViewportSize(){
   const vv=window.visualViewport;
-  const zoom=vv && vv.scale ? vv.scale : 1;
-  const visualWidth=vv ? vv.width*zoom : window.innerWidth;
-  const visualHeight=vv ? vv.height*zoom : window.innerHeight;
-  const staleVisualViewport=Math.abs(visualWidth-window.innerWidth)>2;
   return {
-    width:Math.max(1,staleVisualViewport ? window.innerWidth : Math.min(window.innerWidth,visualWidth)),
-    height:Math.max(1,staleVisualViewport ? window.innerHeight : Math.min(window.innerHeight,visualHeight))
+    width: Math.max(1, vv ? vv.width : window.innerWidth),
+    height: Math.max(1, vv ? vv.height : window.innerHeight)
   };
 }
 
-function getCanvasLayout(width,height){
-  if(
-    width>height &&
-    width<=PHONE_LANDSCAPE_MAX_WIDTH &&
-    height<=PHONE_LANDSCAPE_MAX_HEIGHT
-  ){
-    return {name:"compact-landscape",height:COMPACT_LANDSCAPE_HEIGHT};
-  }
+function applyResponsiveLayout(){
+  const {width:vw,height:vh}=getViewportSize();
+  const body=document.body;
+  const app=document.querySelector(".app");
+  const stage=document.getElementById("appStage");
+  if(!app || !stage) return;
 
-  if(height>width && width<=PHONE_PORTRAIT_MAX_WIDTH){
-    return {name:"phone-portrait",height:DESIGN_HEIGHT};
-  }
+  const portrait = vh >= vw;
+  const safeX=12;
+  const safeY=12;
+  const scale=Math.max(
+    0.18,
+    Math.min((vw-safeX)/DESIGN_WIDTH,(vh-safeY)/DESIGN_HEIGHT,1.35)
+  );
 
-  return {name:"default",height:DESIGN_HEIGHT};
+  body.dataset.layout =
+    (portrait && vw<=620) ? "phone-portrait" : "scaled-canvas";
+
+  app.style.transform=`scale(${scale})`;
+  stage.style.width=(DESIGN_WIDTH*scale)+"px";
+  stage.style.height=(DESIGN_HEIGHT*scale)+"px";
+
+  updateDebugPanel(scale);
 }
 
-function refreshDeviceScale(){
-  if(!document.querySelector(".app") || !$("appStage")) return;
+function updateDebugPanel(scaleOverride){
+  const params=new URLSearchParams(location.search);
+  const p=document.getElementById("debugPanel");
+  if(!p || !params.has("debug")) return;
 
-  const viewport=getViewportSize();
-  const layout=getCanvasLayout(viewport.width,viewport.height);
-  document.body.dataset.layout=layout.name;
-
-  const bodyStyle=getComputedStyle(document.body);
-  const horizontalPadding=parseFloat(bodyStyle.paddingLeft)+parseFloat(bodyStyle.paddingRight);
-  const verticalPadding=parseFloat(bodyStyle.paddingTop)+parseFloat(bodyStyle.paddingBottom);
-  const availableWidth=Math.max(1,viewport.width-horizontalPadding);
-  const availableHeight=Math.max(1,viewport.height-verticalPadding);
-
-  const scale=Math.max(0.1,Math.min(
-    availableWidth/DESIGN_WIDTH,
-    availableHeight/layout.height,
-    1.35
-  ));
-
-  const rootStyle=document.documentElement.style;
-  rootStyle.setProperty("--design-width",DESIGN_WIDTH+"px");
-  rootStyle.setProperty("--design-height",layout.height+"px");
-  rootStyle.setProperty("--app-scale",scale.toFixed(6));
-  rootStyle.setProperty("--scaled-width",(DESIGN_WIDTH*scale)+"px");
-  rootStyle.setProperty("--scaled-height",(layout.height*scale)+"px");
-
-  if($("quizScreen") && $("quizScreen").classList.contains("active")){
-    requestAnimationFrame(fitQuizText);
-  }
+  const vv=window.visualViewport;
+  const app=document.querySelector(".app");
+  const stage=document.getElementById("appStage");
+  const ar=app ? app.getBoundingClientRect() : null;
+  const sr=stage ? stage.getBoundingClientRect() : null;
+  p.style.display="block";
+  p.textContent=[
+    `inner: ${window.innerWidth} x ${window.innerHeight}`,
+    `visual: ${vv ? vv.width.toFixed(1) : "n/a"} x ${vv ? vv.height.toFixed(1) : "n/a"}`,
+    `screen: ${screen.width} x ${screen.height}`,
+    `dpr: ${window.devicePixelRatio}`,
+    `touch: ${navigator.maxTouchPoints}`,
+    `layout: ${document.body.dataset.layout || "(none)"}`,
+    `scale: ${typeof scaleOverride==="number" ? scaleOverride.toFixed(4) : "n/a"}`,
+    `app rect: ${ar ? ar.width.toFixed(1)+" x "+ar.height.toFixed(1) : "n/a"}`,
+    `stage rect: ${sr ? sr.width.toFixed(1)+" x "+sr.height.toFixed(1) : "n/a"}`,
+    `orientation: ${screen.orientation ? screen.orientation.type : "n/a"}`
+  ].join("\n");
 }
 
-let deviceScaleRAF=0;
-function scheduleDeviceScale(){
-  cancelAnimationFrame(deviceScaleRAF);
-  deviceScaleRAF=requestAnimationFrame(refreshDeviceScale);
+let resizeRAF=0;
+function scheduleResponsiveLayout(){
+  cancelAnimationFrame(resizeRAF);
+  resizeRAF=requestAnimationFrame(()=>{
+    applyResponsiveLayout();
+    if($("quizScreen") && $("quizScreen").classList.contains("active")){
+      fitQuestionText();
+    }
+  });
 }
 
-window.addEventListener("resize",scheduleDeviceScale);
+window.addEventListener("resize",scheduleResponsiveLayout);
 window.addEventListener("orientationchange",()=>{
-  scheduleDeviceScale();
-  setTimeout(refreshDeviceScale,200);
+  scheduleResponsiveLayout();
+  setTimeout(applyResponsiveLayout,120);
 });
 if(window.visualViewport){
-  window.visualViewport.addEventListener("resize",scheduleDeviceScale);
+  window.visualViewport.addEventListener("resize",scheduleResponsiveLayout);
 }
 
-refreshDeviceScale();
+applyResponsiveLayout();
 
 load().then(()=>show("categoryScreen")).catch(()=>{});
 </script>
