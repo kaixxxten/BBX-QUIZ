@@ -1637,7 +1637,6 @@ h1{
   left:28px;
   right:28px;
   top:18px;
-  display:grid !important;
   grid-template-columns:1fr 1fr 1fr;
   align-items:center;
   gap:16px;
@@ -1847,6 +1846,21 @@ h1{
 .ta-result-actions .primary,
 .ta-result-actions .btn{
   min-width:190px;
+}
+
+
+/* ===== V8：一般模式 / 極限模式 HUD 完全分離 ===== */
+#taHud{
+  display:none !important;
+}
+#quizScreen.timeattack-active #taHud{
+  display:grid !important;
+}
+#quizScreen:not(.timeattack-active) .meta-row{
+  display:flex !important;
+}
+#quizScreen:not(.timeattack-active) .bottom{
+  display:grid !important;
 }
 
 </style>
@@ -2352,9 +2366,11 @@ function chooseCategory(category){
 
 function startGame(difficulty){
   timeAttackMode=false;
-  $("quizScreen").classList.remove("timeattack-active");
-  $("taHud").style.display="none";
   clearInterval(taTimerId);
+  taTimerId=null;
+  $("quizScreen").classList.remove("timeattack-active");
+  $("taHud").style.display="";
+  $("progress").textContent="";
 
   selectedDifficulty=difficulty;
 
@@ -2417,7 +2433,7 @@ function startTimeAttack(){
   reviewIndex=0;
 
   $("progress").textContent="";
-  $("taHud").style.display="flex";
+  $("taHud").style.display="";
   $("quizScreen").classList.add("timeattack-active");
   $("taTimer").textContent="30.0 秒";
   $("taTimer").classList.remove("danger");
@@ -2554,7 +2570,7 @@ function finishTimeAttack(){
   taTimerId=null;
 
   $("quizScreen").classList.remove("timeattack-active");
-  $("taHud").style.display="none";
+  $("taHud").style.display="";
   $("progress").textContent="";
 
   const rate=taAnsweredTotal ? Math.round(taCorrect/taAnsweredTotal*100) : 0;
@@ -3035,7 +3051,7 @@ $("taRestartBtn").onclick=()=>{
   timeAttackMode=false;
   clearInterval(taTimerId);
   $("quizScreen").classList.remove("timeattack-active");
-  $("taHud").style.display="none";
+  $("taHud").style.display="";
   clearTimeAttackEffects();
   show("categoryScreen");
 };
@@ -3046,7 +3062,7 @@ $("topBtn").onclick=()=>{
   clearInterval(taTimerId);
   taTimerId=null;
   $("quizScreen").classList.remove("timeattack-active");
-  $("taHud").style.display="none";
+  $("taHud").style.display="";
   $("progress").textContent="";
   clearTimeAttackEffects();
   show("categoryScreen");
