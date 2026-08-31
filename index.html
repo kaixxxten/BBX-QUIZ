@@ -1863,6 +1863,58 @@ h1{
   display:grid !important;
 }
 
+
+/* ===== V9：30秒極限挑戰特殊配色 ===== */
+.timeattack-card{
+  position:relative;
+  overflow:hidden;
+  background:#172B55 !important;
+  border:4px solid #F4C430 !important;
+  box-shadow:
+    0 12px 26px rgba(23,43,85,.20),
+    inset 0 0 0 2px rgba(255,255,255,.08) !important;
+}
+.timeattack-card::before,
+.timeattack-card::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:90px;
+  height:3px;
+  background:#F4C430;
+  opacity:.9;
+}
+.timeattack-card::before{
+  left:26px;
+  transform:translateY(-50%) skewX(-30deg);
+}
+.timeattack-card::after{
+  right:26px;
+  transform:translateY(-50%) skewX(-30deg);
+}
+.timeattack-title{
+  position:relative;
+  z-index:1;
+  color:#fff !important;
+  letter-spacing:.02em;
+}
+.timeattack-title::first-letter{
+  color:#F4C430;
+}
+.timeattack-sub{
+  position:relative;
+  z-index:1;
+  color:#F1F4FA !important;
+  opacity:.92 !important;
+}
+.timeattack-card:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(23,43,85,.24),
+    0 0 0 3px rgba(244,196,48,.14),
+    inset 0 0 0 2px rgba(255,255,255,.08) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1898,7 +1950,7 @@ h1{
 
         
         <button class="timeattack-card" id="timeAttackBtn">
-          <div class="timeattack-title" id="timeAttackTitle">30秒 極限挑戰</div>
+          <div class="timeattack-title" id="timeAttackTitle"><span style="color:#F4C430">30秒</span> 極限挑戰</div>
           <div class="timeattack-sub" id="timeAttackSub">ALL QUESTION TIME ATTACK</div>
         </button>
 
@@ -2336,7 +2388,15 @@ function applyUI(ui){
   $("hardDesc").textContent=ui.hardDesc;
   $("homeFoot").textContent=ui.homeFoot;
   $("difficultyFoot").textContent=ui.difficultyFoot;
-  $("timeAttackTitle").textContent=ui.timeAttackTitle;
+  {
+    const title=ui.timeAttackTitle || "30秒 極限挑戰";
+    const el=$("timeAttackTitle");
+    if(title.startsWith("30秒")){
+      el.innerHTML=`<span style="color:#F4C430">30秒</span>${title.slice(3)}`;
+    }else{
+      el.textContent=title;
+    }
+  }
   $("timeAttackSub").textContent=ui.timeAttackSub;
 }
 
