@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172b55">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>BEYBLADE X QUIZ</title>
 <style>
 :root{
@@ -65,6 +69,109 @@ body{
     max(8px,env(safe-area-inset-left));
 }
 button,textarea,input,select{font:inherit}
+
+/* 手機直式入口：直式只顯示旋轉提示，避免縮小後誤觸遊戲。 */
+.orientation-gate{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:
+    max(24px,env(safe-area-inset-top))
+    max(24px,env(safe-area-inset-right))
+    max(24px,env(safe-area-inset-bottom))
+    max(24px,env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 18% 18%,rgba(47,111,218,.2),transparent 34%),
+    radial-gradient(circle at 82% 82%,rgba(244,196,48,.2),transparent 32%),
+    #f8faff;
+  text-align:center;
+}
+.orientation-card{
+  width:min(100%,420px);
+  padding:32px 24px;
+  border:2px solid var(--navy);
+  border-radius:28px;
+  background:#fff;
+  box-shadow:0 18px 50px rgba(43,57,84,.16);
+}
+.orientation-device{
+  position:relative;
+  width:96px;
+  height:56px;
+  margin:0 auto 22px;
+  border:5px solid var(--navy);
+  border-radius:13px;
+  transform:rotate(-8deg);
+}
+.orientation-device::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-17px;
+  width:44px;
+  height:44px;
+  border:5px solid #f4c430;
+  border-top-color:transparent;
+  border-left-color:transparent;
+  border-radius:50%;
+  transform:translateX(-50%) rotate(12deg);
+}
+.orientation-device::after{
+  content:"";
+  position:absolute;
+  left:63px;
+  bottom:-20px;
+  width:0;
+  height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:13px solid #f4c430;
+  transform:rotate(-30deg);
+}
+.orientation-title{
+  color:var(--navy);
+  font-size:clamp(27px,8vw,38px);
+  line-height:1.15;
+  font-weight:1000;
+}
+.orientation-text{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.55;
+  font-weight:700;
+}
+.orientation-fullscreen-btn{
+  width:100%;
+  min-height:52px;
+  margin-top:22px;
+  border:0;
+  border-radius:14px;
+  background:var(--navy);
+  color:#fff;
+  font-size:17px;
+  font-weight:1000;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.orientation-status{
+  min-height:20px;
+  margin-top:12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:700;
+}
+.orientation-status[data-tone="error"]{color:var(--wrong)}
+
+/* JS 尚未完成初次判斷前，也不讓直式手機閃出遊戲畫布。 */
+@media (orientation:portrait) and (max-width:600px){
+  body:not([data-layout]) .orientation-gate{display:flex}
+  body:not([data-layout]) .app-stage{visibility:hidden;pointer-events:none}
+}
 
 /*
   固定設計畫布 1180 × 850，
@@ -1883,6 +1990,13 @@ h1{
 body[data-layout="phone-portrait"]{
   align-items:flex-start;
 }
+body[data-layout="phone-portrait"] .orientation-gate{
+  display:flex;
+}
+body[data-layout="phone-portrait"] .app-stage{
+  visibility:hidden;
+  pointer-events:none;
+}
 
 body[data-layout="mobile-landscape"]{
   --question-max-size:32px;
@@ -1926,6 +2040,14 @@ body[data-layout="mobile-landscape"] .top-btn{
   padding:4px 8px;
   border-radius:8px;
   font-size:11px;
+}
+.fullscreen-btn{display:none}
+body[data-layout="mobile-landscape"] .fullscreen-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  touch-action:manipulation;
 }
 body[data-layout="mobile-landscape"] .screen{
   padding:6px 8px;
@@ -2281,12 +2403,22 @@ body[data-layout="mobile-landscape"] .editor-help{
 </style>
 </head>
 <body>
+<div class="orientation-gate" id="orientationGate" role="dialog" aria-modal="true" aria-labelledby="orientationTitle">
+  <div class="orientation-card">
+    <div class="orientation-device" aria-hidden="true"></div>
+    <div class="orientation-title" id="orientationTitle">請轉成橫式遊玩</div>
+    <div class="orientation-text">轉動手機後會自動顯示遊戲。也可以點下方按鈕，讓瀏覽器嘗試進入全螢幕並切換橫式。</div>
+    <button class="orientation-fullscreen-btn" id="orientationFullscreenBtn" type="button">全螢幕並切換橫式</button>
+    <div class="orientation-status" id="orientationStatus" aria-live="polite"></div>
+  </div>
+</div>
 <div class="app-stage" id="appStage">
 <div class="app">
   <header class="topbar">
     <div class="brand">BEYBLADE X QUIZ</div>
     <div class="top-actions">
       <div class="progress" id="progress"></div>
+      <button class="top-btn fullscreen-btn" id="fullscreenBtn" type="button" aria-pressed="false">全螢幕</button>
       <button class="top-btn" id="topBtn">TOP</button>
       
     </div>
@@ -2626,6 +2758,109 @@ let adminDifficulty="簡單";
 
 const $=id=>document.getElementById(id);
 const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","timeAttackResultScreen","timeAttackReviewScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
+
+let fullscreenRequestPending=false;
+
+function getFullscreenElement(){
+  return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+
+function isPhoneLayout(){
+  return document.body.dataset.layout==="phone-portrait" ||
+    document.body.dataset.layout==="mobile-landscape";
+}
+
+function setOrientationStatus(message,tone=""){
+  const status=$("orientationStatus");
+  if(!status) return;
+  status.textContent=message;
+  if(tone) status.dataset.tone=tone;
+  else status.removeAttribute("data-tone");
+}
+
+function updateFullscreenControls(){
+  const button=$("fullscreenBtn");
+  if(!button) return;
+  const active=Boolean(getFullscreenElement());
+  button.textContent=active ? "離開全螢幕" : "全螢幕";
+  button.setAttribute("aria-pressed",String(active));
+}
+
+function refreshFullscreenControlsSoon(){
+  setTimeout(updateFullscreenControls,250);
+  setTimeout(updateFullscreenControls,1000);
+}
+
+async function lockLandscapeIfPossible(){
+  if(!screen.orientation || typeof screen.orientation.lock!=="function") return false;
+  try{
+    await screen.orientation.lock("landscape");
+    return true;
+  }catch(error){
+    return false;
+  }
+}
+
+async function enterMobileFullscreen(){
+  if(!isPhoneLayout() || fullscreenRequestPending) return false;
+
+  if(getFullscreenElement()){
+    await lockLandscapeIfPossible();
+    updateFullscreenControls();
+    return true;
+  }
+
+  const root=document.documentElement;
+  const request=root.requestFullscreen || root.webkitRequestFullscreen;
+  if(typeof request!=="function"){
+    setOrientationStatus("此瀏覽器不支援網頁全螢幕，請手動將手機轉成橫式。","error");
+    return false;
+  }
+
+  fullscreenRequestPending=true;
+  try{
+    /* 全螢幕必須直接由玩家點擊觸發，瀏覽器不允許載入時強制執行。 */
+    await request.call(root);
+    const locked=await lockLandscapeIfPossible();
+    setOrientationStatus(
+      locked ? "已切換成全螢幕橫式。" : "已進入全螢幕；若畫面仍是直式，請手動轉動手機。"
+    );
+    updateFullscreenControls();
+    refreshFullscreenControlsSoon();
+    return true;
+  }catch(error){
+    setOrientationStatus("瀏覽器未允許全螢幕，請手動旋轉手機，或從瀏覽器選單開啟全螢幕。","error");
+    return false;
+  }finally{
+    fullscreenRequestPending=false;
+  }
+}
+
+async function toggleMobileFullscreen(){
+  if(!getFullscreenElement()){
+    await enterMobileFullscreen();
+    return;
+  }
+
+  const exit=document.exitFullscreen || document.webkitExitFullscreen;
+  if(typeof exit!=="function") return;
+  try{
+    await exit.call(document);
+    if(screen.orientation && typeof screen.orientation.unlock==="function"){
+      screen.orientation.unlock();
+    }
+  }catch(error){
+    setOrientationStatus("目前無法離開全螢幕，請使用手機的返回手勢。","error");
+  }
+  updateFullscreenControls();
+  refreshFullscreenControlsSoon();
+}
+
+function tryFullscreenOnGameStart(){
+  if(document.body.dataset.layout==="mobile-landscape" && !getFullscreenElement()){
+    void enterMobileFullscreen();
+  }
+}
 
 function show(id){
   screens.forEach(x=>$(x).classList.remove("active"));
@@ -3484,15 +3719,24 @@ function exportTxt(){
 
 
 document.querySelectorAll("[data-category]").forEach(btn=>{
-  btn.onclick=()=>chooseCategory(btn.dataset.category);
+  btn.onclick=()=>{
+    tryFullscreenOnGameStart();
+    chooseCategory(btn.dataset.category);
+  };
 });
 
 document.querySelectorAll("[data-difficulty]").forEach(btn=>{
-  btn.onclick=()=>startGame(btn.dataset.difficulty);
+  btn.onclick=()=>{
+    tryFullscreenOnGameStart();
+    startGame(btn.dataset.difficulty);
+  };
 });
 
 $("nextBtn").onclick=next;
-$("timeAttackBtn").onclick=startTimeAttack;
+$("timeAttackBtn").onclick=()=>{
+  tryFullscreenOnGameStart();
+  startTimeAttack();
+};
 $("taReviewBtn").onclick=openTimeAttackReview;
 
 $("reviewPrevBtn").onclick=()=>{
@@ -3597,6 +3841,16 @@ $("sampleBtn").onclick=()=>{
 
 $("exportBtn").onclick=exportTxt;
 
+$("fullscreenBtn").addEventListener("click",toggleMobileFullscreen);
+$("orientationFullscreenBtn").addEventListener("click",enterMobileFullscreen);
+
+document.addEventListener("fullscreenchange",updateFullscreenControls);
+document.addEventListener("webkitfullscreenchange",updateFullscreenControls);
+document.addEventListener("visibilitychange",updateFullscreenControls);
+document.addEventListener("fullscreenerror",()=>{
+  setOrientationStatus("瀏覽器未允許全螢幕，請手動將手機轉成橫式。","error");
+});
+
 
 const DESIGN_WIDTH=1180;
 const DESIGN_HEIGHT=850;
@@ -3638,6 +3892,7 @@ function refreshDeviceScale(){
   const viewport=getViewportSize();
   const layout=getCanvasLayout(viewport.width,viewport.height);
   document.body.dataset.layout=layout.name;
+  updateFullscreenControls();
 
   const bodyStyle=getComputedStyle(document.body);
   const horizontalPadding=parseFloat(bodyStyle.paddingLeft)+parseFloat(bodyStyle.paddingRight);
