@@ -1530,7 +1530,7 @@ h1{
     <div class="top-actions">
       <div class="progress" id="progress"></div>
       <button class="top-btn" id="topBtn">TOP</button>
-      <button class="small-top" id="editorBtn">後臺</button>
+      
     </div>
   </header>
 
@@ -1767,6 +1767,15 @@ const SAMPLE = `動畫｜簡單｜BEYBLADE X 中，假面X所屬的隊伍是哪�
 const KEY="bbx_quiz_v4";
 const UI_KEY="bbx_quiz_ui_text_v1";
 const PER_GAME=5;
+const QUESTION_FILES=[
+  "questions/anime_easy.txt",
+  "questions/anime_hard.txt",
+  "questions/bey_easy.txt",
+  "questions/bey_hard.txt"
+];
+const PAGE_TEXT_FILE="settings/page_text.txt";
+let loadedUI=null;
+
 
 const UI_DEFAULTS={
   homeTitle:"你對 BEYBLADE X 有多了解？",
@@ -1854,25 +1863,59 @@ function shuffle(a){
   return a;
 }
 
-function load(){
-  let t=localStorage.getItem(KEY);
-  if(!t){
-    t=SAMPLE;
-    localStorage.setItem(KEY,t);
+function parsePageText(txt){
+  const ui={...UI_DEFAULTS};
+  txt.split(/\r?\n/).forEach(line=>{
+    const s=line.trim();
+    if(!s || s.startsWith("#")) return;
+    const pos=s.indexOf("=");
+    if(pos<1) return;
+    const key=s.slice(0,pos).trim();
+    const value=s.slice(pos+1).trim();
+    if(key in ui && value) ui[key]=value;
+  });
+  return ui;
+}
+
+async function fetchTextFile(path){
+  const response=await fetch(path,{cache:"no-store"});
+  if(!response.ok) throw new Error(`${path} (${response.status})`);
+  return await response.text();
+}
+
+async function load(){
+  try{
+    const results=await Promise.all([
+      fetchTextFile(PAGE_TEXT_FILE),
+      ...QUESTION_FILES.map(fetchTextFile)
+    ]);
+
+    loadedUI=parsePageText(results[0]);
+    applyUI(loadedUI);
+
+    bank=[];
+    results.slice(1).forEach(txt=>{
+      bank.push(...parse(txt));
+    });
+
+    if(!bank.length) throw new Error("題庫沒有題目");
+
+    // 後臺編輯框仍留在原始碼中，但公開頁面沒有入口。
+    if($("editorBox")) $("editorBox").value="";
+  }catch(e){
+    console.error(e);
+    document.querySelector(".main").innerHTML=`
+      <div style="padding:48px;font-size:20px;color:#294b8e">
+        <h2 style="margin-top:0">資料載入失敗</h2>
+        <p>請確認 questions 與 settings 資料夾有一起上傳。</p>
+        <p style="font-size:15px;color:#6f7b91">${String(e.message||e)}</p>
+      </div>`;
+    throw e;
   }
-  $("editorBox").value=t;
-  bank=parse(t);
-  const ui=getUI();
-  fillUIInputs(ui);
-  applyUI(ui);
 }
 
 function getUI(){
-  try{
-    return {...UI_DEFAULTS,...JSON.parse(localStorage.getItem(UI_KEY)||"{}")};
-  }catch(e){
-    return {...UI_DEFAULTS};
-  }
+  return loadedUI || {...UI_DEFAULTS};
 }
 
 function applyUI(ui){
@@ -2318,10 +2361,7 @@ $("topBtn").onclick=()=>{
   show("categoryScreen");
 };
 
-$("editorBtn").onclick=()=>{
-  $("progress").textContent="";
-  show("editorScreen");
-};
+if($("editorBtn")) $("editorBtn").onclick=()=>show("editorScreen");
 
 
 
@@ -2428,9 +2468,7 @@ if(window.visualViewport){
 
 fitAppToViewport();
 
-load();
-
-show("categoryScreen");
+load().then(()=>show("categoryScreen")).catch(()=>{});
 </script>
 </body>
 </html>

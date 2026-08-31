@@ -1,0 +1,12 @@
+homeTitle=321 GO SHOOT!!
+homeSub=選擇題目分類，挑戰隨機 5 題，開始 BEYBLADE X 挑戰！
+animeTitle=動畫題
+animeDesc=角色、劇情、台詞、隊伍、事件等動畫作品內容。
+beyTitle=陀螺題
+beyDesc=實體陀螺、零件、名稱、規則、機構與商品相關知識。
+easyTitle=簡單
+easyDesc=適合新手或一般參加者。
+hardTitle=困難
+hardDesc=給熟悉作品或陀螺的玩家挑戰。
+homeFoot=每次挑戰都會從對應題庫中重新隨機抽選。
+difficultyFoot=每次會從所選分類與難度中隨機抽出 5 題。
