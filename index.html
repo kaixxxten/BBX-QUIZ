@@ -1603,7 +1603,7 @@ h1{
 }
 
 
-/* ===== 30秒極限挑戰 ===== */
+/* ===== 60秒極限挑戰 ===== */
 .timeattack-card{
   width:100%;
   margin-top:20px;
@@ -1930,7 +1930,7 @@ h1{
 }
 
 
-/* ===== V9：30秒極限挑戰特殊配色 ===== */
+/* ===== V9：60秒極限挑戰特殊配色 ===== */
 .timeattack-card{
   position:relative;
   overflow:hidden;
@@ -2238,7 +2238,7 @@ body[data-layout="mobile-landscape"] #quizScreen .next{
   font-size:14px;
 }
 
-/* 手機橫式 30 秒模式：HUD 與選項使用更多實際畫面 */
+/* 手機橫式 60 秒模式：HUD 與選項使用更多實際畫面 */
 body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz{
   padding-top:40px !important;
   grid-template-rows:58px minmax(0,1fr) !important;
@@ -2430,7 +2430,7 @@ body[data-layout="mobile-landscape"] .editor-help{
       <div class="hero-panel">
         <div class="hero-kicker">BEYBLADE X QUIZ</div>
         <div class="hero-title" id="homeTitle">你對 BEYBLADE X 有多了解？</div>
-        <div class="hero-sub" id="homeSub">選擇題目分類，挑戰隨機 5 題</div>
+        <div class="hero-sub" id="homeSub">選擇題目分類，挑戰隨機 10 題</div>
 
         <div class="hero-actions">
           <button class="hero-card anime" data-category="動畫">
@@ -2446,7 +2446,7 @@ body[data-layout="mobile-landscape"] .editor-help{
 
         
         <button class="timeattack-card" id="timeAttackBtn">
-          <div class="timeattack-title" id="timeAttackTitle"><span style="color:#F4C430">30秒</span> 極限挑戰</div>
+          <div class="timeattack-title" id="timeAttackTitle"><span style="color:#F4C430">60秒</span> 極限挑戰</div>
           <div class="timeattack-sub" id="timeAttackSub">ALL QUESTION TIME ATTACK</div>
         </button>
 
@@ -2457,7 +2457,7 @@ body[data-layout="mobile-landscape"] .editor-help{
     <section class="screen center" id="difficultyScreen">
       <div class="difficulty-panel">
         <div class="difficulty-big-title" id="difficultyTitle">選擇難度</div>
-        <div class="difficulty-big-sub" id="difficultySub">請選擇難度，開始隨機 5 題挑戰</div>
+        <div class="difficulty-big-sub" id="difficultySub">請選擇難度，開始隨機 10 題挑戰</div>
 
         <div class="diff-wrap">
           <button class="diff-card easy" data-difficulty="簡單">
@@ -2471,7 +2471,7 @@ body[data-layout="mobile-landscape"] .editor-help{
           </button>
         </div>
 
-        <div class="difficulty-foot" id="difficultyFoot">每次會從所選分類與難度中隨機抽出 5 題。</div>
+        <div class="difficulty-foot" id="difficultyFoot">每次會從所選分類與難度中隨機抽出 10 題。</div>
       </div>
     </section>
 
@@ -2479,7 +2479,7 @@ body[data-layout="mobile-landscape"] .editor-help{
       <div class="ta-hud" id="taHud" style="display:none">
         <div class="ta-pill" id="taMode">陀螺題・簡單</div>
         <div class="ta-pill" id="taScore">0 CORRECT</div>
-        <div class="ta-pill" id="taTimer">30.0 秒</div>
+        <div class="ta-pill" id="taTimer">60.0 秒</div>
       </div>
       <div class="quiz">
         <div class="meta-row">
@@ -2513,7 +2513,7 @@ body[data-layout="mobile-landscape"] .editor-help{
       <div class="confetti-layer" id="resultEffects"></div>
       <div class="result-symbol" id="resultSymbol">✕</div>
       <div class="mode-title" id="resultTitle">挑戰完成！</div>
-      <div class="score" id="scoreText">0 / 5</div>
+      <div class="score" id="scoreText">0 / 10</div>
       <div class="result-text" id="resultText"></div>
       <button class="primary" id="restartBtn">重新選擇分類</button>
     </section>
@@ -2691,25 +2691,48 @@ const SAMPLE = `動畫｜簡單｜BEYBLADE X 中，假面X所屬的隊伍是哪�
 動畫｜簡單｜七色瑪媞在 Persona 隊中負責的工作之一是？｜宣傳｜廚師｜醫生｜裁判｜A｜七色瑪媞負責宣傳等多項工作。
 動畫｜簡單｜Persona 隊的成員之一是誰？｜假面X｜黑須九｜白星天華｜神成謝爾｜A｜假面X是 Persona 隊成員。
 動畫｜簡單｜BEYBLADE X 的主角群主要參加的是哪一種競技？｜戰鬥陀螺｜賽車｜足球｜卡牌｜A｜作品核心競技為戰鬥陀螺。
+動畫｜簡單｜Persona 隊的三位主要成員是？｜風見鳥、假面X、七色瑪媞｜龍宮庫洛姆、白星天華、不死原霸恩｜神成謝爾、難波結、萬獸國王｜黑須九、黑須八、黑須零｜A｜Persona 的核心成員為風見鳥、假面X與七色瑪媞。
+動畫｜簡單｜Persona 隊以挑戰哪一座競技塔為目標？｜X Tower｜Battle Tower｜Bey Castle｜Gear Arena｜A｜Persona 以登上 X Tower 頂端為目標。
+動畫｜簡單｜假面X的真實身分是誰？｜黑須艾克斯｜風見鳥｜龍宮庫洛姆｜不死原霸恩｜A｜假面X的真實身分是黑須艾克斯。
+動畫｜簡單｜七色瑪媞除了是職業選手，也擅長哪項工作？｜製作與調整陀螺｜維修競技場｜擔任裁判｜設計發射器電池｜A｜七色瑪媞同時也是出色的陀螺工匠。
+動畫｜簡單｜下列哪一顆是風見鳥使用過的陀螺？｜HellsScythe 4-60T｜DranSword 3-60F｜WizardArrow 4-80B｜PhoenixWing 9-60GF｜A｜風見鳥使用過 HellsScythe 4-60T。
 動畫｜困難｜七色瑪媞在 Persona 隊身兼多項工作，以下哪一項不是她最主要的工作？｜宣傳｜製作陀螺｜陀螺選手｜財務管理｜D｜七色瑪媞主要負責宣傳、製作陀螺，也會作為選手出賽。
 動畫｜困難｜以下哪一項較符合 Persona 隊的活動內容？｜參加職業陀螺賽事｜經營餐廳｜拍攝電影｜經營遊樂園｜A｜Persona 主要參與職業陀螺競技。
 動畫｜困難｜假面X最具代表性的特徵之一是？｜戴著面具｜總是穿西裝｜不使用陀螺｜擔任裁判｜A｜假面X以面具造型聞名。
 動畫｜困難｜七色瑪媞除了選手身分之外，還會參與哪類工作？｜隊伍營運與宣傳｜醫療｜裁判｜保全｜A｜她同時負責多項隊伍營運工作。
 動畫｜困難｜風見鳥在故事中最主要的成長方向是？｜提升陀螺實力｜學習料理｜成為記者｜製作動畫｜A｜風見鳥主要是在陀螺競技中成長。
+動畫｜困難｜黑須艾克斯的生日是？｜1月23日｜4月6日｜7月16日｜8月10日｜A｜官方角色資料記載黑須艾克斯的生日是 1 月 23 日。
+動畫｜困難｜七色瑪媞的生日是？｜7月16日｜1月23日｜2月4日｜8月10日｜A｜官方角色資料記載七色瑪媞的生日是 7 月 16 日。
+動畫｜困難｜風見鳥的生日是？｜8月10日｜1月23日｜4月6日｜7月16日｜A｜官方角色資料記載風見鳥的生日是 8 月 10 日。
+動畫｜困難｜白星天華在白星流中的身分是？｜師範代｜初學者｜裁判長｜經理｜A｜白星天華是白星流的師範代。
+動畫｜困難｜不死原霸恩原本所屬的隊伍是？｜Yggdrasil｜Persona｜Pendragon｜Zonamos House｜A｜不死原霸恩所屬的隊伍是 Yggdrasil。
 陀螺｜簡單｜BEYBLADE X 的基本三大部件為何？｜Blade、Ratchet、Bit｜Layer、Disk、Driver｜Core、Ring、Tip｜Blade、Disk、Bit｜A｜BEYBLADE X 基本由 Blade、Ratchet、Bit 組成。
 陀螺｜簡單｜BEYBLADE X 對戰時使用的場地通常稱為？｜Xtreme Stadium｜Battle Box｜Spin Ring｜Gear Field｜A｜BEYBLADE X 使用 Xtreme Stadium。
 陀螺｜簡單｜Bit 位於陀螺的哪個位置？｜最下方｜最上方｜中間外側｜發射器內｜A｜Bit 是陀螺最下方接觸場地的部件。
 陀螺｜簡單｜Ratchet 位於 Blade 與哪個部件之間？｜Bit｜發射器｜拉條｜場地｜A｜Ratchet 位於 Blade 與 Bit 之間。
 陀螺｜簡單｜Xtreme Line 的主要作用是？｜讓陀螺高速加速｜停止旋轉｜固定中心｜增加重量｜A｜Xtreme Line 可讓陀螺產生高速衝刺。
+陀螺｜簡單｜BEYBLADE X 的陀螺由幾個基本部件組成？｜3 個｜2 個｜4 個｜5 個｜A｜基本結構由 Blade、Ratchet、Bit 三個部件組成。
+陀螺｜簡單｜BEYBLADE X 基本對戰共有幾種取勝方式？｜4 種｜2 種｜5 種｜6 種｜A｜共有 Survivor、Knockout、Burst、Xtreme 四種 Finish。
+陀螺｜簡單｜Survivor Finish 可獲得幾分？｜1 分｜2 分｜3 分｜4 分｜A｜Survivor Finish 可獲得 1 分。
+陀螺｜簡單｜Burst Finish 可獲得幾分？｜2 分｜1 分｜3 分｜4 分｜A｜Burst Finish 可獲得 2 分。
+陀螺｜簡單｜Xtreme Finish 可獲得幾分？｜3 分｜1 分｜2 分｜4 分｜A｜Xtreme Finish 可獲得 3 分。
 陀螺｜困難｜Ratchet 名稱中的第二個數字通常代表什麼？｜重量｜高度｜齒數｜直徑｜B｜第二個數字通常代表 Ratchet 高度。
 陀螺｜困難｜Blade 在 BEYBLADE X 中主要影響哪個面向？｜碰撞與重量分布｜電池續航｜發射器長度｜場地尺寸｜A｜Blade 是主要碰撞部件。
 陀螺｜困難｜Bit 的形狀最直接影響哪項表現？｜移動方式與穩定性｜Blade 顏色｜Ratchet 高度｜發射器齒數｜A｜Bit 的形狀會顯著影響移動與穩定。
 陀螺｜困難｜Xtreme Dash 發生時，主要是哪個部件與 Xtreme Line 接觸？｜Bit｜Blade｜Ratchet｜Launcher｜A｜Bit 與 Xtreme Line 接觸後產生高速衝刺。
-陀螺｜困難｜若要改變陀螺的高度設定，最直接會更換哪個部件？｜Ratchet｜Blade｜Launcher｜Grip｜A｜Ratchet 的高度規格會直接影響整體高度。`;
+陀螺｜困難｜若要改變陀螺的高度設定，最直接會更換哪個部件？｜Ratchet｜Blade｜Launcher｜Grip｜A｜Ratchet 的高度規格會直接影響整體高度。
+陀螺｜困難｜Knockout Finish 可獲得幾分？｜2 分｜1 分｜3 分｜4 分｜A｜Knockout Finish 可獲得 2 分。
+陀螺｜困難｜BEYBLADE X 基本對戰通常先取得幾分者獲勝？｜4 分｜3 分｜5 分｜10 分｜A｜基本對戰採先取得 4 分者獲勝。
+陀螺｜困難｜官方介紹將 BEYBLADE X 分成哪四種性能類型？｜攻擊、持久、防禦、平衡｜速度、重量、高度、直徑｜Blade、Ratchet、Bit、Launcher｜左旋、右旋、雙旋、無旋｜A｜四種性能類型為攻擊、持久、防禦與平衡。
+陀螺｜困難｜對手仍在場內但先停止旋轉時，勝方屬於哪種 Finish？｜Survivor Finish｜Burst Finish｜Xtreme Finish｜Knockout Finish｜A｜讓對手先停止旋轉屬於 Survivor Finish。
+陀螺｜困難｜Bit 除了影響移動方式，也會影響哪項性能？｜Burst 抗性｜Blade 顏色｜Launcher 長度｜Stadium 尺寸｜A｜官方結構說明指出 Bit 也會影響 Burst 抗性。`;
 
 const KEY="bbx_quiz_v4";
 const UI_KEY="bbx_quiz_ui_text_v1";
-const PER_GAME=5;
+const PER_GAME=10;
+const PASS_SCORE=6;
+const TIME_ATTACK_SECONDS=60;
+const TIME_ATTACK_DURATION_MS=TIME_ATTACK_SECONDS*1000;
 const QUESTION_FILES=[
   "questions/anime_easy.txt",
   "questions/anime_hard.txt",
@@ -2722,7 +2745,7 @@ let loadedUI=null;
 
 const UI_DEFAULTS={
   homeTitle:"你對 BEYBLADE X 有多了解？",
-  homeSub:"選擇題目分類，挑戰隨機 5 題",
+  homeSub:"選擇題目分類，挑戰隨機 10 題",
   animeTitle:"動畫題",
   animeDesc:"角色、劇情、台詞、隊伍、事件等動畫作品內容。",
   beyTitle:"陀螺題",
@@ -2732,8 +2755,8 @@ const UI_DEFAULTS={
   hardTitle:"困難",
   hardDesc:"給熟悉作品或陀螺的玩家挑戰。",
   homeFoot:"每次挑戰都會從對應題庫中重新隨機抽選。",
-  difficultyFoot:"每次會從所選分類與難度中隨機抽出 5 題。",
-  timeAttackTitle:"30秒 極限挑戰",
+  difficultyFoot:"每次會從所選分類與難度中隨機抽出 10 題。",
+  timeAttackTitle:"60秒 極限挑戰",
   timeAttackSub:"ALL QUESTION TIME ATTACK"
 };
 
@@ -2989,10 +3012,10 @@ function applyUI(ui){
   $("homeFoot").textContent=ui.homeFoot;
   $("difficultyFoot").textContent=ui.difficultyFoot;
   {
-    const title=ui.timeAttackTitle || "30秒 極限挑戰";
+    const title=ui.timeAttackTitle || "60秒 極限挑戰";
     const el=$("timeAttackTitle");
-    if(title.startsWith("30秒")){
-      el.innerHTML=`<span style="color:#F4C430">30秒</span>${title.slice(3)}`;
+    if(title.startsWith("60秒")){
+      el.innerHTML=`<span style="color:#F4C430">60秒</span>${title.slice(3)}`;
     }else{
       el.textContent=title;
     }
@@ -3020,7 +3043,7 @@ function chooseCategory(category){
   const ui=getUI();
   const catName=category==="動畫" ? ui.animeTitle : ui.beyTitle;
   $("difficultyTitle").textContent=`${catName}挑戰`;
-  $("difficultySub").textContent=`選擇難度，開始隨機 5 題挑戰`;
+  $("difficultySub").textContent=`選擇難度，開始隨機 10 題挑戰`;
   show("difficultyScreen");
 }
 
@@ -3053,25 +3076,25 @@ function startGame(difficulty){
 
 
 function getTimeAttackResult(correct,total){
-  const rate=total ? Math.round(correct/total*100) : 0;
+  const rate=total ? correct/total*100 : 0;
 
   // 必須同時達到「答對題數」與「正確率」門檻。
-  if(correct>=15 && rate>=90){
+  if(correct>=30 && rate>=90){
     return {rank:"LEGEND BLADER",stars:"★★★★★＋"};
   }
-  if(correct>=12 && rate>=85){
+  if(correct>=24 && rate>=85){
     return {rank:"MASTER BLADER",stars:"★★★★★"};
   }
-  if(correct>=10 && rate>=80){
+  if(correct>=20 && rate>=80){
     return {rank:"X塔級 BLADER",stars:"★★★★☆"};
   }
-  if(correct>=8 && rate>=70){
+  if(correct>=16 && rate>=70){
     return {rank:"頂尖 BLADER",stars:"★★★☆☆"};
   }
-  if(correct>=6 && rate>=60){
+  if(correct>=12 && rate>=60){
     return {rank:"職業 BLADER",stars:"★★☆☆☆"};
   }
-  if(correct>=4 && rate>=50){
+  if(correct>=8 && rate>=50){
     return {rank:"新星 BLADER",stars:"★★☆☆☆"};
   }
   return {rank:"見習 BLADER",stars:"★☆☆☆☆"};
@@ -3095,14 +3118,14 @@ function startTimeAttack(){
   $("progress").textContent="";
   $("taHud").style.display="";
   $("quizScreen").classList.add("timeattack-active");
-  $("taTimer").textContent="30.0 秒";
+  $("taTimer").textContent=TIME_ATTACK_SECONDS.toFixed(1)+" 秒";
   $("taTimer").classList.remove("danger");
   $("taScore").textContent="0 CORRECT";
   
   
 
   show("quizScreen");
-  taEndTime=performance.now()+30000;
+  taEndTime=performance.now()+TIME_ATTACK_DURATION_MS;
   nextTimeAttackQuestion();
 
   clearInterval(taTimerId);
@@ -3517,7 +3540,7 @@ function makeFailEffects(){
 function showResult(){
   clearResultEffects();
 
-  const passed=score>=3;
+  const passed=score>=PASS_SCORE;
   const screen=$("resultScreen");
 
   $("progress").textContent="";
