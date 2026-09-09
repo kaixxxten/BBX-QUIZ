@@ -10,6 +10,7 @@ questions/
   bey_hard.txt
 settings/
   page_text.txt
+  staff.txt
 images/
   （自行建立子資料夾並放入題目圖或選項圖）
 
@@ -51,11 +52,25 @@ image-choice 範例（3 個圖片選項）：
 - 一般 10 題、60 秒極限挑戰及極限挑戰答題回顧都共用同一套判分資料。
 
 【版本號與 STAFF / CREDIT】
-- App 右下角會持續顯示版本號，點擊後可開啟 STAFF / CREDIT 視窗。
+- 版本號只會顯示在 TOP／首頁右下角，進入其他頁面時會隱藏，回到 TOP 後重新顯示。
 - 版本號只需修改 index.html 內的 APP_VERSION。
-- STAFF 名單集中在 index.html 內的 STAFF_INFO，可直接增加分類或在各分類陣列中增加姓名。
+- STAFF 名單集中在 settings/staff.txt，修改名單後不需要再編輯 index.html。
 - 視窗可用右上角 ×、下方關閉按鈕、點擊遮罩或桌機 ESC 關閉。
 - STAFF 視窗是覆蓋層，不會切換或重建遊戲畫面，也不會重置題目、分數、進度或 60 秒倒數。
+
+settings/staff.txt 使用 UTF-8 純文字，一行一個分類，格式為：
+分類=名字A,名字B
+
+例如：
+製作=名字A
+題庫提供=名字B,名字C
+題目協力=名字D
+測試協力=名字E,名字F
+
+- 多人可以使用半形逗號「,」或全形逗號「，」分隔。
+- 某個分類暫時沒有人時可以保留等號並把右側留空，例如「測試協力=」。
+- 可以增加新的分類；重新上傳 staff.txt 到 GitHub Pages 後，STAFF / CREDIT 視窗會自動更新。
+- staff.txt 缺失或格式錯誤時，視窗會顯示「STAFF 資料載入失敗」，不會影響題庫與遊戲。
 
 【頁面文字】
 settings/page_text.txt
@@ -65,7 +80,7 @@ homeSub=...
 animeTitle=動畫題
 ...
 
-之後改題庫或頁面文字，只需要修改 TXT 並重新上傳，不必修改 index.html。
+之後改題庫、頁面文字或 STAFF 名單，只需要修改對應 TXT 並重新上傳，不必修改 index.html。
 
 注意：本版本使用 fetch() 讀 TXT，請從 GitHub Pages 網址開啟。
 直接在電腦雙擊 index.html，瀏覽器可能因 file:// 安全限制無法讀取 TXT。

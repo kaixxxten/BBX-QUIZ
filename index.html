@@ -519,14 +519,14 @@ h1{
 }
 #quizScreen .answers.image-choices.choice-count-2{
   width:100%;
-  max-width:850px;
+  max-width:932px;
   justify-self:center;
   align-self:stretch;
   align-content:start;
   justify-content:center;
-  grid-template-columns:repeat(2,minmax(0,400px));
-  grid-template-rows:minmax(0,225px);
-  gap:24px !important;
+  grid-template-columns:repeat(2,minmax(0,460px));
+  grid-template-rows:minmax(0,280px);
+  gap:12px !important;
   padding-top:18px;
 }
 #quizScreen .answer.image-answer{
@@ -563,7 +563,7 @@ h1{
 #quizScreen .choice-count-2 .answer.image-answer{
   width:100%;
   height:100%;
-  max-height:225px;
+  max-height:280px;
   align-self:center;
 }
 #quizScreen .choice-count-2 .image-answer-media img{
@@ -2020,8 +2020,8 @@ h1{
   gap:16px !important;
 }
 #quizScreen.timeattack-active .answers.image-choices.choice-count-2{
-  grid-template-rows:minmax(0,225px) !important;
-  gap:24px !important;
+  grid-template-rows:minmax(0,280px) !important;
+  gap:12px !important;
 }
 #quizScreen.timeattack-active .answer{
   min-height:0 !important;
@@ -2256,8 +2256,8 @@ h1{
 .app-version{
   position:fixed;
   z-index:900;
-  right:max(10px,calc((var(--viewport-width,100vw) - var(--scaled-width,100vw))/2 + 12px));
-  bottom:max(6px,calc((var(--viewport-height,100dvh) - var(--scaled-height,100dvh))/2 + 7px));
+  right:max(26px,calc((var(--viewport-width,100vw) - var(--scaled-width,100vw))/2 + 28px));
+  bottom:max(22px,calc((var(--viewport-height,100dvh) - var(--scaled-height,100dvh))/2 + 23px));
   border:1px solid rgba(36,66,127,.22);
   border-radius:999px;
   padding:3px 7px;
@@ -2271,6 +2271,7 @@ h1{
   backdrop-filter:blur(5px);
   transition:opacity .15s ease,border-color .15s ease,background .15s ease;
 }
+.app-version[hidden]{display:none}
 .app-version:hover,
 .app-version:focus-visible{
   opacity:1;
@@ -2348,6 +2349,14 @@ h1{
   margin-top:20px;
   text-align:left;
 }
+.staff-load-status{
+  grid-column:1 / -1;
+  padding:18px;
+  color:var(--muted);
+  font-size:15px;
+  font-weight:900;
+  text-align:center;
+}
 .staff-group{
   min-width:0;
   border:1.5px solid var(--line);
@@ -2382,12 +2391,12 @@ h1{
 }
 body[data-layout="phone-portrait"] .app-version{
   z-index:1050;
-  right:max(10px,env(safe-area-inset-right));
-  bottom:max(10px,env(safe-area-inset-bottom));
+  right:max(22px,env(safe-area-inset-right));
+  bottom:max(22px,env(safe-area-inset-bottom));
 }
 body[data-layout="mobile-landscape"] .app-version{
-  right:max(6px,env(safe-area-inset-right));
-  bottom:max(3px,env(safe-area-inset-bottom));
+  right:max(18px,env(safe-area-inset-right));
+  bottom:max(15px,env(safe-area-inset-bottom));
   padding:2px 5px;
   font-size:8px;
 }
@@ -3699,12 +3708,6 @@ const PASS_SCORE=6;
 const TIME_ATTACK_SECONDS=60;
 const TIME_ATTACK_DURATION_MS=TIME_ATTACK_SECONDS*1000;
 const APP_VERSION="1.2.0";
-const STAFF_INFO={
-  "製作":["待填寫"],
-  "題庫提供":["待填寫"],
-  "題目協力":["待填寫"],
-  "測試協力":["待填寫"]
-};
 const QUESTION_FILES=[
   "questions/anime_easy.txt",
   "questions/anime_hard.txt",
@@ -3712,7 +3715,10 @@ const QUESTION_FILES=[
   "questions/bey_hard.txt"
 ];
 const PAGE_TEXT_FILE="settings/page_text.txt";
+const STAFF_FILE="settings/staff.txt";
 let loadedUI=null;
+let loadedStaff=null;
+let staffLoadState="loading";
 
 
 const UI_DEFAULTS={
@@ -3761,7 +3767,16 @@ function renderAppMetadata(){
 
   const groups=$("staffGroups");
   groups.replaceChildren();
-  Object.entries(STAFF_INFO).forEach(([role,names])=>{
+
+  if(staffLoadState!=="ready"){
+    const status=document.createElement("div");
+    status.className="staff-load-status";
+    status.textContent=staffLoadState==="error" ? "STAFF 資料載入失敗" : "STAFF 資料讀取中…";
+    groups.appendChild(status);
+    return;
+  }
+
+  Object.entries(loadedStaff||{}).forEach(([role,names])=>{
     const group=document.createElement("section");
     group.className="staff-group";
 
@@ -3781,6 +3796,46 @@ function renderAppMetadata(){
     group.appendChild(list);
     groups.appendChild(group);
   });
+}
+
+function parseStaffInfo(txt){
+  const info={};
+  let fieldCount=0;
+
+  txt.split(/\r?\n/).forEach((line,index)=>{
+    const value=line.trim();
+    if(!value || value.startsWith("#")) return;
+
+    const pos=value.indexOf("=");
+    if(pos<1) throw new Error(`staff.txt 第 ${index+1} 行格式錯誤`);
+
+    const role=value.slice(0,pos).trim();
+    if(!role) throw new Error(`staff.txt 第 ${index+1} 行缺少欄位名稱`);
+
+    const names=value.slice(pos+1)
+      .split(/[,，]/)
+      .map(name=>name.trim())
+      .filter(Boolean);
+
+    if(!(role in info)) info[role]=[];
+    info[role].push(...names);
+    fieldCount++;
+  });
+
+  if(!fieldCount) throw new Error("staff.txt 沒有有效欄位");
+  return info;
+}
+
+async function loadStaffInfo(){
+  try{
+    loadedStaff=parseStaffInfo(await fetchTextFile(STAFF_FILE));
+    staffLoadState="ready";
+  }catch(error){
+    loadedStaff=null;
+    staffLoadState="error";
+    console.warn("STAFF 資料載入失敗",error);
+  }
+  renderAppMetadata();
 }
 
 function openStaffDialog(){
@@ -3945,6 +4000,7 @@ function tryFullscreenOnGameStart(){
 function show(id){
   screens.forEach(x=>$(x).classList.remove("active"));
   $(id).classList.add("active");
+  $("appVersionBtn").hidden=id!=="categoryScreen";
 }
 
 const QUESTION_TYPES=new Set(["text-only","image-prompt","image-choice"]);
@@ -5127,6 +5183,7 @@ document.addEventListener("keydown",event=>{
   if(event.key==="Escape" && !$("staffModal").hidden) closeStaffDialog();
 });
 renderAppMetadata();
+void loadStaffInfo();
 
 $("fullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
 $("orientationFullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
