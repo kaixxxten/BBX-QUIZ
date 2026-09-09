@@ -428,16 +428,7 @@ h1{
   cursor:default
 }
 
-/* 圖片題共用媒體元件；沒有圖片時不參與版面。 */
-.question-box.has-media{
-  flex-direction:column;
-  align-items:stretch;
-  justify-content:center;
-  gap:10px;
-}
-.question-box.has-media .question{
-  width:100%;
-}
+/* 圖片題媒體列獨立於題目框；純文字題沒有圖片列，不改變原本網格。 */
 .prompt-images,
 .review-prompt-images,
 .review-choice-images{
@@ -456,6 +447,11 @@ h1{
   grid-template-columns:minmax(0,1fr);
   justify-items:center;
 }
+#quizScreen .prompt-images.has-images{
+  width:100%;
+  align-items:center;
+  justify-content:center;
+}
 .media-frame{
   min-width:0;
   min-height:0;
@@ -465,7 +461,7 @@ h1{
   padding:5px;
   background:#fff;
   color:var(--muted);
-  overflow:hidden;
+  overflow:visible;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -482,9 +478,7 @@ h1{
 .media-frame figcaption{
   flex:0 0 auto;
   width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  overflow-wrap:anywhere;
   color:var(--navy);
   font-size:12px;
   line-height:1.2;
@@ -508,19 +502,38 @@ h1{
 }
 .media-frame.image-error img{display:none}
 .media-frame.image-error .image-fallback{display:flex}
-.prompt-images .media-frame{
-  width:100%;
-  max-width:420px;
-  height:122px;
+#quizScreen .prompt-images .media-frame{
+  width:auto;
+  max-width:100%;
+  height:100%;
+  aspect-ratio:16/9;
+  padding:4px;
 }
-.answers.image-choices.choice-count-2{
-  grid-template-rows:minmax(0,1fr);
+#quizScreen .prompt-images.image-count-2 .media-frame{
+  width:100%;
+}
+#quizScreen .quiz.single-prompt-media .prompt-images .media-frame{
+  width:auto;
+  max-width:550px;
+  height:100%;
+}
+#quizScreen .answers.image-choices.choice-count-2{
+  width:100%;
+  max-width:850px;
+  justify-self:center;
+  align-self:stretch;
+  align-content:start;
+  justify-content:center;
+  grid-template-columns:repeat(2,minmax(0,400px));
+  grid-template-rows:minmax(0,225px);
+  gap:24px !important;
+  padding-top:18px;
 }
 #quizScreen .answer.image-answer{
   position:relative;
   min-height:0;
   padding:10px 12px !important;
-  overflow:hidden !important;
+  overflow:visible !important;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -540,13 +553,21 @@ h1{
   min-height:0;
 }
 .image-answer-media.media-frame{
-  padding:4px;
+  border:0;
+  padding:0;
+  background:transparent;
 }
 .image-answer-media img{
   max-height:150px;
 }
-.choice-count-2 .image-answer-media img{
-  max-height:250px;
+#quizScreen .choice-count-2 .answer.image-answer{
+  width:100%;
+  height:100%;
+  max-height:225px;
+  align-self:center;
+}
+#quizScreen .choice-count-2 .image-answer-media img{
+  max-height:none;
 }
 .answer-code{
   position:absolute;
@@ -1998,6 +2019,10 @@ h1{
   grid-template-rows:1fr 1fr !important;
   gap:16px !important;
 }
+#quizScreen.timeattack-active .answers.image-choices.choice-count-2{
+  grid-template-rows:minmax(0,225px) !important;
+  gap:24px !important;
+}
 #quizScreen.timeattack-active .answer{
   min-height:0 !important;
   overflow:auto !important;
@@ -2090,13 +2115,24 @@ h1{
   grid-template-rows:48px 96px minmax(0,1fr) 138px !important;
 }
 #quizScreen .quiz.has-prompt-media{
-  grid-template-rows:48px 200px minmax(0,1fr) 138px !important;
+  grid-template-rows:48px 90px minmax(150px,180px) minmax(0,1fr) 138px !important;
+  gap:10px !important;
+}
+#quizScreen .quiz.single-prompt-media{
+  grid-template-rows:48px 90px minmax(230px,255px) minmax(0,1fr) 138px !important;
+}
+#quizScreen .quiz.has-prompt-media .answer:not(.image-answer){
+  padding-block:10px;
 }
 #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
-  grid-template-rows:100px minmax(0,1fr) !important;
+  grid-template-rows:90px minmax(0,1fr) !important;
 }
 #quizScreen.timeattack-active .quiz.has-prompt-media{
-  grid-template-rows:190px minmax(0,1fr) !important;
+  grid-template-rows:88px minmax(135px,165px) minmax(0,1fr) !important;
+  gap:10px !important;
+}
+#quizScreen.timeattack-active .quiz.single-prompt-media{
+  grid-template-rows:88px minmax(245px,275px) minmax(0,1fr) !important;
 }
 .review-question .review-prompt-images.has-images{
   margin-top:9px;
@@ -2214,6 +2250,184 @@ h1{
     0 14px 30px rgba(23,43,85,.24),
     0 0 0 3px rgba(244,196,48,.14),
     inset 0 0 0 2px rgba(255,255,255,.08) !important;
+}
+
+/* 集中管理的版本入口與 STAFF / CREDIT 視窗。 */
+.app-version{
+  position:fixed;
+  z-index:900;
+  right:max(10px,calc((var(--viewport-width,100vw) - var(--scaled-width,100vw))/2 + 12px));
+  bottom:max(6px,calc((var(--viewport-height,100dvh) - var(--scaled-height,100dvh))/2 + 7px));
+  border:1px solid rgba(36,66,127,.22);
+  border-radius:999px;
+  padding:3px 7px;
+  background:rgba(255,255,255,.88);
+  color:var(--navy);
+  font-size:11px;
+  line-height:1;
+  font-weight:900;
+  opacity:.62;
+  cursor:pointer;
+  backdrop-filter:blur(5px);
+  transition:opacity .15s ease,border-color .15s ease,background .15s ease;
+}
+.app-version:hover,
+.app-version:focus-visible{
+  opacity:1;
+  border-color:var(--navy);
+  background:#fff;
+  outline:none;
+}
+.staff-modal[hidden]{display:none}
+.staff-modal{
+  position:fixed;
+  inset:0;
+  z-index:1300;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:
+    max(16px,env(safe-area-inset-top))
+    max(16px,env(safe-area-inset-right))
+    max(16px,env(safe-area-inset-bottom))
+    max(16px,env(safe-area-inset-left));
+  background:rgba(23,32,51,.58);
+}
+.staff-dialog{
+  position:relative;
+  width:min(560px,100%);
+  max-height:100%;
+  overflow:auto;
+  border:2px solid var(--navy);
+  border-radius:24px;
+  padding:28px;
+  background:#fff;
+  box-shadow:0 24px 70px rgba(23,43,85,.3);
+  text-align:center;
+}
+.staff-close{
+  position:absolute;
+  top:10px;
+  right:12px;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:var(--soft);
+  color:var(--navy);
+  font-size:28px;
+  line-height:1;
+  font-weight:700;
+  cursor:pointer;
+}
+.staff-close:hover,
+.staff-close:focus-visible{background:#eaf0fb;outline:2px solid var(--navy)}
+.staff-kicker{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+.staff-title{
+  margin:4px 42px 0;
+  color:var(--navy);
+  font-size:36px;
+  line-height:1.15;
+  font-weight:1000;
+}
+.staff-version{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+}
+.staff-groups{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:20px;
+  text-align:left;
+}
+.staff-group{
+  min-width:0;
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:12px 14px;
+  background:var(--soft);
+}
+.staff-role{
+  color:var(--navy);
+  font-size:14px;
+  font-weight:1000;
+}
+.staff-names{
+  margin:6px 0 0;
+  padding:0;
+  list-style:none;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.45;
+  font-weight:750;
+}
+.staff-done{
+  min-width:160px;
+  margin-top:20px;
+  border:0;
+  border-radius:13px;
+  padding:11px 20px;
+  background:var(--navy);
+  color:#fff;
+  font-weight:1000;
+  cursor:pointer;
+}
+body[data-layout="phone-portrait"] .app-version{
+  z-index:1050;
+  right:max(10px,env(safe-area-inset-right));
+  bottom:max(10px,env(safe-area-inset-bottom));
+}
+body[data-layout="mobile-landscape"] .app-version{
+  right:max(6px,env(safe-area-inset-right));
+  bottom:max(3px,env(safe-area-inset-bottom));
+  padding:2px 5px;
+  font-size:8px;
+}
+body[data-layout="mobile-landscape"] .staff-modal{padding:8px 14px}
+body[data-layout="mobile-landscape"] .staff-dialog{
+  width:min(680px,100%);
+  padding:12px 18px;
+  border-radius:16px;
+}
+body[data-layout="mobile-landscape"] .staff-close{
+  top:6px;
+  right:7px;
+  width:30px;
+  height:30px;
+  font-size:22px;
+}
+body[data-layout="mobile-landscape"] .staff-kicker{font-size:9px}
+body[data-layout="mobile-landscape"] .staff-title{margin-top:1px;font-size:24px}
+body[data-layout="mobile-landscape"] .staff-version{margin-top:1px;font-size:10px}
+body[data-layout="mobile-landscape"] .staff-groups{gap:6px;margin-top:8px}
+body[data-layout="mobile-landscape"] .staff-group{padding:6px 9px;border-radius:9px}
+body[data-layout="mobile-landscape"] .staff-role{font-size:11px}
+body[data-layout="mobile-landscape"] .staff-names{margin-top:2px;font-size:11px;line-height:1.25}
+body[data-layout="mobile-landscape"] .staff-done{
+  min-width:110px;
+  margin-top:8px;
+  padding:6px 12px;
+  font-size:11px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] .staff-dialog{padding:8px 14px}
+body[data-layout="mobile-landscape"][data-density="compact"] .staff-groups{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:4px;
+  margin-top:5px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] .staff-group{padding:4px 6px}
+body[data-layout="mobile-landscape"][data-density="compact"] .staff-done{margin-top:5px;padding:4px 10px}
+@media (orientation:portrait) and (max-width:600px){
+  .staff-dialog{padding:24px 18px}
+  .staff-groups{grid-template-columns:1fr}
 }
 
 
@@ -2479,19 +2693,54 @@ body[data-layout="mobile-landscape"] #quizScreen .answer{
 }
 body[data-layout="mobile-landscape"] #quizScreen .answer::-webkit-scrollbar{display:none}
 body[data-layout="mobile-landscape"] #quizScreen .quiz.image-choice-mode:not(.has-prompt-media){
-  grid-template-rows:26px 44px minmax(0,1fr) 70px !important;
+  grid-template-rows:26px 54px minmax(0,1fr) 70px !important;
   gap:4px !important;
 }
 body[data-layout="mobile-landscape"] #quizScreen .quiz.has-prompt-media{
-  grid-template-rows:24px 90px minmax(0,1fr) 70px !important;
+  grid-template-rows:22px 54px minmax(60px,72px) minmax(0,1fr) 70px !important;
   gap:4px !important;
 }
-body[data-layout="mobile-landscape"] #quizScreen .question-box.has-media{gap:4px}
+/* 單張題目圖在手機橫式改用左右分欄；雙圖選項版面不受影響。 */
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media{
+  grid-template-columns:42% minmax(0,1fr);
+  grid-template-rows:22px 54px minmax(0,1fr) 70px !important;
+  column-gap:8px !important;
+  row-gap:4px !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .meta-row{
+  grid-column:1 / -1;
+  grid-row:1;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .question-box{
+  grid-column:1 / -1;
+  grid-row:2;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .prompt-images{
+  grid-column:1;
+  grid-row:3;
+  min-width:0;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .prompt-images .media-frame{
+  width:auto;
+  max-width:100%;
+  height:100%;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .answers{
+  grid-column:2;
+  grid-row:3;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.single-prompt-media .bottom{
+  grid-column:1 / -1;
+  grid-row:4;
+}
 body[data-layout="mobile-landscape"] #quizScreen .prompt-images.has-images{gap:5px}
 body[data-layout="mobile-landscape"] #quizScreen .prompt-images .media-frame{
-  height:50px;
+  height:100%;
   padding:2px;
   border-radius:7px;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.has-prompt-media .answer:not(.image-answer){
+  padding-block:4px;
 }
 body[data-layout="mobile-landscape"] #quizScreen .media-frame figcaption{font-size:8px}
 body[data-layout="mobile-landscape"] #quizScreen .answer.image-answer{
@@ -2499,7 +2748,17 @@ body[data-layout="mobile-landscape"] #quizScreen .answer.image-answer{
   gap:2px;
 }
 body[data-layout="mobile-landscape"] #quizScreen .image-answer-media img{max-height:48px}
-body[data-layout="mobile-landscape"] #quizScreen .choice-count-2 .image-answer-media img{max-height:105px}
+body[data-layout="mobile-landscape"] #quizScreen .answers.image-choices.choice-count-2{
+  max-width:570px;
+  align-content:center;
+  grid-template-rows:minmax(0,1fr);
+  gap:12px !important;
+  padding-top:0;
+}
+body[data-layout="mobile-landscape"] #quizScreen .choice-count-2 .image-answer-media img{max-height:none}
+body[data-layout="mobile-landscape"] #quizScreen .choice-count-2 .answer.image-answer{
+  max-height:140px;
+}
 body[data-layout="mobile-landscape"] #quizScreen .answer-code{
   top:3px;
   left:3px;
@@ -2592,10 +2851,36 @@ body[data-layout="mobile-landscape"] #quizScreen.timeattack-active #taTimer{
   font-size:24px;
 }
 body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
-  grid-template-rows:44px minmax(0,1fr) !important;
+  grid-template-rows:54px minmax(0,1fr) !important;
 }
 body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.has-prompt-media{
-  grid-template-rows:84px minmax(0,1fr) !important;
+  grid-template-rows:54px minmax(60px,68px) minmax(0,1fr) !important;
+  gap:4px !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.single-prompt-media{
+  grid-template-columns:42% minmax(0,1fr);
+  grid-template-rows:54px minmax(0,1fr) !important;
+  column-gap:8px !important;
+  row-gap:4px !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.single-prompt-media .question-box{
+  grid-column:1 / -1;
+  grid-row:1;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.single-prompt-media .prompt-images{
+  grid-column:1;
+  grid-row:2;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.single-prompt-media .answers{
+  grid-column:2;
+  grid-row:2;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .choice-count-2 .answer.image-answer{
+  max-height:165px;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .answers.image-choices.choice-count-2{
+  grid-template-rows:minmax(0,1fr) !important;
+  align-content:center;
 }
 
 /* 工具列壓縮可用高度時，維持操作尺寸並優先收緊垂直留白。 */
@@ -2739,19 +3024,31 @@ body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .answer
   font-size:clamp(14px,2.8vw,21px);
 }
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .quiz.image-choice-mode:not(.has-prompt-media){
-  grid-template-rows:16px 32px minmax(96px,1fr) 42px !important;
+  grid-template-rows:16px 40px minmax(84px,1fr) 42px !important;
   gap:2px !important;
 }
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .quiz.has-prompt-media{
-  grid-template-rows:14px 60px minmax(74px,1fr) 42px !important;
+  grid-template-rows:14px 40px 38px minmax(64px,1fr) 42px !important;
   gap:2px !important;
 }
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .quiz.single-prompt-media{
+  grid-template-rows:14px 40px minmax(0,1fr) 42px !important;
+  column-gap:6px !important;
+  row-gap:2px !important;
+}
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .prompt-images .media-frame{
-  height:30px;
+  height:100%;
   border-radius:5px;
 }
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .image-answer-media img{max-height:30px}
-body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .choice-count-2 .image-answer-media img{max-height:72px}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .answers.image-choices.choice-count-2{
+  max-width:500px;
+  gap:7px !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .choice-count-2 .image-answer-media img{max-height:none}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .choice-count-2 .answer.image-answer{
+  max-height:90px;
+}
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .answer-code{
   min-width:19px;
   height:19px;
@@ -2812,10 +3109,19 @@ body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeatt
   font-size:17px;
 }
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
-  grid-template-rows:32px minmax(118px,1fr) !important;
+  grid-template-rows:40px minmax(104px,1fr) !important;
 }
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .quiz.has-prompt-media{
-  grid-template-rows:54px minmax(96px,1fr) !important;
+  grid-template-rows:40px 36px minmax(68px,1fr) !important;
+  gap:2px !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .quiz.single-prompt-media{
+  grid-template-rows:40px minmax(0,1fr) !important;
+  column-gap:6px !important;
+  row-gap:2px !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .choice-count-2 .answer.image-answer{
+  max-height:105px;
 }
 
 body[data-layout="mobile-landscape"][data-density="compact"] #resultScreen .mode-title{
@@ -3129,8 +3435,9 @@ body[data-layout="mobile-landscape"] .editor-help{
 
         <div class="question-box">
           <div class="question" id="question"></div>
-          <div class="prompt-images" id="promptImages" aria-label="題目圖片"></div>
         </div>
+
+        <div class="prompt-images" id="promptImages" aria-label="題目圖片"></div>
 
         <div class="answers" id="answers"></div>
 
@@ -3328,6 +3635,21 @@ body[data-layout="mobile-landscape"] .editor-help{
 </div>
 </div><!-- /app-stage -->
 
+<button class="app-version" id="appVersionBtn" type="button" aria-haspopup="dialog" aria-controls="staffModal">
+  Ver. 1.2.0
+</button>
+
+<div class="staff-modal" id="staffModal" hidden>
+  <section class="staff-dialog" role="dialog" aria-modal="true" aria-labelledby="staffTitle">
+    <button class="staff-close" id="staffCloseBtn" type="button" aria-label="關閉 STAFF / CREDIT">×</button>
+    <div class="staff-kicker">BEYBLADE X QUIZ</div>
+    <h2 class="staff-title" id="staffTitle">STAFF / CREDIT</h2>
+    <div class="staff-version" id="staffVersion"></div>
+    <div class="staff-groups" id="staffGroups"></div>
+    <button class="staff-done" id="staffDoneBtn" type="button">關閉</button>
+  </section>
+</div>
+
 <script>
 const SAMPLE = `動畫｜簡單｜BEYBLADE X 中，假面X所屬的隊伍是哪一隊？｜Persona｜Pendragon｜Zonamos House｜Yggdrasil｜A｜假面X是 Persona 隊的成員。
 動畫｜簡單｜風見鳥加入 Persona 後，主要是以什麼身分活動？｜陀螺選手｜攝影師｜裁判｜主持人｜A｜風見鳥是 Persona 的陀螺選手。
@@ -3376,6 +3698,13 @@ const PER_GAME=10;
 const PASS_SCORE=6;
 const TIME_ATTACK_SECONDS=60;
 const TIME_ATTACK_DURATION_MS=TIME_ATTACK_SECONDS*1000;
+const APP_VERSION="1.2.0";
+const STAFF_INFO={
+  "製作":["待填寫"],
+  "題庫提供":["待填寫"],
+  "題目協力":["待填寫"],
+  "測試協力":["待填寫"]
+};
 const QUESTION_FILES=[
   "questions/anime_easy.txt",
   "questions/anime_hard.txt",
@@ -3424,6 +3753,49 @@ let adminDifficulty="簡單";
 
 const $=id=>document.getElementById(id);
 const screens=["categoryScreen","difficultyScreen","quizScreen","resultScreen","timeAttackResultScreen","timeAttackReviewScreen","editorScreen","questionEditorScreen","textSettingsScreen"];
+let staffReturnFocus=null;
+
+function renderAppMetadata(){
+  $("appVersionBtn").textContent=`Ver. ${APP_VERSION}`;
+  $("staffVersion").textContent=`Ver. ${APP_VERSION}`;
+
+  const groups=$("staffGroups");
+  groups.replaceChildren();
+  Object.entries(STAFF_INFO).forEach(([role,names])=>{
+    const group=document.createElement("section");
+    group.className="staff-group";
+
+    const heading=document.createElement("div");
+    heading.className="staff-role";
+    heading.textContent=role;
+    group.appendChild(heading);
+
+    const list=document.createElement("ul");
+    list.className="staff-names";
+    const entries=Array.isArray(names) ? names : [names];
+    (entries.length ? entries : ["—"]).forEach(name=>{
+      const item=document.createElement("li");
+      item.textContent=String(name||"—");
+      list.appendChild(item);
+    });
+    group.appendChild(list);
+    groups.appendChild(group);
+  });
+}
+
+function openStaffDialog(){
+  staffReturnFocus=document.activeElement;
+  $("staffModal").hidden=false;
+  $("staffCloseBtn").focus({preventScroll:true});
+}
+
+function closeStaffDialog(){
+  if($("staffModal").hidden) return;
+  $("staffModal").hidden=true;
+  if(staffReturnFocus && document.contains(staffReturnFocus)){
+    staffReturnFocus.focus({preventScroll:true});
+  }
+}
 
 let fullscreenRequestPending=false;
 const FULLSCREEN_UNAVAILABLE_MESSAGE="此瀏覽器不支援一般網頁全螢幕；轉成橫式後仍可直接遊玩。";
@@ -4185,11 +4557,10 @@ function render(){
   const questionType=q.type||"text-only";
   const promptImages=q.promptImages||[];
   const quiz=$("question").closest(".quiz");
-  const questionBox=$("question").parentElement;
   const hasPromptImages=promptImages.length>0;
   quiz.classList.toggle("has-prompt-media",hasPromptImages);
+  quiz.classList.toggle("single-prompt-media",questionType==="image-prompt" && promptImages.length===1);
   quiz.classList.toggle("image-choice-mode",questionType==="image-choice");
-  questionBox.classList.toggle("has-media",hasPromptImages);
   renderMediaItems($("promptImages"),promptImages,{altPrefix:"題目圖片"});
 
   $("feedbackTitle").textContent="";
@@ -4745,6 +5116,17 @@ $("sampleBtn").onclick=()=>{
 };
 
 $("exportBtn").onclick=exportTxt;
+
+$("appVersionBtn").addEventListener("click",openStaffDialog);
+$("staffCloseBtn").addEventListener("click",closeStaffDialog);
+$("staffDoneBtn").addEventListener("click",closeStaffDialog);
+$("staffModal").addEventListener("click",event=>{
+  if(event.target===$("staffModal")) closeStaffDialog();
+});
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape" && !$("staffModal").hidden) closeStaffDialog();
+});
+renderAppMetadata();
 
 $("fullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
 $("orientationFullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
