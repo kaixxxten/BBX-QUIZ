@@ -2021,7 +2021,14 @@ h1{
 }
 #quizScreen.timeattack-active .answers.image-choices.choice-count-2{
   grid-template-rows:minmax(0,280px) !important;
-  gap:12px !important;
+}
+@media (min-width:1200px) and (hover:hover) and (pointer:fine){
+  body[data-layout="default"] #quizScreen.timeattack-active .answers.image-choices.choice-count-2{
+    max-width:950px;
+    grid-template-columns:repeat(2,minmax(0,470px));
+    justify-content:center;
+    column-gap:10px !important;
+  }
 }
 #quizScreen.timeattack-active .answer{
   min-height:0 !important;
