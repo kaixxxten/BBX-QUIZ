@@ -2047,7 +2047,7 @@ body[data-layout="mobile-landscape"] .top-btn{
   font-size:11px;
 }
 .fullscreen-btn{display:none}
-body[data-layout="mobile-landscape"] .fullscreen-btn{
+body[data-fullscreen-available="true"] .fullscreen-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -3115,11 +3115,6 @@ function isFullscreenAvailable(){
   return typeof getFullscreenRequest()==="function";
 }
 
-function isPhoneLayout(){
-  return document.body.dataset.layout==="phone-portrait" ||
-    document.body.dataset.layout==="mobile-landscape";
-}
-
 function setOrientationStatus(message,tone=""){
   const status=$("orientationStatus");
   if(!status) return;
@@ -3177,8 +3172,8 @@ async function lockLandscapeIfPossible(){
   }
 }
 
-async function enterMobileFullscreen(){
-  if(!isPhoneLayout() || fullscreenRequestPending) return false;
+async function enterBrowserFullscreen(){
+  if(fullscreenRequestPending) return false;
 
   if(getFullscreenElement()){
     await lockLandscapeIfPossible();
@@ -3213,9 +3208,9 @@ async function enterMobileFullscreen(){
   }
 }
 
-async function toggleMobileFullscreen(){
+async function toggleBrowserFullscreen(){
   if(!getFullscreenElement()){
-    await enterMobileFullscreen();
+    await enterBrowserFullscreen();
     return;
   }
 
@@ -3239,7 +3234,7 @@ function tryFullscreenOnGameStart(){
     isFullscreenAvailable() &&
     !getFullscreenElement()
   ){
-    void enterMobileFullscreen();
+    void enterBrowserFullscreen();
   }
 }
 
@@ -4222,9 +4217,9 @@ $("sampleBtn").onclick=()=>{
 
 $("exportBtn").onclick=exportTxt;
 
-$("fullscreenBtn").addEventListener("click",toggleMobileFullscreen);
-$("orientationFullscreenBtn").addEventListener("click",toggleMobileFullscreen);
-$("viewportFullscreenBtn").addEventListener("click",toggleMobileFullscreen);
+$("fullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
+$("orientationFullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
+$("viewportFullscreenBtn").addEventListener("click",toggleBrowserFullscreen);
 
 document.addEventListener("fullscreenchange",updateFullscreenControls);
 document.addEventListener("webkitfullscreenchange",updateFullscreenControls);

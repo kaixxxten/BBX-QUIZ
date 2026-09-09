@@ -156,3 +156,10 @@ X塔級 / 頂尖：少量綵帶 + 星星 + GREAT!
 - 手機直式提示頁只在 Fullscreen API 可用時顯示「全螢幕並切換橫式」
 - 瀏覽器安全規則不允許網站在載入時直接強制全螢幕，必須先由玩家點擊一次
 - iPhone Safari／Chrome 若不支援一般網頁全螢幕，不顯示無效按鈕，也不會強制呼叫；轉成橫式後可直接使用一般瀏覽狀態遊玩
+
+【平板全螢幕】
+- 全螢幕能力與 responsive layout 分開判定；平板仍維持原本 default 版面
+- Android 平板 Chrome、iPad Safari／Chrome 只要實際提供 requestFullscreen 或 WebKit 對應 API，就會顯示頂部「全螢幕」按鈕
+- 點擊後呼叫真正的瀏覽器 Fullscreen API，不使用 CSS 模擬放大
+- 退出時使用 exitFullscreen／webkitExitFullscreen，並在瀏覽器允許時解除方向鎖定
+- 手機橫式的自動進入行為維持不變；平板由玩家點擊按鈕進入，不會因選擇分類而自動切換
