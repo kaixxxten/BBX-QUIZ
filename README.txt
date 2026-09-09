@@ -10,6 +10,8 @@ questions/
   bey_hard.txt
 settings/
   page_text.txt
+images/
+  （自行建立子資料夾並放入題目圖或選項圖）
 
 【題庫】
 格式：
@@ -17,6 +19,34 @@ settings/
 
 編號只供管理查找，遊玩頁不顯示。
 四份題庫的編號可以各自從 1 開始。
+
+【圖片題】
+既有純文字題庫格式完全相容，不需要轉換。新題目可使用以下延伸格式：
+
+編號｜分類｜難度｜題型｜題目｜題目圖1｜題目圖1標籤｜題目圖2｜題目圖2標籤｜選項A文字｜選項A圖片｜選項B文字｜選項B圖片｜選項C文字｜選項C圖片｜選項D文字｜選項D圖片｜正確答案｜解說
+
+「編號」仍可省略。其餘欄位位置固定，沒有內容的欄位也必須保留全形分隔符號「｜」。
+
+題型：
+- text-only：純文字題。建議沿用原有短格式；四個文字選項都必須填寫。
+- image-prompt：填寫 1～2 張題目圖；A／B／C／D 維持文字選項，選項圖片欄留空。
+- image-choice：填寫 2～4 個圖片選項；選項需由 A 開始連續填寫，每個使用中的選項圖片不可留空。選項文字可作為圖片小標籤，也可留空。
+
+正確答案仍填 A、B、C 或 D。選項在遊戲中會隨機排列，但正解、玩家選擇與答題回顧會一起依新順序對應。
+
+image-prompt 範例（1 張題目圖）：
+1｜動畫｜簡單｜image-prompt｜圖中是哪一顆陀螺？｜images/prompts/sample.png｜題目圖｜｜｜DranSword｜｜HellsScythe｜｜WizardArrow｜｜KnightShield｜｜A｜圖中是 DranSword。
+
+image-choice 範例（3 個圖片選項）：
+2｜陀螺｜困難｜image-choice｜哪一張圖是正確零件？｜｜｜｜｜選項一｜images/choices/a.png｜選項二｜images/choices/b.png｜選項三｜images/choices/c.png｜｜｜B｜正確圖片是原始 B 選項。
+
+圖片使用方式：
+- 建議把圖片放在專案的 images/ 資料夾，TXT 內填寫相對於 index.html 的路徑，例如 images/prompts/sample.png。
+- 支援瀏覽器可顯示的常見圖片格式；圖片會以 object-fit: contain 顯示，不會拉伸或裁切。
+- 圖片載入失敗時會顯示「圖片載入失敗」佔位提示，題目仍可繼續作答。
+- 路徑、標籤、題目、選項與解說文字內請勿使用全形分隔符號「｜」。
+- 一張題目圖會置中，兩張會左右並排；兩個圖片選項左右並排，三至四個採兩欄排列。
+- 一般 10 題、60 秒極限挑戰及極限挑戰答題回顧都共用同一套判分資料。
 
 【頁面文字】
 settings/page_text.txt

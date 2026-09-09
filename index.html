@@ -428,6 +428,168 @@ h1{
   cursor:default
 }
 
+/* 圖片題共用媒體元件；沒有圖片時不參與版面。 */
+.question-box.has-media{
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  gap:10px;
+}
+.question-box.has-media .question{
+  width:100%;
+}
+.prompt-images,
+.review-prompt-images,
+.review-choice-images{
+  display:none;
+  min-height:0;
+}
+.prompt-images.has-images,
+.review-prompt-images.has-images,
+.review-choice-images.has-images{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.prompt-images.image-count-1,
+.review-prompt-images.image-count-1{
+  grid-template-columns:minmax(0,1fr);
+  justify-items:center;
+}
+.media-frame{
+  min-width:0;
+  min-height:0;
+  margin:0;
+  border:1.5px solid var(--line);
+  border-radius:12px;
+  padding:5px;
+  background:#fff;
+  color:var(--muted);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.media-frame img{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:0;
+  object-fit:contain;
+}
+.media-frame figcaption{
+  flex:0 0 auto;
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--navy);
+  font-size:12px;
+  line-height:1.2;
+  font-weight:900;
+  text-align:center;
+}
+.image-fallback{
+  display:none;
+  width:100%;
+  min-height:42px;
+  align-items:center;
+  justify-content:center;
+  border:1px dashed #a9b5c9;
+  border-radius:8px;
+  padding:6px;
+  background:#f7f9fc;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+}
+.media-frame.image-error img{display:none}
+.media-frame.image-error .image-fallback{display:flex}
+.prompt-images .media-frame{
+  width:100%;
+  max-width:420px;
+  height:122px;
+}
+.answers.image-choices.choice-count-2{
+  grid-template-rows:minmax(0,1fr);
+}
+#quizScreen .answer.image-answer{
+  position:relative;
+  min-height:0;
+  padding:10px 12px !important;
+  overflow:hidden !important;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+  touch-action:manipulation;
+}
+.image-answer:active:not(:disabled){transform:scale(.985)}
+#quizScreen .answer.image-answer.selected{
+  outline:4px solid rgba(41,75,142,.22);
+  outline-offset:-5px;
+}
+.image-answer-media{
+  width:100%;
+  flex:1 1 auto;
+  min-height:0;
+}
+.image-answer-media.media-frame{
+  padding:4px;
+}
+.image-answer-media img{
+  max-height:150px;
+}
+.choice-count-2 .image-answer-media img{
+  max-height:250px;
+}
+.answer-code{
+  position:absolute;
+  top:7px;
+  left:7px;
+  z-index:2;
+  min-width:31px;
+  height:31px;
+  padding:0 7px;
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  line-height:1;
+  font-weight:1000;
+  box-shadow:0 2px 8px rgba(23,43,85,.22);
+}
+.image-answer-caption{
+  flex:0 0 auto;
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:inherit;
+  font-size:16px;
+  line-height:1.2;
+  font-weight:1000;
+  text-align:center;
+}
+#quizScreen .answer.image-answer .answer-mark{
+  position:absolute;
+  top:5px;
+  right:8px;
+  z-index:3;
+  float:none;
+  margin:0;
+  font-size:28px;
+  text-shadow:0 1px 3px #fff;
+}
+
 .bottom{
   border:1.5px solid var(--line);
   border-radius:18px;
@@ -1923,6 +2085,76 @@ h1{
   min-width:190px;
 }
 
+/* 圖片題只調整自己的網格，純文字題沿用既有列高。 */
+#quizScreen .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:48px 96px minmax(0,1fr) 138px !important;
+}
+#quizScreen .quiz.has-prompt-media{
+  grid-template-rows:48px 200px minmax(0,1fr) 138px !important;
+}
+#quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:100px minmax(0,1fr) !important;
+}
+#quizScreen.timeattack-active .quiz.has-prompt-media{
+  grid-template-rows:190px minmax(0,1fr) !important;
+}
+.review-question .review-prompt-images.has-images{
+  margin-top:9px;
+}
+.review-prompt-images .media-frame{
+  width:100%;
+  max-width:360px;
+  height:105px;
+}
+.review-choice-images{
+  margin-bottom:12px;
+}
+.review-choice-images .review-choice{
+  position:relative;
+  height:105px;
+  border-width:2px;
+}
+.review-choice-images .review-choice.selected{
+  outline:4px solid rgba(41,75,142,.2);
+  outline-offset:-5px;
+}
+.review-choice-images .review-choice.correct{
+  border-color:var(--correct);
+  background:var(--correct-bg);
+}
+.review-choice-images .review-choice.wrong{
+  border-color:var(--wrong);
+  background:var(--wrong-bg);
+}
+.review-choice-code{
+  position:absolute;
+  top:5px;
+  left:5px;
+  z-index:2;
+  min-width:26px;
+  height:26px;
+  border-radius:999px;
+  padding:0 6px;
+  background:var(--navy);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:1000;
+}
+.review-choice-caption{
+  flex:0 0 auto;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--navy);
+  font-size:12px;
+  line-height:1.2;
+  font-weight:900;
+}
+
 
 /* 一般模式 / 極限模式 HUD 完全分離 */
 #taHud{
@@ -2246,6 +2478,42 @@ body[data-layout="mobile-landscape"] #quizScreen .answer{
   font-size:clamp(22px,3.4vw,28px);
 }
 body[data-layout="mobile-landscape"] #quizScreen .answer::-webkit-scrollbar{display:none}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:26px 44px minmax(0,1fr) 70px !important;
+  gap:4px !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen .quiz.has-prompt-media{
+  grid-template-rows:24px 90px minmax(0,1fr) 70px !important;
+  gap:4px !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen .question-box.has-media{gap:4px}
+body[data-layout="mobile-landscape"] #quizScreen .prompt-images.has-images{gap:5px}
+body[data-layout="mobile-landscape"] #quizScreen .prompt-images .media-frame{
+  height:50px;
+  padding:2px;
+  border-radius:7px;
+}
+body[data-layout="mobile-landscape"] #quizScreen .media-frame figcaption{font-size:8px}
+body[data-layout="mobile-landscape"] #quizScreen .answer.image-answer{
+  padding:4px 6px !important;
+  gap:2px;
+}
+body[data-layout="mobile-landscape"] #quizScreen .image-answer-media img{max-height:48px}
+body[data-layout="mobile-landscape"] #quizScreen .choice-count-2 .image-answer-media img{max-height:105px}
+body[data-layout="mobile-landscape"] #quizScreen .answer-code{
+  top:3px;
+  left:3px;
+  min-width:23px;
+  height:23px;
+  padding:0 5px;
+  font-size:12px;
+}
+body[data-layout="mobile-landscape"] #quizScreen .image-answer-caption{font-size:11px}
+body[data-layout="mobile-landscape"] #quizScreen .answer.image-answer .answer-mark{
+  top:1px;
+  right:4px;
+  font-size:20px;
+}
 body[data-layout="mobile-landscape"] #quizScreen .bottom{
   min-height:70px !important;
   padding:5px 7px !important;
@@ -2322,6 +2590,12 @@ body[data-layout="mobile-landscape"] #quizScreen.timeattack-active #taScore{font
 body[data-layout="mobile-landscape"] #quizScreen.timeattack-active #taTimer{
   padding:5px 8px;
   font-size:24px;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:44px minmax(0,1fr) !important;
+}
+body[data-layout="mobile-landscape"] #quizScreen.timeattack-active .quiz.has-prompt-media{
+  grid-template-rows:84px minmax(0,1fr) !important;
 }
 
 /* 工具列壓縮可用高度時，維持操作尺寸並優先收緊垂直留白。 */
@@ -2464,6 +2738,26 @@ body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .answer
   line-height:1.1;
   font-size:clamp(14px,2.8vw,21px);
 }
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:16px 32px minmax(96px,1fr) 42px !important;
+  gap:2px !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .quiz.has-prompt-media{
+  grid-template-rows:14px 60px minmax(74px,1fr) 42px !important;
+  gap:2px !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .prompt-images .media-frame{
+  height:30px;
+  border-radius:5px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .image-answer-media img{max-height:30px}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .choice-count-2 .image-answer-media img{max-height:72px}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .answer-code{
+  min-width:19px;
+  height:19px;
+  font-size:10px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .image-answer-caption{font-size:9px}
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen .bottom{
   min-height:42px !important;
   padding:2px 4px !important;
@@ -2516,6 +2810,12 @@ body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeatt
 body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active #taTimer{
   padding:3px 5px;
   font-size:17px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
+  grid-template-rows:32px minmax(118px,1fr) !important;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] #quizScreen.timeattack-active .quiz.has-prompt-media{
+  grid-template-rows:54px minmax(96px,1fr) !important;
 }
 
 body[data-layout="mobile-landscape"][data-density="compact"] #resultScreen .mode-title{
@@ -2571,6 +2871,25 @@ body[data-layout="mobile-landscape"][data-density="compact"] .review-explanation
   padding-top:3px;
   font-size:10px;
 }
+body[data-layout="mobile-landscape"][data-density="compact"] .review-prompt-images.has-images,
+body[data-layout="mobile-landscape"][data-density="compact"] .review-choice-images.has-images{gap:3px}
+body[data-layout="mobile-landscape"][data-density="compact"] .review-prompt-images .media-frame{height:38px}
+body[data-layout="mobile-landscape"][data-density="compact"] .review-choice-images{
+  margin-bottom:4px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] .review-choice-images .review-choice{
+  height:54px;
+  padding:2px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] .review-choice-code{
+  top:2px;
+  left:2px;
+  min-width:18px;
+  height:18px;
+  padding:0 4px;
+  font-size:9px;
+}
+body[data-layout="mobile-landscape"][data-density="compact"] .review-choice-caption{font-size:8px}
 body[data-layout="mobile-landscape"][data-density="compact"] .review-actions .primary,
 body[data-layout="mobile-landscape"][data-density="compact"] .review-actions .btn,
 body[data-layout="mobile-landscape"][data-density="compact"] .ta-result-actions .primary,
@@ -2666,6 +2985,14 @@ body[data-layout="mobile-landscape"] .review-explanation{
   padding-top:6px;
   font-size:12px;
   line-height:1.35;
+}
+body[data-layout="mobile-landscape"] .review-prompt-images.has-images,
+body[data-layout="mobile-landscape"] .review-choice-images.has-images{gap:5px}
+body[data-layout="mobile-landscape"] .review-prompt-images .media-frame{height:58px}
+body[data-layout="mobile-landscape"] .review-choice-images{margin-bottom:6px}
+body[data-layout="mobile-landscape"] .review-choice-images .review-choice{
+  height:78px;
+  padding:3px;
 }
 body[data-layout="mobile-landscape"] .review-actions,
 body[data-layout="mobile-landscape"] .ta-result-actions{
@@ -2802,6 +3129,7 @@ body[data-layout="mobile-landscape"] .editor-help{
 
         <div class="question-box">
           <div class="question" id="question"></div>
+          <div class="prompt-images" id="promptImages" aria-label="題目圖片"></div>
         </div>
 
         <div class="answers" id="answers"></div>
@@ -2853,10 +3181,14 @@ body[data-layout="mobile-landscape"] .editor-help{
           <div class="review-count" id="reviewCount">1 / 1</div>
         </div>
 
-        <div class="review-question" id="reviewQuestion"></div>
+        <div class="review-question">
+          <div id="reviewQuestion"></div>
+          <div class="review-prompt-images" id="reviewPromptImages" aria-label="題目圖片"></div>
+        </div>
         <div class="review-status" id="reviewStatus"></div>
 
         <div class="review-body">
+          <div class="review-choice-images" id="reviewChoiceImages" aria-label="圖片選項回顧"></div>
           <div class="review-row"><strong>你的答案：</strong><span id="reviewYourAnswer"></span></div>
           <div class="review-row"><strong>正確答案：</strong><span id="reviewCorrectAnswer"></span></div>
           <div class="review-explanation" id="reviewExplanation"></div>
@@ -2908,8 +3240,8 @@ body[data-layout="mobile-landscape"] .editor-help{
         <button class="btn" id="questionEditorBackBtn">返回</button>
       </div>
       <p class="editor-help">
-        每行一題。格式：編號｜分類｜難度｜題目｜選項A｜選項B｜選項C｜選項D｜正確答案｜解說<br>
-        編號只供後臺查找使用，玩家遊玩時不會顯示。此頁只會顯示目前分類的題目。
+        原有純文字格式：編號｜分類｜難度｜題目｜選項A｜選項B｜選項C｜選項D｜正確答案｜解說<br>
+        圖片題延伸格式與範例請見 README.txt；舊格式可繼續直接使用。編號只供後臺查找使用。
       </p>
 
       <div class="question-editor-wrap">
@@ -3243,6 +3575,8 @@ function show(id){
   $(id).classList.add("active");
 }
 
+const QUESTION_TYPES=new Set(["text-only","image-prompt","image-choice"]);
+
 function parse(txt){
   const out=[];
   txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).forEach((line,i)=>{
@@ -3255,7 +3589,8 @@ function parse(txt){
       p=p.slice(1);
     }
 
-    const [category,difficulty,question,a,b,c,d,correct,...rest]=p;
+    const category=p[0];
+    const difficulty=p[1];
 
     if(!["動畫","陀螺"].includes(category))
       throw new Error(`第 ${i+1} 行分類請填「動畫」或「陀螺」`);
@@ -3263,23 +3598,107 @@ function parse(txt){
     if(!["簡單","困難"].includes(difficulty))
       throw new Error(`第 ${i+1} 行難度請填「簡單」或「困難」`);
 
-    if(!question || !a || !b || !c || !d)
-      throw new Error(`第 ${i+1} 行題目或選項有空白`);
-
     const map={A:0,B:1,C:2,D:3};
-    const ans=(correct||"").toUpperCase();
+    let type="text-only";
+    let question="";
+    let promptImages=[];
+    let options=[];
+    let optionImages=[];
+    let correct="";
+    let explanation="";
 
-    if(!(ans in map))
-      throw new Error(`第 ${i+1} 行答案需為 A／B／C／D`);
+    if(p.length>=18 && !QUESTION_TYPES.has(p[2]))
+      throw new Error(`第 ${i+1} 行題型請填 text-only、image-prompt 或 image-choice`);
+
+    if(QUESTION_TYPES.has(p[2])){
+      type=p[2];
+      const [
+        ,,
+        ,questionText,
+        promptImage1,promptLabel1,
+        promptImage2,promptLabel2,
+        optionAText,optionAImage,
+        optionBText,optionBImage,
+        optionCText,optionCImage,
+        optionDText,optionDImage,
+        answerLetter,...rest
+      ]=p;
+
+      question=questionText;
+      promptImages=[
+        {src:promptImage1||"",label:promptLabel1||""},
+        {src:promptImage2||"",label:promptLabel2||""}
+      ].filter(item=>item.src);
+
+      const optionPairs=[
+        {text:optionAText||"",image:optionAImage||""},
+        {text:optionBText||"",image:optionBImage||""},
+        {text:optionCText||"",image:optionCImage||""},
+        {text:optionDText||"",image:optionDImage||""}
+      ];
+
+      if(type==="image-choice"){
+        let optionCount=optionPairs.length;
+        while(optionCount && !optionPairs[optionCount-1].text && !optionPairs[optionCount-1].image){
+          optionCount--;
+        }
+        const usedOptions=optionPairs.slice(0,optionCount);
+
+        if(optionCount<2 || usedOptions.some(item=>!item.image))
+          throw new Error(`第 ${i+1} 行圖片選項需由 A 開始連續填寫 2～4 張圖片`);
+
+        options=usedOptions.map(item=>item.text);
+        optionImages=usedOptions.map(item=>item.image);
+      }else{
+        options=optionPairs.map(item=>item.text);
+        optionImages=optionPairs.map(item=>item.image);
+
+        if(options.some(text=>!text))
+          throw new Error(`第 ${i+1} 行文字選項 A／B／C／D 不可空白`);
+      }
+
+      if(type==="text-only" && (promptImages.length || optionImages.some(Boolean)))
+        throw new Error(`第 ${i+1} 行 text-only 題型不可填寫圖片欄位`);
+
+      if(type==="image-prompt"){
+        if(!promptImages.length)
+          throw new Error(`第 ${i+1} 行 image-prompt 題型至少需要 1 張題目圖片`);
+        if(optionImages.some(Boolean))
+          throw new Error(`第 ${i+1} 行 image-prompt 題型的選項應使用文字，不可填寫選項圖片`);
+      }
+
+      correct=answerLetter;
+      explanation=rest.join("｜");
+    }else{
+      const [, ,questionText,a,b,c,d,answerLetter,...rest]=p;
+      question=questionText;
+      options=[a,b,c,d];
+      optionImages=["","","",""];
+      correct=answerLetter;
+      explanation=rest.join("｜");
+
+      if(!question || options.some(text=>!text))
+        throw new Error(`第 ${i+1} 行題目或選項有空白`);
+    }
+
+    if(!question)
+      throw new Error(`第 ${i+1} 行題目不可空白`);
+
+    const ans=(correct||"").toUpperCase();
+    if(!(ans in map) || map[ans]>=options.length)
+      throw new Error(`第 ${i+1} 行答案需對應已填寫的 A／B／C／D 選項`);
 
     out.push({
       adminNo,
       category,
       difficulty,
+      type,
       question,
-      options:[a,b,c,d],
+      promptImages,
+      options,
+      optionImages,
       answer:map[ans],
-      explanation:rest.join("｜")
+      explanation
     });
   });
 
@@ -3621,6 +4040,63 @@ function finishTimeAttack(){
   show("timeAttackResultScreen");
 }
 
+function createImageFrame(media,{className="",alt="圖片",code=""}={}){
+  const figure=document.createElement("figure");
+  figure.className=`media-frame ${className}`.trim();
+
+  if(code){
+    const codeEl=document.createElement("span");
+    codeEl.className=className.includes("review-choice") ? "review-choice-code" : "answer-code";
+    codeEl.textContent=code;
+    figure.appendChild(codeEl);
+  }
+
+  const img=document.createElement("img");
+  img.src=media.src;
+  img.alt=media.label || alt;
+  img.decoding="async";
+  img.addEventListener("load",()=>requestAnimationFrame(fitQuizText),{once:true});
+  img.addEventListener("error",()=>{
+    figure.classList.add("image-error");
+    requestAnimationFrame(fitQuizText);
+  },{once:true});
+  figure.appendChild(img);
+
+  const fallback=document.createElement("span");
+  fallback.className="image-fallback";
+  fallback.textContent="圖片載入失敗";
+  figure.appendChild(fallback);
+
+  if(media.label){
+    const caption=document.createElement("figcaption");
+    caption.className=className.includes("image-answer")
+      ? "image-answer-caption"
+      : className.includes("review-choice") ? "review-choice-caption" : "";
+    caption.textContent=media.label;
+    figure.appendChild(caption);
+  }
+
+  return figure;
+}
+
+function renderMediaItems(container,items,options={}){
+  container.replaceChildren();
+  container.classList.remove("has-images","image-count-1","image-count-2","image-count-3","image-count-4");
+  if(!items.length) return;
+
+  container.classList.add("has-images",`image-count-${items.length}`);
+  items.forEach((item,index)=>{
+    container.appendChild(createImageFrame(item,{
+      className:options.className||"",
+      alt:options.altPrefix ? `${options.altPrefix} ${index+1}` : "圖片"
+    }));
+  });
+}
+
+function answerDisplayText(index,text){
+  return `${String.fromCharCode(65+index)}. ${text || "圖片選項"}`;
+}
+
 function fitQuestionText(){
   const box=$("question").parentElement;
   const q=$("question");
@@ -3633,7 +4109,7 @@ function fitQuestionText(){
   let guard=0;
 
   while(
-    (q.scrollHeight > box.clientHeight - 4 || q.scrollWidth > box.clientWidth - 4) &&
+    (box.scrollHeight > box.clientHeight + 1 || q.scrollWidth > box.clientWidth - 4) &&
     size > minSize &&
     guard < 40
   ){
@@ -3654,6 +4130,7 @@ function fitAnswerText(){
   const minSize=readCSSSize("--answer-min-size",22);
 
   document.querySelectorAll("#answers .answer").forEach(answer=>{
+    if(answer.classList.contains("image-answer")) return;
     answer.style.fontSize="";
     let size=compact
       ? configuredMax
@@ -3681,12 +4158,14 @@ function fitQuizText(){
 function shuffledQuestionView(q){
   const items=q.options.map((text,originalIndex)=>({
     text,
+    image:(q.optionImages&&q.optionImages[originalIndex])||"",
     isCorrect:originalIndex===q.answer
   }));
 
   const shuffled=shuffle(items);
   return {
     options:shuffled.map(x=>x.text),
+    optionImages:shuffled.map(x=>x.image),
     answer:shuffled.findIndex(x=>x.isCorrect)
   };
 }
@@ -3702,6 +4181,17 @@ function render(){
   if(!timeAttackMode) $("progress").textContent=`${index+1} / ${current.length}`;
   else $("progress").textContent="";
   $("question").textContent=q.question;
+
+  const questionType=q.type||"text-only";
+  const promptImages=q.promptImages||[];
+  const quiz=$("question").closest(".quiz");
+  const questionBox=$("question").parentElement;
+  const hasPromptImages=promptImages.length>0;
+  quiz.classList.toggle("has-prompt-media",hasPromptImages);
+  quiz.classList.toggle("image-choice-mode",questionType==="image-choice");
+  questionBox.classList.toggle("has-media",hasPromptImages);
+  renderMediaItems($("promptImages"),promptImages,{altPrefix:"題目圖片"});
+
   $("feedbackTitle").textContent="";
   $("feedbackAnswer").textContent="";
   $("feedbackText").textContent="";
@@ -3721,14 +4211,31 @@ function render(){
     $("taMode").textContent=`${q.category==="動畫" ? "動畫題" : "陀螺題"}・${q.difficulty}`;
   }
 
-  $("answers").innerHTML="";
+  const answers=$("answers");
+  answers.replaceChildren();
+  answers.classList.remove("image-choices","choice-count-2","choice-count-3","choice-count-4");
+  if(questionType==="image-choice"){
+    answers.classList.add("image-choices",`choice-count-${q._view.options.length}`);
+  }
 
   q._view.options.forEach((opt,i)=>{
     const b=document.createElement("button");
-    b.className="answer";
-    b.textContent=`${String.fromCharCode(65+i)}. ${opt}`;
+    b.className=questionType==="image-choice" ? "answer image-answer" : "answer";
+
+    if(questionType==="image-choice"){
+      const code=String.fromCharCode(65+i);
+      b.setAttribute("aria-label",answerDisplayText(i,opt));
+      b.appendChild(createImageFrame({src:q._view.optionImages[i],label:opt},{
+        className:"image-answer-media",
+        alt:`選項 ${code}`,
+        code
+      }));
+    }else{
+      b.textContent=answerDisplayText(i,opt);
+    }
+
     b.onclick=()=>chooseAnswer(i,b);
-    $("answers").appendChild(b);
+    answers.appendChild(b);
   });
 
   requestAnimationFrame(fitQuizText);
@@ -3757,6 +4264,7 @@ function chooseAnswer(i,b){
   const q=current[index];
   const buttons=[...$("answers").querySelectorAll(".answer")];
   buttons.forEach(x=>x.disabled=true);
+  b.classList.add("selected");
 
   const isCorrect=i===q._view.answer;
 
@@ -3777,8 +4285,7 @@ function chooseAnswer(i,b){
     $("bottomPanel").classList.add("wrong-state");
   }
 
-  const correctLetter=String.fromCharCode(65+q._view.answer);
-  $("feedbackAnswer").textContent=`正確答案：${correctLetter}. ${q._view.options[q._view.answer]}`;
+  $("feedbackAnswer").textContent=`正確答案：${answerDisplayText(q._view.answer,q._view.options[q._view.answer])}`;
   $("feedbackText").textContent=q.explanation||"";
   requestAnimationFrame(fitAnswerText);
   requestAnimationFrame(fitFeedbackText);
@@ -3793,8 +4300,11 @@ function chooseAnswer(i,b){
     taHistory.push({
       category:q.category,
       difficulty:q.difficulty,
+      type:q.type||"text-only",
       question:q.question,
+      promptImages:(q.promptImages||[]).map(item=>({...item})),
       options:[...q._view.options],
+      optionImages:[...(q._view.optionImages||[])],
       selectedIndex:i,
       correctIndex:q._view.answer,
       isCorrect,
@@ -3821,6 +4331,8 @@ function renderTimeAttackReview(){
   if(!taHistory.length){
     $("reviewCount").textContent="0 / 0";
     $("reviewQuestion").textContent="本次沒有完成作答的題目。";
+    renderMediaItems($("reviewPromptImages"),[]);
+    renderMediaItems($("reviewChoiceImages"),[]);
     $("reviewStatus").textContent="";
     $("reviewYourAnswer").textContent="—";
     $("reviewCorrectAnswer").textContent="—";
@@ -3831,18 +4343,35 @@ function renderTimeAttackReview(){
   }
 
   const item=taHistory[reviewIndex];
-  const yourLetter=String.fromCharCode(65+item.selectedIndex);
-  const correctLetter=String.fromCharCode(65+item.correctIndex);
 
   $("reviewCount").textContent=`${reviewIndex+1} / ${taHistory.length}`;
   $("reviewQuestion").textContent=`${item.category==="動畫"?"動畫題":"陀螺題"}・${item.difficulty}｜${item.question}`;
+  renderMediaItems($("reviewPromptImages"),item.promptImages||[],{altPrefix:"題目圖片"});
+
+  const reviewChoices=$("reviewChoiceImages");
+  reviewChoices.replaceChildren();
+  reviewChoices.classList.remove("has-images","image-count-1","image-count-2","image-count-3","image-count-4");
+  if(item.type==="image-choice"){
+    reviewChoices.classList.add("has-images",`image-count-${item.options.length}`);
+    item.options.forEach((text,index)=>{
+      const frame=createImageFrame({src:item.optionImages[index],label:text},{
+        className:"review-choice",
+        alt:`選項 ${String.fromCharCode(65+index)}`,
+        code:String.fromCharCode(65+index)
+      });
+      frame.classList.toggle("selected",index===item.selectedIndex);
+      frame.classList.toggle("correct",index===item.correctIndex);
+      frame.classList.toggle("wrong",index===item.selectedIndex && !item.isCorrect);
+      reviewChoices.appendChild(frame);
+    });
+  }
 
   const status=$("reviewStatus");
   status.textContent=item.isCorrect ? "✓ 答對了" : "✕ 答錯了";
   status.className="review-status "+(item.isCorrect?"correct":"wrong");
 
-  $("reviewYourAnswer").textContent=`${yourLetter}. ${item.options[item.selectedIndex]}`;
-  $("reviewCorrectAnswer").textContent=`${correctLetter}. ${item.options[item.correctIndex]}`;
+  $("reviewYourAnswer").textContent=answerDisplayText(item.selectedIndex,item.options[item.selectedIndex]);
+  $("reviewCorrectAnswer").textContent=answerDisplayText(item.correctIndex,item.options[item.correctIndex]);
   $("reviewExplanation").textContent=item.explanation || "此題沒有解說。";
 
   $("reviewPrevBtn").disabled=reviewIndex===0;
