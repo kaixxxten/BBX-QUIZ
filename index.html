@@ -2122,6 +2122,11 @@ h1{
 #quizScreen .quiz.has-prompt-media .answer:not(.image-answer){
   padding-block:10px;
 }
+/* 單張題目圖的文字選項由既有縮字邏輯完整收納，不在按鈕內建立捲動區。 */
+body[data-layout="default"] #quizScreen .quiz.single-prompt-media .answer:not(.image-answer){
+  overflow:hidden !important;
+  overflow-wrap:anywhere;
+}
 #quizScreen.timeattack-active .quiz.image-choice-mode:not(.has-prompt-media){
   grid-template-rows:90px minmax(0,1fr) !important;
 }
