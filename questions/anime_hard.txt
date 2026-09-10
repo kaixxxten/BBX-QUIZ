@@ -24,8 +24,8 @@
 24｜動畫｜困難｜以下哪一顆陀螺，龍宮庫洛武沒有拿來和艾克斯的陀螺對戰過？｜蒼龍勇氣｜蒼龍利刃｜蒼龍爆刃｜蒼龍神劍｜A｜龍宮庫洛武沒有拿「蒼龍勇氣」與艾克斯的陀螺對戰過，因此答案為A。
 25｜動畫｜困難｜以下哪一顆陀螺，派坤沒有複製製作過？｜極狐九尾｜魔導至尊｜蒼龍爆刃｜武士星劍｜A｜派坤沒有複製製作過「極狐九尾」，因此答案為A。
 26｜動畫｜困難｜白星歐米茄給龍宮庫洛武的陀螺是哪一個？｜衝擊龍神｜蒼穹龍神｜蒼穹龍騎士｜隕星龍騎士｜A｜白星歐米茄交給龍宮庫洛武的陀螺是「衝擊龍神」，因此答案為A。
-27｜動畫｜困難｜image-prompt｜請問以下食物的名字是？｜images/prompts/montblanc-sushi.jpg｜｜｜｜紅豆奶油壽司｜｜巨石蒙布朗｜｜蒙布朗壽司｜｜咖啡蛋糕｜｜C｜
-28｜動畫｜困難｜image-choice｜以下哪個是萬獸葵恩的住所？｜｜｜｜｜ ｜images/choices/queen-house-a.jpg｜ ｜images/choices/queen-house-b.jpg｜｜｜｜｜｜
-29｜動畫｜困難｜image-choice｜以下哪個是佐那魔斯莊園？｜｜｜｜｜｜images/choices/zonamos-manor-a.jpg｜｜images/choices/zonamos-manor-b.jpg｜｜｜｜｜｜
-30｜動畫｜困難｜image-prompt｜請問以下食物的名字是？｜images/prompts/tropical-pizza-sushi.jpg｜｜｜｜鳳梨披薩壽司｜｜夏威夷壽司｜｜熱帶披薩壽司｜｜水果風味壽司｜｜C｜
-31｜動畫｜困難｜image-prompt｜請問這個造型的瑪緹是什麼型態？｜images/prompts/multi-superstar-form.jpg｜ ｜｜｜偶像型態｜｜打歌型態｜｜白星型態｜｜巨星型態｜｜D｜
+27｜動畫｜困難｜image-prompt｜請問以下食物的名字是？｜images/prompts/montblanc-sushi.jpg｜｜｜｜紅豆奶油壽司｜｜巨石蒙布朗｜｜蒙布朗壽司｜｜咖啡蛋糕｜｜C｜正確的是蒙布朗壽司。
+28｜動畫｜困難｜image-choice｜以下哪個是萬獸葵恩的住所？｜｜｜｜｜ ｜images/choices/queen-house-a.jpg｜ ｜images/choices/queen-house-b.jpg｜｜｜｜｜｜正確的是萬獸葵恩住所的圖片。
+29｜動畫｜困難｜image-choice｜以下哪個是佐那魔斯莊園？｜｜｜｜｜｜images/choices/zonamos-manor-a.jpg｜｜images/choices/zonamos-manor-b.jpg｜｜｜｜｜｜正確的是佐那魔斯莊園的圖片。
+30｜動畫｜困難｜image-prompt｜請問以下食物的名字是？｜images/prompts/tropical-pizza-sushi.jpg｜｜｜｜鳳梨披薩壽司｜｜夏威夷壽司｜｜熱帶披薩壽司｜｜水果風味壽司｜｜C｜正確的是熱帶披薩壽司。
+31｜動畫｜困難｜image-prompt｜請問這個造型的瑪緹是什麼型態？｜images/prompts/multi-superstar-form.jpg｜ ｜｜｜偶像型態｜｜打歌型態｜｜白星型態｜｜巨星型態｜｜D｜正確的是巨星型態。
