@@ -4525,7 +4525,9 @@ function renderMediaItems(container,items,options={}){
 }
 
 function answerDisplayText(index,text){
-  return `${String.fromCharCode(65+index)}. ${text || "圖片選項"}`;
+  const code=String.fromCharCode(65+index);
+  const label=String(text||"").trim();
+  return label ? `${code}. ${label}` : code;
 }
 
 function fitQuestionText(){
