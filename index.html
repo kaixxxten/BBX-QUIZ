@@ -4524,8 +4524,8 @@ function renderMediaItems(container,items,options={}){
   });
 }
 
-function answerDisplayText(index,text){
-  const code=String.fromCharCode(65+index);
+function answerDisplayText(index,text,key=""){
+  const code=key || String.fromCharCode(65+index);
   const label=String(text||"").trim();
   return label ? `${code}. ${label}` : code;
 }
@@ -4590,15 +4590,21 @@ function fitQuizText(){
 
 function shuffledQuestionView(q){
   const items=q.options.map((text,originalIndex)=>({
+    key:String.fromCharCode(65+originalIndex),
     text,
     image:(q.optionImages&&q.optionImages[originalIndex])||"",
     isCorrect:originalIndex===q.answer
   }));
 
   const shuffled=shuffle(items);
+  const preserveOriginalKeys=(q.type||"text-only")==="image-choice";
   return {
+    choices:shuffled,
     options:shuffled.map(x=>x.text),
     optionImages:shuffled.map(x=>x.image),
+    optionKeys:shuffled.map((x,displayIndex)=>
+      preserveOriginalKeys ? x.key : String.fromCharCode(65+displayIndex)
+    ),
     answer:shuffled.findIndex(x=>x.isCorrect)
   };
 }
@@ -4655,9 +4661,10 @@ function render(){
     b.className=questionType==="image-choice" ? "answer image-answer" : "answer";
 
     if(questionType==="image-choice"){
-      const code=String.fromCharCode(65+i);
-      b.setAttribute("aria-label",answerDisplayText(i,opt));
-      b.appendChild(createImageFrame({src:q._view.optionImages[i],label:opt},{
+      const choice=q._view.choices[i];
+      const code=choice.key;
+      b.setAttribute("aria-label",answerDisplayText(i,choice.text,code));
+      b.appendChild(createImageFrame({src:choice.image,label:choice.text},{
         className:"image-answer-media",
         alt:`選項 ${code}`,
         code
@@ -4694,11 +4701,14 @@ function chooseAnswer(i,b){
   answered=true;
 
   const q=current[index];
+  const questionType=q.type||"text-only";
   const buttons=[...$("answers").querySelectorAll(".answer")];
   buttons.forEach(x=>x.disabled=true);
   b.classList.add("selected");
 
-  const isCorrect=i===q._view.answer;
+  const selectedChoice=questionType==="image-choice" ? q._view.choices[i] : null;
+  const correctChoice=questionType==="image-choice" ? q._view.choices[q._view.answer] : null;
+  const isCorrect=selectedChoice ? selectedChoice.isCorrect : i===q._view.answer;
 
   if(isCorrect){
     if(!timeAttackMode) score++;
@@ -4717,7 +4727,11 @@ function chooseAnswer(i,b){
     $("bottomPanel").classList.add("wrong-state");
   }
 
-  $("feedbackAnswer").textContent=`正確答案：${answerDisplayText(q._view.answer,q._view.options[q._view.answer])}`;
+  $("feedbackAnswer").textContent=`正確答案：${answerDisplayText(
+    q._view.answer,
+    q._view.options[q._view.answer],
+    correctChoice ? correctChoice.key : ""
+  )}`;
   $("feedbackText").textContent=q.explanation||"";
   requestAnimationFrame(fitAnswerText);
   requestAnimationFrame(fitFeedbackText);
@@ -4737,8 +4751,11 @@ function chooseAnswer(i,b){
       promptImages:(q.promptImages||[]).map(item=>({...item})),
       options:[...q._view.options],
       optionImages:[...(q._view.optionImages||[])],
+      optionKeys:[...(q._view.optionKeys||[])],
       selectedIndex:i,
       correctIndex:q._view.answer,
+      selectedKey:selectedChoice ? selectedChoice.key : "",
+      correctKey:correctChoice ? correctChoice.key : "",
       isCorrect,
       explanation:q.explanation||""
     });
@@ -4786,10 +4803,11 @@ function renderTimeAttackReview(){
   if(item.type==="image-choice"){
     reviewChoices.classList.add("has-images",`image-count-${item.options.length}`);
     item.options.forEach((text,index)=>{
+      const code=(item.optionKeys&&item.optionKeys[index]) || String.fromCharCode(65+index);
       const frame=createImageFrame({src:item.optionImages[index],label:text},{
         className:"review-choice",
-        alt:`選項 ${String.fromCharCode(65+index)}`,
-        code:String.fromCharCode(65+index)
+        alt:`選項 ${code}`,
+        code
       });
       frame.classList.toggle("selected",index===item.selectedIndex);
       frame.classList.toggle("correct",index===item.correctIndex);
@@ -4802,8 +4820,16 @@ function renderTimeAttackReview(){
   status.textContent=item.isCorrect ? "✓ 答對了" : "✕ 答錯了";
   status.className="review-status "+(item.isCorrect?"correct":"wrong");
 
-  $("reviewYourAnswer").textContent=answerDisplayText(item.selectedIndex,item.options[item.selectedIndex]);
-  $("reviewCorrectAnswer").textContent=answerDisplayText(item.correctIndex,item.options[item.correctIndex]);
+  $("reviewYourAnswer").textContent=answerDisplayText(
+    item.selectedIndex,
+    item.options[item.selectedIndex],
+    item.type==="image-choice" ? item.selectedKey : ""
+  );
+  $("reviewCorrectAnswer").textContent=answerDisplayText(
+    item.correctIndex,
+    item.options[item.correctIndex],
+    item.type==="image-choice" ? item.correctKey : ""
+  );
   $("reviewExplanation").textContent=item.explanation || "此題沒有解說。";
 
   $("reviewPrevBtn").disabled=reviewIndex===0;
