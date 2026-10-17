@@ -3866,7 +3866,20 @@ function getFullscreenElement(){
   return document.fullscreenElement || document.webkitFullscreenElement || null;
 }
 
+function isStandaloneApp(){
+  return Boolean(
+    (typeof window.matchMedia==="function" && window.matchMedia("(display-mode: standalone)").matches) ||
+    window.navigator.standalone===true
+  );
+}
+
 function getFullscreenRequest(){
+  /*
+    iPad 主畫面 PWA 已由系統以 standalone 顯示，不需要再進入
+    Fullscreen API。巢狀進入瀏覽器全螢幕會觸發 WebKit 的鍵盤防偽警告。
+  */
+  if(isStandaloneApp()) return null;
+
   const root=document.documentElement;
   if(typeof root.requestFullscreen==="function" && document.fullscreenEnabled===true){
     return root.requestFullscreen;
@@ -3894,8 +3907,10 @@ function updateFullscreenControls(){
   const orientationButton=$("orientationFullscreenBtn");
   const noticeButton=$("viewportFullscreenBtn");
   const orientationText=$("orientationText");
+  const standalone=isStandaloneApp();
   const available=isFullscreenAvailable();
   const active=Boolean(getFullscreenElement());
+  document.body.dataset.standalone=String(standalone);
   document.body.dataset.fullscreenAvailable=String(available);
 
   [button,noticeButton].forEach(item=>{
@@ -3910,13 +3925,17 @@ function updateFullscreenControls(){
   }
 
   if(orientationText){
-    orientationText.textContent=available
+    orientationText.textContent=standalone
+      ? "轉動手機後會自動顯示遊戲。"
+      : available
       ? "轉動手機後會自動顯示遊戲。也可以點下方按鈕進入全螢幕。"
       : "轉動手機後會自動顯示遊戲；此瀏覽器會保留網址列與工具列。";
   }
 
   const status=$("orientationStatus");
-  if(status && !available && (!status.textContent || status.textContent===FULLSCREEN_UNAVAILABLE_MESSAGE)){
+  if(status && standalone && status.textContent===FULLSCREEN_UNAVAILABLE_MESSAGE){
+    setOrientationStatus("");
+  }else if(status && !available && !standalone && (!status.textContent || status.textContent===FULLSCREEN_UNAVAILABLE_MESSAGE)){
     setOrientationStatus(FULLSCREEN_UNAVAILABLE_MESSAGE);
   }else if(status && available && status.textContent===FULLSCREEN_UNAVAILABLE_MESSAGE){
     setOrientationStatus("");

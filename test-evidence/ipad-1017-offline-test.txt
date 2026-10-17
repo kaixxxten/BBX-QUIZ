@@ -1,10 +1,13 @@
 BEYBLADE X QUIZ 1017 iPad WebKit offline PWA test
 Viewport/device: iPad (gen 11) landscape / 944x656
-PWA cache: bbx-quiz-ipad-1017-c23233b1fb72d532
+PWA cache: bbx-quiz-ipad-1017-8c0915dfdbfb3b84
 Precached URLs: 26
 Server stopped before offline verification: YES
 Offline close/reopen: OK
 Touch input: Playwright tap()
+Installed PWA standalone detection: YES
+Nested Fullscreen API button/request path: DISABLED
+Normal quiz flow active element: BODY (not text input)
 動畫題 button -> difficulty page: OK
 陀螺題 button -> difficulty page: OK
 TOP return: OK

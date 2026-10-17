@@ -79,6 +79,12 @@ async function main() {
     ...devices["iPad (gen 11) landscape"],
     serviceWorkers: "allow"
   });
+  await context.addInitScript(() => {
+    Object.defineProperty(window.navigator, "standalone", {
+      configurable: true,
+      get: () => true
+    });
+  });
   const externalRequests = [];
   context.on("request", request => {
     if (!request.url().startsWith(origin) && !/^(data|blob):/.test(request.url())) {
@@ -100,13 +106,20 @@ async function main() {
       return {
         cacheName,
         cachedUrls: cache ? (await cache.keys()).map(request => request.url) : [],
-        questionFiles: Object.keys(window.BBX_OFFLINE_FILES || {}).filter(key => key.startsWith("questions/")).length
+        questionFiles: Object.keys(window.BBX_OFFLINE_FILES || {}).filter(key => key.startsWith("questions/")).length,
+        standalone: document.body.dataset.standalone,
+        fullscreenAvailable: document.body.dataset.fullscreenAvailable,
+        fullscreenButtonDisplay: getComputedStyle(document.getElementById("fullscreenBtn")).display
       };
     });
     if (!onlineState.cacheName || onlineState.cachedUrls.length < 26) {
       throw new Error(`PWA precache incomplete: ${onlineState.cachedUrls.length}`);
     }
     if (onlineState.questionFiles !== 4) throw new Error("Offline question data missing");
+    if (onlineState.standalone !== "true") throw new Error("iPad standalone mode was not detected");
+    if (onlineState.fullscreenAvailable !== "false" || onlineState.fullscreenButtonDisplay !== "none") {
+      throw new Error("Fullscreen API must not be offered inside the installed iPad PWA");
+    }
     const onlineMetrics = await readLayoutMetrics(onlinePage);
     if (onlineMetrics.layout !== "default") throw new Error(`Unexpected iPad layout: ${onlineMetrics.layout}`);
 
@@ -127,6 +140,17 @@ async function main() {
     await page.waitForSelector("#difficultyScreen.active");
     await page.locator("#topBtn").tap();
     await page.waitForSelector("#categoryScreen.active");
+
+    const activeElementState = await page.evaluate(() => {
+      const active = document.activeElement;
+      return {
+        tagName: active?.tagName || "",
+        isTextEntry: Boolean(active?.matches?.('input, textarea, [contenteditable="true"]'))
+      };
+    });
+    if (activeElementState.isTextEntry) {
+      throw new Error(`Normal quiz flow focused a text-entry element: ${activeElementState.tagName}`);
+    }
 
     await page.locator('.hero-card[data-category="陀螺"]').tap();
     await page.waitForSelector("#difficultyScreen.active");
@@ -212,6 +236,9 @@ async function main() {
       "Server stopped before offline verification: YES",
       "Offline close/reopen: OK",
       "Touch input: Playwright tap()",
+      "Installed PWA standalone detection: YES",
+      "Nested Fullscreen API button/request path: DISABLED",
+      `Normal quiz flow active element: ${activeElementState.tagName || "none"} (not text input)`,
       "動畫題 button -> difficulty page: OK",
       "陀螺題 button -> difficulty page: OK",
       "TOP return: OK",

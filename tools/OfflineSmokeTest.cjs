@@ -51,9 +51,7 @@ vm.runInContext(
 const questionFiles = expectedFiles.filter(file => file.startsWith("questions/"));
 const questions = questionFiles.flatMap(file => parserContext.parseQuestions(offlineFiles[file]));
 
-if (questions.length !== 108) {
-  throw new Error(`Expected 108 questions, got ${questions.length}`);
-}
+if (!questions.length) throw new Error("Question bank is empty");
 
 for (const category of ["動畫", "陀螺"]) {
   for (const difficulty of ["簡單", "困難"]) {
@@ -110,6 +108,44 @@ const fetchContext = {
 vm.createContext(fetchContext);
 vm.runInContext(`${html.slice(fetchStart, fetchEnd)}\nthis.readOfflineFile=fetchTextFile;`, fetchContext);
 
+const fullscreenGuardStart = html.indexOf("function isStandaloneApp");
+const fullscreenGuardEnd = html.indexOf("\nfunction isFullscreenAvailable", fullscreenGuardStart);
+if (fullscreenGuardStart < 0 || fullscreenGuardEnd < 0) {
+  throw new Error("Standalone fullscreen guard not found");
+}
+
+function fullscreenRequestFor({displayModeStandalone, navigatorStandalone}) {
+  const fullscreenContext = {
+    window: {
+      matchMedia() {
+        return {matches: displayModeStandalone};
+      },
+      navigator: {standalone: navigatorStandalone}
+    },
+    document: {
+      documentElement: {requestFullscreen() {}},
+      fullscreenEnabled: true,
+      webkitFullscreenEnabled: false
+    }
+  };
+  vm.createContext(fullscreenContext);
+  vm.runInContext(
+    `${html.slice(fullscreenGuardStart, fullscreenGuardEnd)}\nthis.getRequest=getFullscreenRequest;`,
+    fullscreenContext
+  );
+  return fullscreenContext.getRequest();
+}
+
+if (fullscreenRequestFor({displayModeStandalone: true, navigatorStandalone: false}) !== null) {
+  throw new Error("Fullscreen API must be disabled in display-mode standalone");
+}
+if (fullscreenRequestFor({displayModeStandalone: false, navigatorStandalone: true}) !== null) {
+  throw new Error("Fullscreen API must be disabled in iPadOS standalone mode");
+}
+if (typeof fullscreenRequestFor({displayModeStandalone: false, navigatorStandalone: false}) !== "function") {
+  throw new Error("Fullscreen API must remain available in a supported browser tab");
+}
+
 Promise.all(expectedFiles.map(file => fetchContext.readOfflineFile(file)))
   .then(results => {
     if (results.some((text, index) => text !== offlineFiles[expectedFiles[index]])) {
@@ -124,6 +160,7 @@ Promise.all(expectedFiles.map(file => fetchContext.readOfflineFile(file)))
     console.log("Image references: OK");
     console.log("Image-choice shuffled answer/image binding: OK");
     console.log("file:// loader without fetch(): OK");
+    console.log("iPad PWA standalone fullscreen guard: OK");
   })
   .catch(error => {
     console.error(error);

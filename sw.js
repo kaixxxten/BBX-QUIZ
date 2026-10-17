@@ -1,4 +1,4 @@
-const CACHE_NAME = "bbx-quiz-ipad-1017-0d1c2299641e8be7";
+const CACHE_NAME = "bbx-quiz-ipad-1017-8c0915dfdbfb3b84";
 const CACHE_PREFIX = "bbx-quiz-ipad-1017-";
 const PRECACHE_URLS = ["./","./icons/apple-touch-icon-180.png","./icons/icon-192.png","./icons/icon-512.png","./images/choices/queen-house-a.jpg","./images/choices/queen-house-b.jpg","./images/choices/zonamos-manor-a.jpg","./images/choices/zonamos-manor-a-v2.jpg","./images/choices/zonamos-manor-b.jpg","./images/choices/zonamos-manor-b-v2.jpg","./images/prompts/g-bit.jpg","./images/prompts/montblanc-sushi.jpg","./images/prompts/multi-superstar-form.jpg","./images/prompts/tropical-pizza-sushi.jpg","./images/README.txt","./images/zonamos-manor-a.jpg","./images/zonamos-manor-b.jpg","./index.html","./manifest.webmanifest","./offline-data.js","./questions/anime_easy.txt","./questions/anime_hard.txt","./questions/bey_easy.txt","./questions/bey_hard.txt","./settings/page_text.txt","./settings/staff.txt"];
 const INDEX_URL = "./index.html";
