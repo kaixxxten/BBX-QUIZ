@@ -1,0 +1,19 @@
+BEYBLADE X QUIZ 日常更新流程
+============================
+
+1. 修改 questions、settings、images 或 index.html。
+2. 雙擊「更新iPad離線版.cmd」。
+3. 等待視窗顯示「更新完成」。
+4. 將整個 BBX-QUIZ-OFFICIAL 資料夾重新發布／上傳。
+5. iPad 保持連網，完全關閉 BBX QUIZ 後重新開啟。
+6. 確認新版題目、圖片與程式已載入完成。
+7. 開啟飛航模式，再測試一次離線功能。
+
+重要提醒
+--------
+
+- 不要只單獨上傳 TXT。
+- 每次更新後都要重新執行「更新iPad離線版.cmd」。
+- 最安全的方式是每次把整個 BBX-QUIZ-OFFICIAL 資料夾一起重新發布。
+- 畫面上的 Ver. 1.2.0 與 cache version 是不同的。
+- 若要修改畫面版本號，請另外修改 index.html 內的 APP_VERSION。

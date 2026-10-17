@@ -1,0 +1,12 @@
+BEYBLADE X QUIZ PWA update test
+Old cache: bbx-quiz-ipad-1017-340039129a51f8d4
+New cache: bbx-quiz-ipad-1017-c23233b1fb72d532
+Explicit Service Worker update check: OK
+New worker controllerchange detected: OK
+Current index requests after publish: 3
+Automatic reload on home screen: OK
+New offline-data marker loaded: OK
+Old cache deleted: OK
+Updated release close/reopen with server stopped: OK
+Updated release touch navigation while offline: OK
+External requests: 0

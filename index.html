@@ -7,6 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BBX QUIZ">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180.png">
 <title>BEYBLADE X QUIZ</title>
 <style>
 :root{
@@ -3662,6 +3665,7 @@ body[data-layout="mobile-landscape"] .editor-help{
   </section>
 </div>
 
+<script src="./offline-data.js"></script>
 <script>
 const SAMPLE = `動畫｜簡單｜BEYBLADE X 中，假面X所屬的隊伍是哪一隊？｜Persona｜Pendragon｜Zonamos House｜Yggdrasil｜A｜假面X是 Persona 隊的成員。
 動畫｜簡單｜風見鳥加入 Persona 後，主要是以什麼身分活動？｜陀螺選手｜攝影師｜裁判｜主持人｜A｜風見鳥是 Persona 的陀螺選手。
@@ -4161,6 +4165,14 @@ function parsePageText(txt){
 }
 
 async function fetchTextFile(path){
+  const offlineFiles=window.BBX_OFFLINE_FILES;
+  if(
+    offlineFiles &&
+    Object.prototype.hasOwnProperty.call(offlineFiles,path)
+  ){
+    return offlineFiles[path];
+  }
+
   const response=await fetch(path,{cache:"no-store"});
   if(!response.ok) throw new Error(`${path} (${response.status})`);
   return await response.text();
@@ -5311,6 +5323,47 @@ if(window.visualViewport){
 refreshDeviceScale();
 
 load().then(()=>show("categoryScreen")).catch(()=>{});
+</script>
+<script>
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  const hadServiceWorkerController=Boolean(navigator.serviceWorker.controller);
+  let reloadingForPwaUpdate=false;
+
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(!hadServiceWorkerController || reloadingForPwaUpdate) return;
+
+    const homeScreen=document.getElementById("categoryScreen");
+    if(homeScreen && homeScreen.classList.contains("active")){
+      reloadingForPwaUpdate=true;
+      location.reload();
+    }else{
+      document.documentElement.dataset.pwaUpdatePending="true";
+    }
+  });
+
+  window.BBX_PWA_READY=(async()=>{
+    const registration=await navigator.serviceWorker.register("./sw.js",{
+      scope:"./",
+      updateViaCache:"none"
+    });
+
+    try{
+      await registration.update();
+    }catch(error){
+      /* 完全離線時更新檢查失敗是正常狀況，既有快取仍可繼續使用。 */
+      if(navigator.onLine) console.warn("離線版本更新檢查失敗",error);
+    }
+
+    await navigator.serviceWorker.ready;
+    document.documentElement.dataset.pwaReady="true";
+    return registration;
+  })()
+    .catch(error=>{
+      document.documentElement.dataset.pwaReady="error";
+      console.warn("離線功能註冊失敗",error);
+      throw error;
+    });
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,21 @@
+BEYBLADE X QUIZ 1017 iPad WebKit offline PWA test
+Viewport/device: iPad (gen 11) landscape / 944x656
+PWA cache: bbx-quiz-ipad-1017-c23233b1fb72d532
+Precached URLs: 26
+Server stopped before offline verification: YES
+Offline close/reopen: OK
+Touch input: Playwright tap()
+動畫題 button -> difficulty page: OK
+陀螺題 button -> difficulty page: OK
+TOP return: OK
+General mode: 1 / 10, 4 answers, next question 2 / 10 OK
+Offline images loaded: 1
+Image question correct-answer judgment: OK
+Time attack countdown: 60.0 -> 58.8
+Time attack result: 作答 1 題｜答對 0 題｜正確率 0% / 見習 BLADER
+Time attack review: OK
+Online/offline layout metrics identical: YES
+Layout: default
+App viewport: 888.5 x 640.0
+External requests: 0
+Note: Playwright WebKit emulates iPad Safari behavior; physical iPad Add to Home Screen remains the final device acceptance test.
